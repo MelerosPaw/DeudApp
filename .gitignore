@@ -1,0 +1,11 @@
+.gradle
+/local.properties
+/build
+.idea/
+DeudApp.iml
+gradle.properties
+gradlew
+gradlew.bat
+projectFilesBackup/
+settings.gradle
+gradle/

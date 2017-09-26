@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="5dp"
+    android:orientation="vertical"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/cv_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_basic"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_fecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:paddingBottom="2dp"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingTop="2dp"
+                android:textColor="@android:color/white"
+                tools:text="12/05/2015" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/tv_concepto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_detalle_entidad"
+                    android:textStyle="bold"
+                    tools:text="Concepto" />
+
+                <TextView
+                    android:id="@+id/tv_cantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp"
+                    tools:text="350,25 €" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_opciones_entidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_aumentar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/ripple_basic"
+                android:textColor="@color/colorPrimary"
+                android:drawableLeft="@android:drawable/ic_menu_add"
+                android:drawablePadding="10dp"
+                android:drawableStart="@android:drawable/ic_menu_add"
+                android:gravity="center_vertical"
+                android:paddingBottom="4dp"
+                android:paddingEnd="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:text="@string/aumentar_deuda"
+                android:textSize="@dimen/text_size_detalle_entidad" />
+
+            <TextView
+                android:id="@+id/tv_descontar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:background="@drawable/ripple_basic"
+                android:textColor="@color/colorPrimary"
+                android:drawableLeft="@android:drawable/ic_menu_camera"
+                android:drawablePadding="10dp"
+                android:drawableStart="@android:drawable/ic_menu_camera"
+                android:gravity="center_vertical"
+                android:paddingBottom="4dp"
+                android:paddingEnd="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:text="@string/descontar_deuda"
+                android:textSize="@dimen/text_size_detalle_entidad" />
+
+            <TextView
+                android:id="@+id/tv_cancelar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_basic"
+                android:textColor="@color/colorPrimary"
+                android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+                android:drawablePadding="10dp"
+                android:drawableStart="@android:drawable/ic_menu_close_clear_cancel"
+                android:gravity="center_vertical"
+                android:paddingBottom="4dp"
+                android:paddingEnd="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="4dp"
+                android:text="@string/cancelar_deuda"
+                android:textSize="@dimen/text_size_detalle_entidad" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
