@@ -20,10 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
@@ -34,14 +36,18 @@ import melerospaw.deudapp.iu.adapters.AdaptadorPersonas;
 import melerospaw.deudapp.iu.dialogs.DialogoCambiarNombre;
 import melerospaw.deudapp.iu.dialogs.MenuContextualPersona;
 import melerospaw.deudapp.modelo.Persona;
+import melerospaw.deudapp.task.BusProvider;
+import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class FragmentViewPagerPersonas extends Fragment {
 
     public static final String BUNDLE_TIPO = "tipo";
 
-    @Bind(R.id.rv_personas) RecyclerView rvPersonas;
-    @Bind(R.id.tv_vacio)    TextView tvVacio;
+    @BindView(R.id.rv_personas) RecyclerView rvPersonas;
+    @BindView(R.id.tv_vacio)    TextView tvVacio;
+    @BindView(R.id.tv_total)    TextView tvTotal;
+    @BindView(R.id.tv_cantidad) TextView tvCantidad;
 
     private GestorDatos gestor;
     private AdaptadorPersonas adaptadorPersonas;
@@ -66,6 +72,7 @@ public class FragmentViewPagerPersonas extends Fragment {
         this.mTipo = getArguments().getString(BUNDLE_TIPO);
         gestor = GestorDatos.getGestor(getActivity());
         setHasOptionsMenu(true);
+        BusProvider.getBus().register(this);
     }
 
     @Nullable
@@ -83,6 +90,7 @@ public class FragmentViewPagerPersonas extends Fragment {
         asignarListenersAdapter();
         inicializarMensajeVacio();
         desactivarModoEliminacion();
+        mostrarTotal();
     }
 
     @Override
@@ -190,6 +198,25 @@ public class FragmentViewPagerPersonas extends Fragment {
         }
     }
 
+    private void mostrarTotal() {
+        tvCantidad.setText(adaptadorPersonas.obtenerTotal());
+
+        String texto;
+        switch (mTipo) {
+            case ConstantesGenerales.DEBO:
+                texto = "Total debido";
+                break;
+            case ConstantesGenerales.ME_DEBEN:
+                texto = "Total adeudado";
+                break;
+            default:
+                texto = "Balance total";
+                break;
+        }
+
+        tvTotal.setText(texto);
+    }
+
     private void setMenuEliminar() {
         menu.clear();
         getActivity().getMenuInflater().inflate(R.menu.menu_eliminar, menu);
@@ -258,10 +285,22 @@ public class FragmentViewPagerPersonas extends Fragment {
         if (personaEliminada) {
             adaptadorPersonas.eliminarPersona(persona);
             inicializarMensajeVacio();
+            mostrarTotal();
         } else {
             StringUtils.toastCorto(getActivity(),
                     String.format(getString(R.string.imposible_eliminar_deudas),
                             persona.getNombre()));
         }
+    }
+
+    @Subscribe
+    public void onEventoDeudaModificada(EventoDeudaModificada evento) {
+        mostrarTotal();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BusProvider.getBus().unregister(this);
     }
 }

@@ -3,8 +3,6 @@ package melerospaw.deudapp.iu.activities;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -38,12 +36,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.otto.Bus;
 
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
@@ -58,25 +55,24 @@ import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.StringUtils;
-import melerospaw.memoryutil.MemoryUtil;
 
 public class ActivityDetallePersona extends AppCompatActivity {
 
     public static final String BUNDLE_PERSONA = "PERSONA";
     private static final int RC_FOTO = 0;
 
-    @Bind(R.id.toolbar)                     Toolbar toolbar;
-    @Bind(R.id.tv_toolbar_titulo)           TextView tvToolbarTitulo;
-    @Bind(R.id.tv_titulo)                   TextView tvTitulo;
-    @Bind(R.id.tv_toolbar_subtitulo)        TextView tvToolbarSubtitulo;
-    @Bind(R.id.tv_subtitulo)                TextView tvSubtitulo;
-    @Bind(R.id.rv_deudas)                   ContextRecyclerView rvDeudas;
-    @Bind(R.id.tv_concepto)                 TextView tvConcepto;
-    @Bind(R.id.tv_cantidad)                 TextView tvCantidad;
-    @Bind(R.id.app_bar)                     AppBarLayout appBar;
-    @Bind(R.id.collapsing_toolbar_layout)   CollapsingToolbarLayout collapsingToolbarLayout;
-    @Bind(R.id.ll_barra_total)              LinearLayout llBarraTotal;
-    @Bind(R.id.iv_foto)                     ImageView ivFoto;
+    @BindView(R.id.toolbar)                     Toolbar toolbar;
+    @BindView(R.id.tv_toolbar_titulo)           TextView tvToolbarTitulo;
+    @BindView(R.id.tv_titulo)                   TextView tvTitulo;
+    @BindView(R.id.tv_toolbar_subtitulo)        TextView tvToolbarSubtitulo;
+    @BindView(R.id.tv_subtitulo)                TextView tvSubtitulo;
+    @BindView(R.id.rv_deudas)                   ContextRecyclerView rvDeudas;
+    @BindView(R.id.tv_concepto)                 TextView tvConcepto;
+    @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
+    @BindView(R.id.app_bar)                     AppBarLayout appBar;
+    @BindView(R.id.collapsing_toolbar_layout)   CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.ll_barra_total)              LinearLayout llBarraTotal;
+    @BindView(R.id.iv_foto)                     ImageView ivFoto;
 
     private GestorDatos gestor;
     private Bus bus = BusProvider.getBus();
@@ -556,4 +552,3 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 }
-

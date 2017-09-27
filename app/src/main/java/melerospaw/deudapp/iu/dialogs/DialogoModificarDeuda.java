@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
@@ -28,12 +28,12 @@ public class DialogoModificarDeuda extends DialogFragment {
     public static final String BUNDLE_POSICION = "POSICION";
     public static final String BUNDLE_TIPO_ENTIDAD = "TIPO_ENTIDAD";
 
-    @Bind(R.id.tv_titulo)       TextView tvTitulo;
-    @Bind(R.id.tv_mensaje)      TextView tvMensaje;
-    @Bind(R.id.et_cantidad)     EditText etCantidad;
-    @Bind(R.id.tv_euro)         TextView tvEuro;
-    @Bind(R.id.tv_guardar)      TextView btnAceptar;
-    @Bind(R.id.tv_cancelar)     TextView btnCancelar;
+    @BindView(R.id.tv_titulo)       TextView tvTitulo;
+    @BindView(R.id.tv_mensaje)      TextView tvMensaje;
+    @BindView(R.id.et_cantidad)     EditText etCantidad;
+    @BindView(R.id.tv_euro)         TextView tvEuro;
+    @BindView(R.id.tv_guardar)      TextView btnAceptar;
+    @BindView(R.id.tv_cancelar)     TextView btnCancelar;
 
     private String modo;
     private int position;

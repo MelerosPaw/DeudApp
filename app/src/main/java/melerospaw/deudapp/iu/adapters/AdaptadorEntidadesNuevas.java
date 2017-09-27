@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.LinkedList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
@@ -109,9 +109,9 @@ public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEnti
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.et_concepto) EditText etConcepto;
-        @Bind(R.id.et_cantidad) EditText etCantidad;
-        @Bind(R.id.tv_euro)     TextView tvEuro;
+        @BindView(R.id.et_concepto) EditText etConcepto;
+        @BindView(R.id.et_cantidad) EditText etCantidad;
+        @BindView(R.id.tv_euro)     TextView tvEuro;
 
         private Entidad entidad;
 
