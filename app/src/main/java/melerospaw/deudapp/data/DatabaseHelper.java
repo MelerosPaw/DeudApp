@@ -27,12 +27,12 @@ import melerospaw.memoryutil.Path;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-    public static final String TAG = DatabaseHelper.class.getSimpleName();
-    private static DatabaseHelper helper;
+    private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "DeudApp.sqlite";
     private static final int DATABASE_VERSION = 1;
     private final Path.Builder RUTA_CARPETA_IMAGENES;
 
+    private static DatabaseHelper helper;
     private Dao<Persona, String> personaDao;
     private Dao<Entidad, Integer> entidadDao;
 

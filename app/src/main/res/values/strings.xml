@@ -64,5 +64,7 @@
     <string name="cambiar_nombre">Cambiar nombre</string>
     <string name="cambiar">Cambiar</string>
     <string name="mensaje_dialogo_cambiar_nombre">Introduce un nuevo nombre para %1$s:</string>
+    <string name="total_debido">Total debido</string>
+    <string name="total_adeudado">Total adeudado</string>
 
 </resources>
