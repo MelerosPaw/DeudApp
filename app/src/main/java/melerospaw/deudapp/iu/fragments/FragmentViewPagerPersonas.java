@@ -18,15 +18,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.squareup.otto.Subscribe;
 
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
@@ -36,18 +36,19 @@ import melerospaw.deudapp.iu.adapters.AdaptadorPersonas;
 import melerospaw.deudapp.iu.dialogs.DialogoCambiarNombre;
 import melerospaw.deudapp.iu.dialogs.MenuContextualPersona;
 import melerospaw.deudapp.modelo.Persona;
-import melerospaw.deudapp.task.BusProvider;
-import melerospaw.deudapp.task.EventoDeudaModificada;
+import melerospaw.deudapp.utils.ColorManager;
+import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class FragmentViewPagerPersonas extends Fragment {
 
     public static final String BUNDLE_TIPO = "tipo";
 
-    @BindView(R.id.rv_personas) RecyclerView rvPersonas;
-    @BindView(R.id.tv_vacio)    TextView tvVacio;
-    @BindView(R.id.tv_total)    TextView tvTotal;
-    @BindView(R.id.tv_cantidad) TextView tvCantidad;
+    @BindView(R.id.rv_personas)     RecyclerView rvPersonas;
+    @BindView(R.id.tv_vacio)        TextView tvVacio;
+    @BindView(R.id.ll_barra_total)  LinearLayout llBarraTotal;
+    @BindView(R.id.tv_total)        TextView tvTotal;
+    @BindView(R.id.tv_cantidad)     TextView tvCantidad;
 
     private GestorDatos gestor;
     private AdaptadorPersonas adaptadorPersonas;
@@ -55,6 +56,7 @@ public class FragmentViewPagerPersonas extends Fragment {
     private String mTipo;
     private Persona personaSeleccionada;
     private Menu menu;
+    private Unbinder unbinder;
 
     public static FragmentViewPagerPersonas newInstance(String tipo) {
         FragmentViewPagerPersonas f = new FragmentViewPagerPersonas();
@@ -72,7 +74,6 @@ public class FragmentViewPagerPersonas extends Fragment {
         this.mTipo = getArguments().getString(BUNDLE_TIPO);
         gestor = GestorDatos.getGestor(getActivity());
         setHasOptionsMenu(true);
-        BusProvider.getBus().register(this);
     }
 
     @Nullable
@@ -80,7 +81,7 @@ public class FragmentViewPagerPersonas extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_lista_personas, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         loadView();
         return rootView;
     }
@@ -118,6 +119,7 @@ public class FragmentViewPagerPersonas extends Fragment {
                 adaptadorPersonas.desactivarModoEliminacion();
                 desactivarModoEliminacion();
                 inicializarMensajeVacio();
+                mostrarTotal();
             } else {
                 Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
             }
@@ -176,6 +178,13 @@ public class FragmentViewPagerPersonas extends Fragment {
                 }
             }
         });
+
+        adaptadorPersonas.setOnDeudaModificadaListener(new AdaptadorPersonas.OnDeudaModificadaListener() {
+            @Override
+            public void onDeudaModificada(float totalActualizado) {
+                mostrarTotal();
+            }
+        });
     }
 
     private void inicializarMensajeVacio() {
@@ -199,7 +208,9 @@ public class FragmentViewPagerPersonas extends Fragment {
     }
 
     private void mostrarTotal() {
-        tvCantidad.setText(adaptadorPersonas.obtenerTotal());
+
+        float total = adaptadorPersonas.obtenerTotal();
+        tvCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",") + " €");
 
         String texto;
         switch (mTipo) {
@@ -215,6 +226,8 @@ public class FragmentViewPagerPersonas extends Fragment {
         }
 
         tvTotal.setText(texto);
+        ColorManager.pintarColorDeuda(llBarraTotal, total);
+        llBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
     }
 
     private void setMenuEliminar() {
@@ -293,14 +306,9 @@ public class FragmentViewPagerPersonas extends Fragment {
         }
     }
 
-    @Subscribe
-    public void onEventoDeudaModificada(EventoDeudaModificada evento) {
-        mostrarTotal();
-    }
-
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        BusProvider.getBus().unregister(this);
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

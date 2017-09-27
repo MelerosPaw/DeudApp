@@ -39,6 +39,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     private ContextualMenuInterface contextualMenuInterface;
     private OnItemClickListener itemClickListener;
     private OnPersonaSeleccionadaListener onPersonaSeleccionadaListener;
+    private OnDeudaModificadaListener onDeudaModificadaListener;
 
     public AdaptadorPersonas(Activity context, List<Persona> datos, String tipo) {
         this.context = context;
@@ -163,7 +164,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         notifyItemChanged(posicion);
     }
 
-    public String obtenerTotal() {
+    public float obtenerTotal() {
         float total = 0;
         for (Persona persona : mDatos) {
             for (Entidad entidad: persona.getEntidades()) {
@@ -171,7 +172,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
             }
         }
 
-        return DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",");
+        return total;
     }
 
     public void setContextualMenuInterface(ContextualMenuInterface interfaz) {
@@ -184,6 +185,10 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
 
     public void setOnPersonaSeleccionadaListener(OnPersonaSeleccionadaListener onPersonaSeleccionadaListener) {
         this.onPersonaSeleccionadaListener = onPersonaSeleccionadaListener;
+    }
+
+    public void setOnDeudaModificadaListener(OnDeudaModificadaListener onDeudaModificadaListener) {
+        this.onDeudaModificadaListener = onDeudaModificadaListener;
     }
 
     @Override
@@ -204,6 +209,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
             Persona persona = evento.getPersona();
             gestor.recargarPersona(persona);
             modificarItemPersona(persona);
+            onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
         }
     }
 
@@ -230,6 +236,10 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     public interface OnPersonaSeleccionadaListener {
         void personaSeleccionada(boolean activarModoEliminacion);
         void personaDeseleccionada(boolean desactivarModoEliminacion);
+    }
+
+    public interface OnDeudaModificadaListener {
+        void onDeudaModificada(float totalActualizado);
     }
 
 

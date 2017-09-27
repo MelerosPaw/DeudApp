@@ -53,6 +53,7 @@ import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
+import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.StringUtils;
 
@@ -206,17 +207,19 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void cargarColorTotal() {
 
-        @ColorRes int colorId;
+        ColorManager.pintarColorDeuda(llBarraTotal, persona.getCantidadTotal());
 
-        if (persona.getCantidadTotal() < 0) {
-            colorId = R.color.light_red;
-        } else if (persona.getCantidadTotal() > 0) {
-            colorId = R.color.light_green;
-        } else {
-            colorId = R.color.light_blue;
-        }
-
-        llBarraTotal.setBackgroundColor(ContextCompat.getColor(this, colorId));
+//        @ColorRes int colorId;
+//
+//        if (persona.getCantidadTotal() < 0) {
+//            colorId = R.color.light_red;
+//        } else if (persona.getCantidadTotal() > 0) {
+//            colorId = R.color.light_green;
+//        } else {
+//            colorId = R.color.light_blue;
+//        }
+//
+//        llBarraTotal.setBackgroundColor(ContextCompat.getColor(this, colorId));
     }
 
     private void mostrarTotal() {
