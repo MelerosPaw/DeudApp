@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import melerospaw.deudapp.BuildConfig;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.memoryutil.Path;
@@ -69,7 +70,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             throw new RuntimeException(e);
         }
 
-        cargarDatosPrueba();
+        if (BuildConfig.DEBUG) {
+            cargarDatosPrueba();
+        }
     }
 
 
