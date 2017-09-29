@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import melerospaw.deudapp.R;
@@ -24,9 +24,9 @@ public class DialogoCambiarNombre extends DialogFragment {
     public static final String BUNDLE_PERSONA = "BUNDLE_PERSONA";
     public static final String BUNDLE_POSICION = "BUNDLE_POSICION";
 
-    @Bind(R.id.fl_loading_view) FrameLayout flLoadingView;
-    @Bind(R.id.tv_mensaje)      TextView tvMensaje;
-    @Bind(R.id.et_nombre)       EditText etNombre;
+    @BindView(R.id.fl_loading_view) FrameLayout flLoadingView;
+    @BindView(R.id.tv_mensaje)      TextView tvMensaje;
+    @BindView(R.id.et_nombre)       EditText etNombre;
 
     private GestorDatos gestor;
     private Persona persona;

@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import melerospaw.deudapp.R;
@@ -43,13 +43,13 @@ public class ActivityNuevaEntidad extends AppCompatActivity {
     public static final String RESULT_ENTITIES_ADDED = "ENTITIES_ADDED";
     public static final int PERMISO_CONTACTOS = 0;
 
-    @Bind(R.id.toolbar)                 Toolbar toolbar;
-    @Bind(R.id.ll_seccion_personas)     LinearLayout llSeccionPersonas;
-    @Bind(R.id.tv_personas_vacias)      TextView tvPersonasVacias;
-    @Bind(R.id.rv_personas)             RecyclerView rvPersonas;
-    @Bind(R.id.tv_entidades_vacias)     TextView tvEntidadesVacias;
-    @Bind(R.id.rv_conceptosCantidades)  RecyclerView rvConceptosCantidades;
-    @Bind(R.id.btn_guardar)             Button btnGuardar;
+    @BindView(R.id.toolbar)                 Toolbar toolbar;
+    @BindView(R.id.ll_seccion_personas)     LinearLayout llSeccionPersonas;
+    @BindView(R.id.tv_personas_vacias)      TextView tvPersonasVacias;
+    @BindView(R.id.rv_personas)             RecyclerView rvPersonas;
+    @BindView(R.id.tv_entidades_vacias)     TextView tvEntidadesVacias;
+    @BindView(R.id.rv_conceptosCantidades)  RecyclerView rvConceptosCantidades;
+    @BindView(R.id.btn_guardar)             Button btnGuardar;
 
     private GestorDatos gestor;
     private AdaptadorPersonasNuevas adaptadorNuevaPersona;

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import melerospaw.deudapp.R;
@@ -91,14 +91,14 @@ public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEnt
      */
     class ViewHolder extends ContextRecyclerView.ViewHolder {
 
-        @Bind(R.id.cv_item)             LinearLayout cvItem;
-        @Bind(R.id.tv_fecha)            TextView tvFecha;
-        @Bind(R.id.tv_concepto)         TextView tvConcepto;
-        @Bind(R.id.tv_cantidad)         TextView tvCantidad;
-        @Bind(R.id.ll_opciones_entidad) LinearLayout llOpcionesEntidad;
-        @Bind(R.id.tv_aumentar)         TextView tvAumentar;
-        @Bind(R.id.tv_descontar)        TextView tvDescontar;
-        @Bind(R.id.tv_cancelar)         TextView tvCancelar;
+        @BindView(R.id.cv_item)             LinearLayout cvItem;
+        @BindView(R.id.tv_fecha)            TextView tvFecha;
+        @BindView(R.id.tv_concepto)         TextView tvConcepto;
+        @BindView(R.id.tv_cantidad)         TextView tvCantidad;
+        @BindView(R.id.ll_opciones_entidad) LinearLayout llOpcionesEntidad;
+        @BindView(R.id.tv_aumentar)         TextView tvAumentar;
+        @BindView(R.id.tv_descontar)        TextView tvDescontar;
+        @BindView(R.id.tv_cancelar)         TextView tvCancelar;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -144,7 +144,6 @@ public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEnt
         public void onViewClicked(View view) {
             switch (view.getId()) {
                 case R.id.cv_item:
-//                    v.showContextMenu();
                     toggleOptions();
                     break;
                 case R.id.tv_aumentar:
@@ -160,7 +159,7 @@ public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEnt
         }
 
         private void toggleOptions() {
-            if(callback.sizeAboutToChange()) {
+            if (callback.sizeAboutToChange()) {
                 elementosAbiertos.put(getAdapterPosition(), !elementosAbiertos.get(getAdapterPosition()));
                 mostrarOpciones();
             }

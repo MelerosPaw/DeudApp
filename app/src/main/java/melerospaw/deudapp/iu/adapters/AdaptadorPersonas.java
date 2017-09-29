@@ -17,11 +17,12 @@ import com.squareup.otto.Subscribe;
 import java.util.LinkedList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
+import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
@@ -38,6 +39,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     private ContextualMenuInterface contextualMenuInterface;
     private OnItemClickListener itemClickListener;
     private OnPersonaSeleccionadaListener onPersonaSeleccionadaListener;
+    private OnDeudaModificadaListener onDeudaModificadaListener;
 
     public AdaptadorPersonas(Activity context, List<Persona> datos, String tipo) {
         this.context = context;
@@ -162,6 +164,17 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         notifyItemChanged(posicion);
     }
 
+    public float obtenerTotal() {
+        float total = 0;
+        for (Persona persona : mDatos) {
+            for (Entidad entidad: persona.getEntidades()) {
+                total += entidad.getCantidad();
+            }
+        }
+
+        return total;
+    }
+
     public void setContextualMenuInterface(ContextualMenuInterface interfaz) {
         this.contextualMenuInterface = interfaz;
     }
@@ -172,6 +185,10 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
 
     public void setOnPersonaSeleccionadaListener(OnPersonaSeleccionadaListener onPersonaSeleccionadaListener) {
         this.onPersonaSeleccionadaListener = onPersonaSeleccionadaListener;
+    }
+
+    public void setOnDeudaModificadaListener(OnDeudaModificadaListener onDeudaModificadaListener) {
+        this.onDeudaModificadaListener = onDeudaModificadaListener;
     }
 
     @Override
@@ -192,6 +209,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
             Persona persona = evento.getPersona();
             gestor.recargarPersona(persona);
             modificarItemPersona(persona);
+            onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
         }
     }
 
@@ -220,6 +238,10 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         void personaDeseleccionada(boolean desactivarModoEliminacion);
     }
 
+    public interface OnDeudaModificadaListener {
+        void onDeudaModificada(float totalActualizado);
+    }
+
 
 
     /**
@@ -227,9 +249,9 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
      */
     class PersonViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.tv_nombre)           TextView tvNombre;
-        @Bind(R.id.tv_deudaRestante)    TextView tvDeudaRestante;
-        @Bind(R.id.iv_letra)            ImageView ivLetra;
+        @BindView(R.id.tv_nombre)           TextView tvNombre;
+        @BindView(R.id.tv_deudaRestante)    TextView tvDeudaRestante;
+        @BindView(R.id.iv_letra)            ImageView ivLetra;
 
         private View item;
 

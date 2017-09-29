@@ -21,18 +21,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import melerospaw.deudapp.BuildConfig;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.memoryutil.Path;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-    public static final String TAG = DatabaseHelper.class.getSimpleName();
-    private static DatabaseHelper helper;
+    private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "DeudApp.sqlite";
     private static final int DATABASE_VERSION = 1;
     private final Path.Builder RUTA_CARPETA_IMAGENES;
 
+    private static DatabaseHelper helper;
     private Dao<Persona, String> personaDao;
     private Dao<Entidad, Integer> entidadDao;
 
@@ -69,7 +70,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             throw new RuntimeException(e);
         }
 
-        cargarDatosPrueba();
+        if (BuildConfig.DEBUG) {
+            cargarDatosPrueba();
+        }
     }
 
 

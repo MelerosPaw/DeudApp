@@ -12,7 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import melerospaw.deudapp.R;
@@ -22,7 +22,7 @@ public class MenuContextualPersona extends DialogFragment {
     public static final String BUNDLE_NOMBRE_PERSONA = "persona";
     public static final String TAG = MenuContextualPersona.class.getSimpleName();
 
-    @Bind(R.id.tv_titulo)           TextView tvTitulo;
+    @BindView(R.id.tv_titulo)           TextView tvTitulo;
 
     private MenuContextualPersonaCallback callback;
     private String nombrePersona;

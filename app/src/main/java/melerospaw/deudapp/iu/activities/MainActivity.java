@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.adapters.ViewPagerAdapter;
@@ -23,9 +23,9 @@ import static melerospaw.deudapp.R.id.tv_nombre;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Bind(R.id.toolbar)     Toolbar toolbar;
-    @Bind(R.id.tabs)        TabLayout tabs;
-    @Bind(R.id.viewPager)   ViewPager viewPager;
+    @BindView(R.id.toolbar)     Toolbar toolbar;
+    @BindView(R.id.tabs)        TabLayout tabs;
+    @BindView(R.id.viewPager)   ViewPager viewPager;
 
     private CharSequence tabSeleccionada;
     private boolean isRestoring;

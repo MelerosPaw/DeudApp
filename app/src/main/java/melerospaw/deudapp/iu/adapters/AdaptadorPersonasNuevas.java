@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
@@ -89,7 +89,7 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
     /**VIEWHOLDER*/
     class ViewHolder extends RecyclerView.ViewHolder{
 
-        @Bind(R.id.actv_persona)    AutoCompleteTextView actvAcreedor;
+        @BindView(R.id.actv_persona)    AutoCompleteTextView actvAcreedor;
 
         private Persona persona;
 
