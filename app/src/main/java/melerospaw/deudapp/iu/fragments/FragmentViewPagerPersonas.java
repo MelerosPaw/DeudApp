@@ -1,6 +1,8 @@
 package melerospaw.deudapp.iu.fragments;
 
+import android.animation.LayoutTransition;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -9,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ViewUtils;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
@@ -18,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,6 +31,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import melerospaw.deudapp.BuildConfig;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
@@ -47,7 +52,10 @@ public class FragmentViewPagerPersonas extends Fragment {
     @BindView(R.id.rv_personas)     RecyclerView rvPersonas;
     @BindView(R.id.tv_vacio)        TextView tvVacio;
     @BindView(R.id.ll_barra_total)  LinearLayout llBarraTotal;
+    @BindView(R.id.fl_total)        FrameLayout flTotal;
     @BindView(R.id.tv_total)        TextView tvTotal;
+    @BindView(R.id.ll_subtotal)     LinearLayout llSubtotal;
+    @BindView(R.id.tv_subtotal)     TextView tvSubtotal;
     @BindView(R.id.tv_cantidad)     TextView tvCantidad;
 
     private GestorDatos gestor;
@@ -92,6 +100,10 @@ public class FragmentViewPagerPersonas extends Fragment {
         inicializarMensajeVacio();
         desactivarModoEliminacion();
         mostrarTotal();
+        if (Build.VERSION.SDK_INT >= 16) {
+            llSubtotal.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
+            flTotal.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
+        }
     }
 
     @Override
@@ -126,6 +138,7 @@ public class FragmentViewPagerPersonas extends Fragment {
                 break;
             case R.id.menu_seleccionar_todo:
                 adaptadorPersonas.seleccionarTodo();
+                mostrarSubtotal();
                 break;
             case R.id.menu_deseleccionar:
                 adaptadorPersonas.deseleccionarTodo();
@@ -241,19 +254,23 @@ public class FragmentViewPagerPersonas extends Fragment {
         tvTotal.setText(texto);
         ColorManager.pintarColorDeuda(llBarraTotal, total);
         llBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
+        llSubtotal.getLayoutParams().width = 0;
     }
 
     private void mostrarSubtotal() {
-        List<Persona> marcados = adaptadorPersonas.obtenerMarcados();
-        float total = 0;
 
+        float total = adaptadorPersonas.obtenerTotal();
+        float subtotal = 0;
+
+        List<Persona> marcados = adaptadorPersonas.obtenerMarcados();
         for (Persona persona : marcados) {
-            total += persona.getCantidadTotal();
+            subtotal += persona.getCantidadTotal();
         }
 
-        tvTotal.setText("Total seleccionado:");
-        tvCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",") + "  € / " +
-        DecimalFormatUtils.decimalToStringIfZero(adaptadorPersonas.obtenerTotal(), 2, ".", ",") + " €");
+        tvTotal.setText("Total seleccionado");
+        tvSubtotal.setText(DecimalFormatUtils.decimalToStringIfZero(subtotal, 2, ".", ","));
+        tvCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",") + " €");
+        llSubtotal.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
     }
 
     private void setMenuEliminar() {
