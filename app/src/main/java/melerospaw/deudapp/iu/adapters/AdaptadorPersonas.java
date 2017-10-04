@@ -150,10 +150,20 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         return false;
     }
 
-    private void deseleccionarTodo() {
+    public void deseleccionarTodo() {
         for (int i = 0; i < mDatos.size(); i++) {
             if (seleccionados.get(i)) {
                 seleccionados.put(i, false);
+                notifyItemChanged(i);
+            }
+        }
+        modoEliminarActivado = false;
+    }
+
+    public void seleccionarTodo() {
+        for (int i = 0; i < mDatos.size(); i++) {
+            if (!seleccionados.get(i)) {
+                seleccionados.put(i, true);
                 notifyItemChanged(i);
             }
         }
@@ -167,9 +177,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     public float obtenerTotal() {
         float total = 0;
         for (Persona persona : mDatos) {
-            for (Entidad entidad: persona.getEntidades()) {
-                total += entidad.getCantidad();
-            }
+            total += persona.getCantidadTotal();
         }
 
         return total;

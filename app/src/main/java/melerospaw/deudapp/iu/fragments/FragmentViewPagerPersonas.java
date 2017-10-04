@@ -31,7 +31,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.activities.ActivityDetallePersona;
-import melerospaw.deudapp.iu.activities.ActivityNuevaEntidad;
+import melerospaw.deudapp.iu.activities.ActivityNuevasEntidades;
 import melerospaw.deudapp.iu.adapters.AdaptadorPersonas;
 import melerospaw.deudapp.iu.dialogs.DialogoCambiarNombre;
 import melerospaw.deudapp.iu.dialogs.MenuContextualPersona;
@@ -107,25 +107,35 @@ public class FragmentViewPagerPersonas extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-        if (id == R.id.nueva) {
-            ActivityNuevaEntidad.start(getContext());
-        } else if (id == R.id.menu_opcion_eliminar) {
-            List<Persona> personasMarcadas = adaptadorPersonas.obtenerMarcados();
-            boolean eliminados = gestor.eliminarPersonas(personasMarcadas);
-            if (eliminados) {
-                adaptadorPersonas.eliminar(personasMarcadas);
-                adaptadorPersonas.desactivarModoEliminacion();
+        switch (item.getItemId()) {
+            case R.id.nueva:
+                ActivityNuevasEntidades.start(getContext());
+                break;
+            case R.id.menu_opcion_eliminar:
+                List<Persona> personasMarcadas = adaptadorPersonas.obtenerMarcados();
+                boolean eliminados = gestor.eliminarPersonas(personasMarcadas);
+                if (eliminados) {
+                    adaptadorPersonas.eliminar(personasMarcadas);
+                    adaptadorPersonas.desactivarModoEliminacion();
+                    desactivarModoEliminacion();
+                    inicializarMensajeVacio();
+                    mostrarTotal();
+                } else {
+                    Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.menu_seleccionar_todo:
+                adaptadorPersonas.seleccionarTodo();
+                break;
+            case R.id.menu_deseleccionar:
+                adaptadorPersonas.deseleccionarTodo();
                 desactivarModoEliminacion();
-                inicializarMensajeVacio();
-                mostrarTotal();
-            } else {
-                Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
-            }
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return id == R.id.nueva || id == R.id.menu_opcion_eliminar;
+        return true;
     }
 
     private void cargarPersonas() {
@@ -169,12 +179,15 @@ public class FragmentViewPagerPersonas extends Fragment {
                 if (activarModoEliminacion) {
                     activarModoEliminacion();
                 }
+                mostrarSubtotal();
             }
 
             @Override
             public void personaDeseleccionada(boolean desactivarModoEliminacion) {
                 if (desactivarModoEliminacion) {
                     desactivarModoEliminacion();
+                } else {
+                    mostrarSubtotal();
                 }
             }
         });
@@ -230,6 +243,19 @@ public class FragmentViewPagerPersonas extends Fragment {
         llBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
     }
 
+    private void mostrarSubtotal() {
+        List<Persona> marcados = adaptadorPersonas.obtenerMarcados();
+        float total = 0;
+
+        for (Persona persona : marcados) {
+            total += persona.getCantidadTotal();
+        }
+
+        tvTotal.setText("Total seleccionado:");
+        tvCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",") + "  € / " +
+        DecimalFormatUtils.decimalToStringIfZero(adaptadorPersonas.obtenerTotal(), 2, ".", ",") + " €");
+    }
+
     private void setMenuEliminar() {
         menu.clear();
         getActivity().getMenuInflater().inflate(R.menu.menu_eliminar, menu);
@@ -239,6 +265,7 @@ public class FragmentViewPagerPersonas extends Fragment {
         if (menu != null) {
             modoEliminar = false;
             setMenuNormal();
+            mostrarTotal();
         }
     }
 

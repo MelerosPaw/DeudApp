@@ -66,8 +66,6 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
         focus = true;
     }
 
-
-    /**Returns every Acreedor with name assigned in the RV*/
     public List<Persona> getPersonas() {
         List<Persona> personas = new ArrayList<>();
 
@@ -81,6 +79,18 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
 
     public boolean hayAlguien() {
         return !getPersonas().isEmpty();
+    }
+
+    public boolean hayNombresRepetidos() {
+        int size = mDatos.size();
+        for (int i = 0; i < size; i++) {
+            for (int j = size - 1; j > i; j--) {
+                if (mDatos.get(i).getNombre().equals(mDatos.get(j).getNombre())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 
@@ -129,9 +139,7 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
         public void cerrarEdicion(boolean hasFocus) {
             if (!hasFocus){
                 String nombre = actvAcreedor.getText().toString();
-                if (!StringUtils.isCadenaVacia(nombre)) {
-                    persona.setNombre(nombre);
-                }
+                persona.setNombre(nombre);
             }
         }
     }

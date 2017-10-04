@@ -34,7 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:drawableTop="@android:drawable/ic_input_add"
+                android:drawableTop="@drawable/ic_nueva_persona"
+                android:textColor="@android:color/white"
                 android:text="@string/nueva_persona" />
 
         </LinearLayout>
@@ -86,7 +87,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:drawableTop="@android:drawable/ic_input_add"
+                android:drawableTop="@drawable/ic_deuda"
+                android:textColor="@android:color/white"
                 android:text="@string/nueva_deuda" />
 
             <View
@@ -107,7 +109,8 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:drawableTop="@android:drawable/ic_input_add"
+                android:drawableTop="@drawable/ic_derecho_cobro"
+                android:textColor="@android:color/white"
                 android:text="@string/nuevo_derecho_de_cobro" />
 
         </LinearLayout>

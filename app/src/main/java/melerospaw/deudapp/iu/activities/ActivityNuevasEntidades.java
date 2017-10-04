@@ -36,7 +36,7 @@ import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
 
-public class ActivityNuevaEntidad extends AppCompatActivity {
+public class ActivityNuevasEntidades extends AppCompatActivity {
 
     public static final String BUNDLE_PERSONA = "PERSONA";
     public static final int REQUEST_CODE_ADD_ENTITIES = 1;
@@ -61,14 +61,14 @@ public class ActivityNuevaEntidad extends AppCompatActivity {
     private @Persona.TipoPersona int tipoPersona;
 
     public static void start(Context context) {
-        Intent starter = new Intent(context, ActivityNuevaEntidad.class);
+        Intent starter = new Intent(context, ActivityNuevasEntidades.class);
         context.startActivity(starter);
     }
 
     public static void startForResult(AppCompatActivity activity, Persona persona) {
-        Intent intent = new Intent(activity, ActivityNuevaEntidad.class);
-        intent.putExtra(ActivityNuevaEntidad.BUNDLE_PERSONA, persona);
-        activity.startActivityForResult(intent, ActivityNuevaEntidad.REQUEST_CODE_ADD_ENTITIES);
+        Intent intent = new Intent(activity, ActivityNuevasEntidades.class);
+        intent.putExtra(ActivityNuevasEntidades.BUNDLE_PERSONA, persona);
+        activity.startActivityForResult(intent, ActivityNuevasEntidades.REQUEST_CODE_ADD_ENTITIES);
     }
 
     @Override
@@ -204,9 +204,7 @@ public class ActivityNuevaEntidad extends AppCompatActivity {
 
     private void iniciarProcesoGuardado() {
         clearFocus();
-        if (!sePuedeGuardar()) {
-            Snackbar.make(rvConceptosCantidades, R.string.faltan_datos, Snackbar.LENGTH_LONG).show();
-        } else {
+        if (sePuedeGuardar()) {
             inferirTipoPersona();
             guardar();
         }
@@ -229,11 +227,38 @@ public class ActivityNuevaEntidad extends AppCompatActivity {
     }
 
     public boolean sePuedeGuardar() {
+
+        boolean sePuedeGuardar;
+
         if (isForResult) {
-            return adaptadorEntidades.hayAlgo();
+            if (!adaptadorEntidades.hayAlgo()){
+                Snackbar.make(rvConceptosCantidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
+                sePuedeGuardar = false;
+            } else if (adaptadorEntidades.hayEntidadesIncompletas()) {
+                Snackbar.make(rvConceptosCantidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
+                sePuedeGuardar = false;
+            } else {
+                return true;
+            }
         } else {
-            return adaptadorNuevaPersona.hayAlguien() && adaptadorEntidades.hayAlgo();
+            if (!adaptadorNuevaPersona.hayAlguien()) {
+                Snackbar.make(rvConceptosCantidades, "No has añadido ninguna persona", Snackbar.LENGTH_LONG).show();
+                sePuedeGuardar = false;
+            } else if (adaptadorNuevaPersona.hayNombresRepetidos()) {
+                Snackbar.make(rvConceptosCantidades, "Has añadido más de una vez la misma persona", Snackbar.LENGTH_LONG).show();
+                sePuedeGuardar = false;
+            } else if (!adaptadorEntidades.hayAlgo()) {
+                Snackbar.make(rvConceptosCantidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
+                sePuedeGuardar = false;
+            } else if (adaptadorEntidades.hayEntidadesIncompletas()) {
+                Snackbar.make(rvConceptosCantidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
+                sePuedeGuardar = false;
+            } else {
+                sePuedeGuardar = true;
+            }
         }
+
+        return sePuedeGuardar;
     }
 
     private void inferirTipoPersona() {

@@ -41,7 +41,7 @@
     <string name="nuevo_derecho_de_cobro">Nuevo derecho de cobro</string>
     <string name="nueva_persona">Nueva persona</string>
     <string name="entidades_vacio">Añade una deduda seleccionando NUEVA DEUDA o NUEVO DERECHO DE COBRO.</string>
-    <string name="personas_vacio">Añade una persona seleccionando NUEVA PERSONA .</string>
+    <string name="personas_vacio">Añade una persona seleccionando NUEVA PERSONA.</string>
     <string name="nombre">Nombre</string>
     <string name="anadir_deuda">Añadir deuda</string>
     <string name="faltan_datos">Faltan datos por especificar.</string>
@@ -66,5 +66,7 @@
     <string name="mensaje_dialogo_cambiar_nombre">Introduce un nuevo nombre para %1$s:</string>
     <string name="total_debido">Total debido</string>
     <string name="total_adeudado">Total adeudado</string>
+    <string name="deseleccionar_todo">Deseleccionar todo</string>
+    <string name="sseleccionar_todo">Seleccionar todo</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
 import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -17,7 +16,6 @@ import android.support.transition.TransitionManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -287,7 +285,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 navigateBack();
                 break;
             case R.id.nueva:
-                ActivityNuevaEntidad.startForResult(this, persona);
+                ActivityNuevasEntidades.startForResult(this, persona);
                 break;
             case R.id.imagen:
                 buscarImagen();
@@ -492,7 +490,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == RC_FOTO) {
                 procesarResultFoto(data);
-            } else if (requestCode == ActivityNuevaEntidad.REQUEST_CODE_ADD_ENTITIES){
+            } else if (requestCode == ActivityNuevasEntidades.REQUEST_CODE_ADD_ENTITIES){
                 procesarResultNuevasDeudas(data);
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
@@ -517,7 +515,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     private void procesarResultNuevasDeudas(Intent data) {
         gestor.recargarPersona(persona);
-        actualizarLista((ArrayList<Entidad>) data.getSerializableExtra(ActivityNuevaEntidad.RESULT_ENTITIES_ADDED));
+        actualizarLista((ArrayList<Entidad>) data.getSerializableExtra(ActivityNuevasEntidades.RESULT_ENTITIES_ADDED));
         BusProvider.getBus().post(new EventoDeudaModificada(persona));
     }
 
