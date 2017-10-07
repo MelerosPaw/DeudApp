@@ -22,7 +22,6 @@ import butterknife.ButterKnife;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
-import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
@@ -126,19 +125,14 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         notifyItemInserted(mDatos.size() - 1);
     }
 
-    private void seleccionarItem(ImageView v, String text, int color) {
-        TextDrawable drawable = TextDrawable.builder()
-                .beginConfig()
-                .endConfig()
-                .buildRound(text, color);
-        v.setImageDrawable(drawable);
-    }
-
     public void eliminarPersona(Persona persona) {
         int posicion = mDatos.indexOf(persona);
         if (posicion != -1) {
             mDatos.remove(persona);
             notifyItemRemoved(posicion);
+        }
+        if (getItemCount() == 0) {
+            desactivarModoEliminacion();
         }
     }
 
@@ -150,10 +144,20 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         return false;
     }
 
-    private void deseleccionarTodo() {
+    public void deseleccionarTodo() {
         for (int i = 0; i < mDatos.size(); i++) {
             if (seleccionados.get(i)) {
                 seleccionados.put(i, false);
+                notifyItemChanged(i);
+            }
+        }
+        modoEliminarActivado = false;
+    }
+
+    public void seleccionarTodo() {
+        for (int i = 0; i < mDatos.size(); i++) {
+            if (!seleccionados.get(i)) {
+                seleccionados.put(i, true);
                 notifyItemChanged(i);
             }
         }
@@ -167,12 +171,21 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     public float obtenerTotal() {
         float total = 0;
         for (Persona persona : mDatos) {
-            for (Entidad entidad: persona.getEntidades()) {
-                total += entidad.getCantidad();
-            }
+            total += persona.getCantidadTotal();
         }
 
         return total;
+    }
+
+    public float obtenerSubtotal() {
+        float subtotal = 0;
+
+        List<Persona> marcados = obtenerMarcados();
+        for (Persona persona : marcados) {
+            subtotal += persona.getCantidadTotal();
+        }
+
+        return subtotal;
     }
 
     public void setContextualMenuInterface(ContextualMenuInterface interfaz) {
@@ -346,6 +359,14 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
             if (onPersonaSeleccionadaListener != null) {
                 onPersonaSeleccionadaListener.personaSeleccionada(true);
             }
+        }
+
+        private void seleccionarItem(ImageView v, String text, int color) {
+            TextDrawable drawable = TextDrawable.builder()
+                    .beginConfig()
+                    .endConfig()
+                    .buildRound(text, color);
+            v.setImageDrawable(drawable);
         }
     }
 }

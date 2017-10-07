@@ -78,8 +78,12 @@ public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEnti
         return entidades;
     }
 
+    public boolean hayEntidadesIncompletas() {
+        return getEntidades().size() != mData.size();
+    }
+
     public boolean hayAlgo() {
-        return !getEntidades().isEmpty();
+        return !mData.isEmpty();
     }
 
     public boolean hayDeudas() {
@@ -159,6 +163,8 @@ public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEnti
                     String concepto = etConcepto.getText().toString();
                     if (!StringUtils.isCadenaVacia(concepto)) {
                         entidad.setConcepto(concepto);
+                    } else {
+                        entidad.setConcepto(null);
                     }
                 } else if (v.getId() == R.id.et_cantidad) {
                     String cantidad = etCantidad.getText().toString().replaceAll(",", ".");

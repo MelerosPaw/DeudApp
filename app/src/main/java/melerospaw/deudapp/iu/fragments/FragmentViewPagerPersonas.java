@@ -1,6 +1,8 @@
 package melerospaw.deudapp.iu.fragments;
 
+import android.animation.LayoutTransition;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -18,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,7 +34,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.activities.ActivityDetallePersona;
-import melerospaw.deudapp.iu.activities.ActivityNuevaEntidad;
+import melerospaw.deudapp.iu.activities.ActivityNuevasEntidades;
 import melerospaw.deudapp.iu.adapters.AdaptadorPersonas;
 import melerospaw.deudapp.iu.dialogs.DialogoCambiarNombre;
 import melerospaw.deudapp.iu.dialogs.MenuContextualPersona;
@@ -47,7 +50,10 @@ public class FragmentViewPagerPersonas extends Fragment {
     @BindView(R.id.rv_personas)     RecyclerView rvPersonas;
     @BindView(R.id.tv_vacio)        TextView tvVacio;
     @BindView(R.id.ll_barra_total)  LinearLayout llBarraTotal;
+    @BindView(R.id.fl_total)        FrameLayout flTotal;
     @BindView(R.id.tv_total)        TextView tvTotal;
+    @BindView(R.id.ll_subtotal)     LinearLayout llSubtotal;
+    @BindView(R.id.tv_subtotal)     TextView tvSubtotal;
     @BindView(R.id.tv_cantidad)     TextView tvCantidad;
 
     private GestorDatos gestor;
@@ -92,6 +98,10 @@ public class FragmentViewPagerPersonas extends Fragment {
         inicializarMensajeVacio();
         desactivarModoEliminacion();
         mostrarTotal();
+        if (Build.VERSION.SDK_INT >= 16) {
+            llSubtotal.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
+            flTotal.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
+        }
     }
 
     @Override
@@ -107,25 +117,36 @@ public class FragmentViewPagerPersonas extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-        if (id == R.id.nueva) {
-            ActivityNuevaEntidad.start(getContext());
-        } else if (id == R.id.menu_opcion_eliminar) {
-            List<Persona> personasMarcadas = adaptadorPersonas.obtenerMarcados();
-            boolean eliminados = gestor.eliminarPersonas(personasMarcadas);
-            if (eliminados) {
-                adaptadorPersonas.eliminar(personasMarcadas);
-                adaptadorPersonas.desactivarModoEliminacion();
+        switch (item.getItemId()) {
+            case R.id.nueva:
+                ActivityNuevasEntidades.start(getContext());
+                break;
+            case R.id.menu_opcion_eliminar:
+                List<Persona> personasMarcadas = adaptadorPersonas.obtenerMarcados();
+                boolean eliminados = gestor.eliminarPersonas(personasMarcadas);
+                if (eliminados) {
+                    adaptadorPersonas.eliminar(personasMarcadas);
+                    adaptadorPersonas.desactivarModoEliminacion();
+                    desactivarModoEliminacion();
+                    inicializarMensajeVacio();
+                    mostrarTotal();
+                } else {
+                    Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.menu_seleccionar_todo:
+                adaptadorPersonas.seleccionarTodo();
+                mostrarSubtotal();
+                break;
+            case R.id.menu_deseleccionar:
+                adaptadorPersonas.deseleccionarTodo();
                 desactivarModoEliminacion();
-                inicializarMensajeVacio();
-                mostrarTotal();
-            } else {
-                Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
-            }
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return id == R.id.nueva || id == R.id.menu_opcion_eliminar;
+        return true;
     }
 
     private void cargarPersonas() {
@@ -169,12 +190,15 @@ public class FragmentViewPagerPersonas extends Fragment {
                 if (activarModoEliminacion) {
                     activarModoEliminacion();
                 }
+                mostrarSubtotal();
             }
 
             @Override
             public void personaDeseleccionada(boolean desactivarModoEliminacion) {
                 if (desactivarModoEliminacion) {
                     desactivarModoEliminacion();
+                } else {
+                    mostrarSubtotal();
                 }
             }
         });
@@ -182,7 +206,13 @@ public class FragmentViewPagerPersonas extends Fragment {
         adaptadorPersonas.setOnDeudaModificadaListener(new AdaptadorPersonas.OnDeudaModificadaListener() {
             @Override
             public void onDeudaModificada(float totalActualizado) {
-                mostrarTotal();
+                if (isAdded()) {
+                    if (modoEliminar) {
+                        mostrarSubtotal();
+                    } else {
+                        mostrarTotal();
+                    }
+                }
             }
         });
     }
@@ -228,6 +258,25 @@ public class FragmentViewPagerPersonas extends Fragment {
         tvTotal.setText(texto);
         ColorManager.pintarColorDeuda(llBarraTotal, total);
         llBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
+        llSubtotal.getLayoutParams().width = 0;
+    }
+
+    private void mostrarSubtotal() {
+
+        if (adaptadorPersonas.getItemCount() == 0) {
+            desactivarModoEliminacion();
+            mostrarTotal();
+        } else {
+            float total = adaptadorPersonas.obtenerTotal();
+            float subtotal = adaptadorPersonas.obtenerSubtotal();
+
+            tvTotal.setText("Total seleccionado");
+            tvSubtotal.setText(DecimalFormatUtils.decimalToStringIfZero(subtotal, 2, ".", ","));
+            tvCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",") + " €");
+            ColorManager.pintarColorDeuda(llBarraTotal, total);
+            llBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
+            llSubtotal.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        }
     }
 
     private void setMenuEliminar() {
@@ -239,6 +288,7 @@ public class FragmentViewPagerPersonas extends Fragment {
         if (menu != null) {
             modoEliminar = false;
             setMenuNormal();
+            mostrarTotal();
         }
     }
 

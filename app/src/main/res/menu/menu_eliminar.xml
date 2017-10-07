@@ -5,8 +5,22 @@
     <item
         android:id="@+id/menu_opcion_eliminar"
         android:title="@string/eliminar_deudas"
-        android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:orderInCategory="2"
+        android:icon="@drawable/ic_borrar"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_seleccionar_todo"
+        android:title="@string/sseleccionar_todo"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_seleccionar_todo"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_deseleccionar"
+        android:title="@string/deseleccionar_todo"
+        android:orderInCategory="0"
+        android:icon="@drawable/ic_deseleccionar"
+        app:showAsAction="always"/>
 
 </menu>

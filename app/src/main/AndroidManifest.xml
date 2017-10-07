@@ -38,7 +38,7 @@
         </activity>
 
         <activity
-            android:name=".iu.activities.ActivityNuevaEntidad"
+            android:name=".iu.activities.ActivityNuevasEntidades"
             android:label="Deudas nuevas"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
