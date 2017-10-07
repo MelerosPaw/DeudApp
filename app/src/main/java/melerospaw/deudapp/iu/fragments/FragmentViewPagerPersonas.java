@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ViewUtils;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
@@ -31,7 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import melerospaw.deudapp.BuildConfig;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
@@ -208,7 +206,13 @@ public class FragmentViewPagerPersonas extends Fragment {
         adaptadorPersonas.setOnDeudaModificadaListener(new AdaptadorPersonas.OnDeudaModificadaListener() {
             @Override
             public void onDeudaModificada(float totalActualizado) {
-                mostrarTotal();
+                if (isAdded()) {
+                    if (modoEliminar) {
+                        mostrarSubtotal();
+                    } else {
+                        mostrarTotal();
+                    }
+                }
             }
         });
     }
@@ -259,18 +263,20 @@ public class FragmentViewPagerPersonas extends Fragment {
 
     private void mostrarSubtotal() {
 
-        float total = adaptadorPersonas.obtenerTotal();
-        float subtotal = 0;
+        if (adaptadorPersonas.getItemCount() == 0) {
+            desactivarModoEliminacion();
+            mostrarTotal();
+        } else {
+            float total = adaptadorPersonas.obtenerTotal();
+            float subtotal = adaptadorPersonas.obtenerSubtotal();
 
-        List<Persona> marcados = adaptadorPersonas.obtenerMarcados();
-        for (Persona persona : marcados) {
-            subtotal += persona.getCantidadTotal();
+            tvTotal.setText("Total seleccionado");
+            tvSubtotal.setText(DecimalFormatUtils.decimalToStringIfZero(subtotal, 2, ".", ","));
+            tvCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",") + " €");
+            ColorManager.pintarColorDeuda(llBarraTotal, total);
+            llBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
+            llSubtotal.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
         }
-
-        tvTotal.setText("Total seleccionado");
-        tvSubtotal.setText(DecimalFormatUtils.decimalToStringIfZero(subtotal, 2, ".", ","));
-        tvCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",") + " €");
-        llSubtotal.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
     }
 
     private void setMenuEliminar() {

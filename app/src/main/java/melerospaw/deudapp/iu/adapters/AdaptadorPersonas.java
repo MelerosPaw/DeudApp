@@ -22,7 +22,6 @@ import butterknife.ButterKnife;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
-import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
@@ -126,19 +125,14 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         notifyItemInserted(mDatos.size() - 1);
     }
 
-    private void seleccionarItem(ImageView v, String text, int color) {
-        TextDrawable drawable = TextDrawable.builder()
-                .beginConfig()
-                .endConfig()
-                .buildRound(text, color);
-        v.setImageDrawable(drawable);
-    }
-
     public void eliminarPersona(Persona persona) {
         int posicion = mDatos.indexOf(persona);
         if (posicion != -1) {
             mDatos.remove(persona);
             notifyItemRemoved(posicion);
+        }
+        if (getItemCount() == 0) {
+            desactivarModoEliminacion();
         }
     }
 
@@ -181,6 +175,17 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         }
 
         return total;
+    }
+
+    public float obtenerSubtotal() {
+        float subtotal = 0;
+
+        List<Persona> marcados = obtenerMarcados();
+        for (Persona persona : marcados) {
+            subtotal += persona.getCantidadTotal();
+        }
+
+        return subtotal;
     }
 
     public void setContextualMenuInterface(ContextualMenuInterface interfaz) {
@@ -354,6 +359,14 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
             if (onPersonaSeleccionadaListener != null) {
                 onPersonaSeleccionadaListener.personaSeleccionada(true);
             }
+        }
+
+        private void seleccionarItem(ImageView v, String text, int color) {
+            TextDrawable drawable = TextDrawable.builder()
+                    .beginConfig()
+                    .endConfig()
+                    .buildRound(text, color);
+            v.setImageDrawable(drawable);
         }
     }
 }
