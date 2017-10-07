@@ -2,9 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
+
     compileSdkVersion 26
     buildToolsVersion "25.0.3"
-
     defaultConfig {
         applicationId "melerospaw.deudapp"
         minSdkVersion 15
@@ -14,16 +14,25 @@ android {
         vectorDrawables.useSupportLibrary true
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'llavesita'
+            keyPassword 'javier*1237'
+            storeFile file('C:/Users/meler_000/AndroidStudioProjects/store.jks')
+            storePassword 'javier*1237'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
-
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            applicationIdSuffix ".dev"
+//            applicationIdSuffix ".dev"
         }
     }
 }
