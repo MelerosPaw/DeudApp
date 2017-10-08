@@ -14,10 +14,10 @@ public abstract class AnywhereDialog extends Dialog {
     private int yPositionOnScreen;
 
     /**
-     * A view necessary to determine the dialog's position and the listener to get the selected
+     * A itemView necessary to determine the dialog's position and the listener to get the selected
      * option.
      *
-     * @param view  The view to set the dialog's position.
+     * @param view  The itemView to set the dialog's position.
      */
     public AnywhereDialog(View view) {
         super(view.getContext());
@@ -43,7 +43,7 @@ public abstract class AnywhereDialog extends Dialog {
 
 
     /**
-     * Locates the dialog in relation to the view received.
+     * Locates the dialog in relation to the itemView received.
      */
     private void setDialogPosition() {
         int[] viewLocation = new int[2];

@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setTabs() {
 //        tabs.setTabMode(TabLayout.MODE_FIXED);
-//        View view = tabPersonalizada();
-//        tabs.addTab(tabs.newTab().setText("DEBO").setCustomView(view));
+//        View itemView = tabPersonalizada();
+//        tabs.addTab(tabs.newTab().setText("DEBO").setCustomView(itemView));
 //        tabs.addTab(tabs.newTab().setText(ConstantesGenerales.DEBO));
 //        tabs.addTab(tabs.newTab().setText(ConstantesGenerales.ME_DEBEN));
 //        tabs.addTab(tabs.newTab().setText(ConstantesGenerales.AMBOS));

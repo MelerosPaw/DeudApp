@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.j256.ormlite.misc.TransactionManager;
@@ -187,7 +188,7 @@ public class GestorDatos {
      * Recibe una cantidad de deudas y acreedores, los asocia y los guarda. Si algún acreedor no
      * existe, lo crea.
      */
-    public boolean crearEntidadesPersonas(final List<Persona> personas,
+    public boolean crearEntidadesPersonas(final Context context, final List<Persona> personas,
                                           final List<Entidad> entidades,
                                           @Persona.TipoPersona final int tipoPersona) {
 
@@ -211,7 +212,7 @@ public class GestorDatos {
                             nueva = false;
                         }
 
-                        guardado = guardarActualizar(nuevaPersona, nueva, entidades, tipoPersona);
+                        guardado = guardarActualizar(context, nuevaPersona, nueva, entidades, tipoPersona);
                     }
 
                     return guardado;
@@ -229,14 +230,17 @@ public class GestorDatos {
      * Asigna las deudas al acreedor y viceversa, las guarda en la base de datos y después
      * actualiza el acreedor.
      */
-    private boolean guardarActualizar(Persona persona, boolean nuevaPersona, List<Entidad> entidades,
-                                      @Persona.TipoPersona int tipoPersona) {
+    private boolean guardarActualizar(Context context, Persona persona, boolean nuevaPersona,
+                                      List<Entidad> entidades, @Persona.TipoPersona int tipoPersona) {
 
         // Si la persona es nueva, se queda con el tipo inferido de la lista.
         // Si no es nueva, se comprueba lo que era antes y si es necesario, se le cambia.
         if (nuevaPersona) {
             persona.setTipo(tipoPersona);
             databaseHelper.nuevaPersona(persona);
+            if (!TextUtils.isEmpty(persona.getImagen())) {
+                guardarFoto(context, persona, Uri.parse(persona.getImagen()));
+            }
         } else {
             if (persona.getTipo() == Persona.INACTIVO) {
                 persona.setTipo(tipoPersona);
@@ -401,6 +405,7 @@ public class GestorDatos {
             Persona p = new Persona();
             p.setImagen(contacto.getPhotoThumbnailUri());
             p.setNombre(contacto.getName());
+            p.setImagen(contacto.getPhotoUri());
             personas.add(p);
         }
 

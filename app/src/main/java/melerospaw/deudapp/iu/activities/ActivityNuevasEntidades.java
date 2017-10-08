@@ -277,7 +277,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
                 Collections.singletonList(persona) : adaptadorNuevaPersona.getPersonas();
         List<Entidad> entidades = adaptadorEntidades.getEntidades();
 
-        boolean guardados = gestor.crearEntidadesPersonas(personas, entidades, tipoPersona);
+        boolean guardados = gestor.crearEntidadesPersonas(this, personas, entidades, tipoPersona);
 
         if (isForResult) {
             sendCorrectResult(entidades);

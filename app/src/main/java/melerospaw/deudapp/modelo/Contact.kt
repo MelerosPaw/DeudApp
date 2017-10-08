@@ -1,3 +1,3 @@
 package melerospaw.deudapp.modelo
 
-data class Contact(val name : String, val photoThumbnailUri: String?)
+data class Contact(val name : String, val photoThumbnailUri: String?, val photoUri: String?)

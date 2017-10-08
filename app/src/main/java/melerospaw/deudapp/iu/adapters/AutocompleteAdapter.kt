@@ -1,12 +1,16 @@
 package melerospaw.deudapp.iu.adapters
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.amulyakhare.textdrawable.util.ColorGenerator
+import com.bumptech.glide.Glide
 import melerospaw.deudapp.R
 import melerospaw.deudapp.modelo.Persona
+import melerospaw.deudapp.utils.TextDrawableManager
 import java.util.*
 
 
@@ -49,18 +53,28 @@ class AutocompleteAdapter(private val mContext: Context,
         return view
     }
 
-    inner class ViewHolder(val view: View) {
+
+    inner class ViewHolder(val itemView: View) {
 
         private var ivFoto: ImageView? = null
         private var tvNombre: TextView? = null
 
         fun bindView(persona: Persona) {
-            ivFoto = view.findViewById(R.id.iv_foto)
-            tvNombre = view.findViewById(R.id.tv_nombre)
+            ivFoto = itemView.findViewById(R.id.iv_foto)
+            tvNombre = itemView.findViewById(R.id.tv_nombre)
 
-//            Glide.with(view.context)
-//                    .load(contact.photoThumbnailUri)
-//                    .into(ivFoto)
+            if (TextUtils.isEmpty(persona.imagen)) {
+                if (persona.color == -1) {
+                    persona.color = ColorGenerator.MATERIAL.randomColor
+                }
+                ivFoto?.setImageDrawable(TextDrawableManager.createDrawable(persona.nombre.first(),
+                        persona.color))
+            } else {
+                Glide.with(itemView.context)
+                        .load(persona.imagen)
+                        .into(ivFoto)
+            }
+
             tvNombre?.text = persona.nombre
         }
     }

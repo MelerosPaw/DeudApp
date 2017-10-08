@@ -1,5 +1,6 @@
 package melerospaw.deudapp.iu.adapters;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
+import melerospaw.deudapp.data.ContactManager;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.StringUtils;
 
@@ -24,10 +27,11 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
 
     private List<Persona> mDatos;
     private List<Persona> listaPersonas;
-    private AppCompatActivity mContext;
+    private Context mContext;
+    private AutocompleteAdapter adapter;
     private boolean focus;
 
-    public AdaptadorPersonasNuevas(AppCompatActivity context, List<Persona> mDatos,
+    public AdaptadorPersonasNuevas(Context context, List<Persona> mDatos,
                                    List<Persona> personas) {
         this.mContext = context;
         this.mDatos = mDatos;
@@ -113,13 +117,19 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
             this.persona = persona;
 
             actvAcreedor.setText(persona.getNombre());
-            // TODO: 21/09/2017 Eliminar contactos que ya están como deudores y luego ordenar
             filtrarLista();
-            // TODO: 19/09/2017 Mostrar foto
-            AutocompleteAdapter adapter = new AutocompleteAdapter(mContext, R.layout.item_autocomplete, listaPersonas);
+            adapter = new AutocompleteAdapter(mContext, R.layout.item_autocomplete, listaPersonas);
             actvAcreedor.setAdapter(adapter);
+            actvAcreedor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Persona personaSeleccionada = adapter.getItem(i);
+                    ViewHolder.this.persona.setColor(personaSeleccionada.getColor());
+                    ViewHolder.this.persona.setImagen(personaSeleccionada.getImagen());
+                }
+            });
 
-            if (StringUtils.isCadenaVacia(persona.getNombre()) && focus != null && focus){
+            if (StringUtils.isCadenaVacia(persona.getNombre()) && focus != null && focus) {
                 actvAcreedor.setVisibility(View.VISIBLE);
                 actvAcreedor.requestFocus();
             }
@@ -145,6 +155,8 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
     }
 
     public void filtrarLista() {
+        ContactManager.eliminarRepetidos(listaPersonas);
+        ContactManager.ordenar(listaPersonas);
     }
 }
 
