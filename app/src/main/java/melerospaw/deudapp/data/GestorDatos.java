@@ -60,8 +60,8 @@ public class GestorDatos {
         return databaseHelper.getNombresExistentes();
     }
 
-    public List<Persona> getPersonaSimple(){
-        return databaseHelper.getNombreEImagen();
+    public List<Contact> getPersonaSimple(){
+        return ContactManager.parsePersonas(databaseHelper.getNombreEImagen());
     }
 
     /**
@@ -248,6 +248,9 @@ public class GestorDatos {
                 persona.setTipo(Persona.AMBOS);
             }
             databaseHelper.actualizarPersona(persona);
+            if (!TextUtils.isEmpty(persona.getImagen())) {
+                guardarFoto(context, persona, Uri.parse(persona.getImagen()));
+            }
         }
 
         // Si se le mete la nueva Entidad a la colección de la persona, parece que después,
@@ -398,18 +401,18 @@ public class GestorDatos {
         return eliminada;
     }
 
-    public List<Persona> getPersonasFromContactos(Context context) {
-        List<Contact> contactos = ContactManager.obtainContacts(context);
-        List<Persona> personas = new LinkedList<>();
-        for (Contact contacto : contactos) {
-            Persona p = new Persona();
-            p.setImagen(contacto.getPhotoThumbnailUri());
-            p.setNombre(contacto.getName());
-            p.setImagen(contacto.getPhotoUri());
-            personas.add(p);
-        }
+    public List<Contact> getPersonasFromContactos(Context context) {
+        return ContactManager.obtainContacts(context);
+//        List<Persona> personas = new LinkedList<>();
+//        for (Contact contacto : contactos) {
+//            Persona p = new Persona();
+//            p.setImagen(contacto.getPhotoThumbnailUri());
+//            p.setNombre(contacto.getName());
+//            p.setImagen(contacto.getPhotoUri());
+//            personas.add(p);
+//        }
 
-        return personas;
+//        return personas;
     }
 
     public boolean cambiarNombre(Persona persona, String nuevoNombre) {
