@@ -120,7 +120,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     private void cargarAdaptador(boolean tieneAccesoAContactos) {
         List<Contact> personasSimples = gestor.getPersonaSimple();
         if (tieneAccesoAContactos) {
-            personasSimples.addAll(gestor.getPersonasFromContactos(this));
+            personasSimples.addAll(gestor.getContacts(this));
         }
         adaptadorNuevaPersona = new AdaptadorPersonasNuevas(
                 this, new LinkedList<Contact>(), personasSimples);

@@ -401,18 +401,8 @@ public class GestorDatos {
         return eliminada;
     }
 
-    public List<Contact> getPersonasFromContactos(Context context) {
+    public List<Contact> getContacts(Context context) {
         return ContactManager.obtainContacts(context);
-//        List<Persona> personas = new LinkedList<>();
-//        for (Contact contacto : contactos) {
-//            Persona p = new Persona();
-//            p.setImagen(contacto.getPhotoThumbnailUri());
-//            p.setNombre(contacto.getName());
-//            p.setImagen(contacto.getPhotoUri());
-//            personas.add(p);
-//        }
-
-//        return personas;
     }
 
     public boolean cambiarNombre(Persona persona, String nuevoNombre) {
