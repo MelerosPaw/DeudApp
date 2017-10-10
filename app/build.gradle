@@ -12,6 +12,7 @@ android {
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary true
+        testInstrumentationRunner 'de.lemona.android.testng.TestNGRunner'
     }
 
     signingConfigs {
@@ -42,6 +43,10 @@ repositories {
     maven {
         url 'https://dl.bintray.com/triodesabios/maven/'
     }
+
+    maven {
+        url 'http://dl.bintray.com/lemonade/maven'
+    }
 }
 
 dependencies {
@@ -59,4 +64,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.meleros-paw:memoryutil:1.1.4'
     compile 'com.meleros-paw:header-behaviour:1.3.0-beta'
+    androidTestCompile 'org.testng:testng:6.9.6'
+    androidTestCompile 'de.lemona.android:android-testng:1.1.27'
 }
