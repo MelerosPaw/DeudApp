@@ -215,12 +215,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 public Boolean call() throws Exception {
                     for (Persona persona : personas) {
                         getEntidadDao().delete(persona.getEntidades());
-                        persona.setEntidades(Collections.<Entidad>emptyList());
-                        persona.actualizarTotal();
-                        persona.setTipo(Persona.INACTIVO);
-                        persona.setImagen(null);
-//                        helper.getPersonaDao().delete(persona);
-                        getPersonaDao().update(persona);
+//                        persona.setEntidades(Collections.<Entidad>emptyList());
+//                        persona.actualizarTotal();
+//                        persona.setTipo(Persona.INACTIVO);
+//                        persona.setImagen(null);
+                        helper.getPersonaDao().delete(persona);
+//                        getPersonaDao().update(persona);
                     }
 
                     return true;

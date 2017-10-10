@@ -71,6 +71,24 @@ public class Persona implements Serializable{
         this.tipo = tipo;
     }
 
+    public Persona(String nombre, String imagen) {
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.entidades = new LinkedList<>();
+        this.tipo = 0;
+        this.color = -1;
+        this.cantidadTotal = 0;
+    }
+
+    public Persona(String nombre, String imagen, int color) {
+        this.nombre = nombre;
+        this.imagen = imagen;
+        this.entidades = new LinkedList<>();
+        this.tipo = 0;
+        this.color = color;
+        this.cantidadTotal = 0;
+    }
+
     public float getCantidadTotal() {
         actualizarTotal();
         return cantidadTotal;
@@ -206,10 +224,13 @@ public class Persona implements Serializable{
 
     @Override
     public String toString(){
+        String cantidadDeudas = getDeudas() == null ? "VACÍO" : Integer.toString(getDeudas().size());
+        String cantidadDerechosCobro = getDerechosCobro() == null ? "VACÍO" : Integer.toString(getDerechosCobro().size());
+
         return getNombre() + "\n" +
                 "TIPO: " + getTipoPersonaString() + "\n" +
-                "DEUDAS: " + getDeudas().size() + "\n" +
-                "DERECHOS COBRO: " + getDerechosCobro().size() + "\n" +
+                "DEUDAS: " + cantidadDeudas + "\n" +
+                "DERECHOS COBRO: " + cantidadDerechosCobro + "\n" +
                 "TOTAL DEBIDO: " + getCantidadTotal();
     }
 

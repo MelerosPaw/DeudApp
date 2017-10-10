@@ -26,6 +26,7 @@ import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.TextDrawableManager;
 
 public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.PersonViewHolder> {
 
@@ -362,11 +363,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         }
 
         private void seleccionarItem(ImageView v, String text, int color) {
-            TextDrawable drawable = TextDrawable.builder()
-                    .beginConfig()
-                    .endConfig()
-                    .buildRound(text, color);
-            v.setImageDrawable(drawable);
+            v.setImageDrawable(TextDrawableManager.createDrawable(text, color));
         }
     }
 }

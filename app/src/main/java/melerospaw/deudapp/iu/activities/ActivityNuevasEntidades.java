@@ -31,6 +31,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.adapters.AdaptadorEntidadesNuevas;
 import melerospaw.deudapp.iu.adapters.AdaptadorPersonasNuevas;
+import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.StringUtils;
@@ -117,12 +118,12 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void cargarAdaptador(boolean tieneAccesoAContactos) {
-        List<Persona> personasSimples = gestor.getPersonaSimple();
+        List<Contact> personasSimples = gestor.getPersonaSimple();
         if (tieneAccesoAContactos) {
-            personasSimples.addAll(gestor.getPersonasFromContactos(this));
+            personasSimples.addAll(gestor.getContacts(this));
         }
         adaptadorNuevaPersona = new AdaptadorPersonasNuevas(
-                this, new LinkedList<Persona>(), personasSimples);
+                this, new LinkedList<Contact>(), personasSimples);
         layoutManagerPersonas = new LinearLayoutManager(this);
         rvPersonas.setLayoutManager(layoutManagerPersonas);
         rvPersonas.setAdapter(adaptadorNuevaPersona);
@@ -277,7 +278,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
                 Collections.singletonList(persona) : adaptadorNuevaPersona.getPersonas();
         List<Entidad> entidades = adaptadorEntidades.getEntidades();
 
-        boolean guardados = gestor.crearEntidadesPersonas(personas, entidades, tipoPersona);
+        boolean guardados = gestor.crearEntidadesPersonas(this, personas, entidades, tipoPersona);
 
         if (isForResult) {
             sendCorrectResult(entidades);

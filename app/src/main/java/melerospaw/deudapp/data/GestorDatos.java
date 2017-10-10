@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.j256.ormlite.misc.TransactionManager;
@@ -15,7 +16,6 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -59,8 +59,8 @@ public class GestorDatos {
         return databaseHelper.getNombresExistentes();
     }
 
-    public List<Persona> getPersonaSimple(){
-        return databaseHelper.getNombreEImagen();
+    public List<Contact> getPersonaSimple(){
+        return ContactManager.parsePersonas(databaseHelper.getNombreEImagen());
     }
 
     /**
@@ -82,7 +82,12 @@ public class GestorDatos {
     /**
      * Elimina todas las deudas de una persona y deja su cantidadTotal a 0
      */
-    public boolean eliminarPersonas(final List<Persona> personas) {
+    public boolean eliminarPersona(final List<Persona> personas) {
+        eliminarImagenes(personas);
+        return databaseHelper.eliminarPersonas(personas);
+    }
+
+    private void eliminarImagenes(List<Persona> personas) {
         for (Persona persona : personas) {
             if (persona.tieneImagen()) {
                 Result result = MemoryUtil.deleteFile(persona.getImagen(), false);
@@ -92,7 +97,6 @@ public class GestorDatos {
                 }
             }
         }
-        return databaseHelper.eliminarPersonas(personas);
     }
 
     /**
@@ -187,7 +191,7 @@ public class GestorDatos {
      * Recibe una cantidad de deudas y acreedores, los asocia y los guarda. Si algún acreedor no
      * existe, lo crea.
      */
-    public boolean crearEntidadesPersonas(final List<Persona> personas,
+    public boolean crearEntidadesPersonas(final Context context, final List<Persona> personas,
                                           final List<Entidad> entidades,
                                           @Persona.TipoPersona final int tipoPersona) {
 
@@ -211,7 +215,7 @@ public class GestorDatos {
                             nueva = false;
                         }
 
-                        guardado = guardarActualizar(nuevaPersona, nueva, entidades, tipoPersona);
+                        guardado = guardarActualizar(context, nuevaPersona, nueva, entidades, tipoPersona);
                     }
 
                     return guardado;
@@ -229,8 +233,8 @@ public class GestorDatos {
      * Asigna las deudas al acreedor y viceversa, las guarda en la base de datos y después
      * actualiza el acreedor.
      */
-    private boolean guardarActualizar(Persona persona, boolean nuevaPersona, List<Entidad> entidades,
-                                      @Persona.TipoPersona int tipoPersona) {
+    private boolean guardarActualizar(Context context, Persona persona, boolean nuevaPersona,
+                                      List<Entidad> entidades, @Persona.TipoPersona int tipoPersona) {
 
         // Si la persona es nueva, se queda con el tipo inferido de la lista.
         // Si no es nueva, se comprueba lo que era antes y si es necesario, se le cambia.
@@ -297,30 +301,18 @@ public class GestorDatos {
 
         if (bitmap != null) {
 
-            String rutaString;
-            Path rutaPath;
-            Result<File> result;
-
             if (persona.tieneImagen()) {
                 MemoryUtil.deleteFile(persona.getImagen(), false);
-                rutaString = persona.getImagen();
-                result = MemoryUtil.saveBitmap(bitmap, rutaString);
-                if (result.isSuccessful()) {
-                    persona.setImagen(rutaString);
-                }
-            } else {
-                String nombreImagen = getUniqueName(persona.getNombre());
-                rutaPath = databaseHelper.getRutaCarpetaImagenes()
-                        .file(nombreImagen)
-                        .build();
-                result = MemoryUtil.saveBitmap(bitmap, rutaPath);
-                if (result.isSuccessful()) {
-                    persona.setImagen(rutaPath.getPath());
-                }
             }
-
+            String nombreImagen = getUniqueName(persona.getNombre());
+            Path rutaPath = databaseHelper.getRutaCarpetaImagenes()
+                    .file(nombreImagen)
+                    .build();
+            Result<File> result = MemoryUtil.saveBitmap(bitmap, rutaPath);
+            if (result.isSuccessful()) {
+                persona.setImagen(rutaPath.getPath());
+            }
             guardada = result.isSuccessful() && databaseHelper.actualizarPersona(persona);
-
         } else {
             guardada = false;
         }
@@ -394,17 +386,8 @@ public class GestorDatos {
         return eliminada;
     }
 
-    public List<Persona> getPersonasFromContactos(Context context) {
-        List<Contact> contactos = ContactManager.obtainContacts(context);
-        List<Persona> personas = new LinkedList<>();
-        for (Contact contacto : contactos) {
-            Persona p = new Persona();
-            p.setImagen(contacto.getPhotoThumbnailUri());
-            p.setNombre(contacto.getName());
-            personas.add(p);
-        }
-
-        return personas;
+    public List<Contact> getContacts(Context context) {
+        return ContactManager.obtainContacts(context);
     }
 
     public boolean cambiarNombre(Persona persona, String nuevoNombre) {

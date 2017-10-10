@@ -1,20 +1,25 @@
 package melerospaw.deudapp.iu.adapters
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.amulyakhare.textdrawable.util.ColorGenerator
+import com.bumptech.glide.Glide
 import melerospaw.deudapp.R
+import melerospaw.deudapp.modelo.Contact
 import melerospaw.deudapp.modelo.Persona
+import melerospaw.deudapp.utils.TextDrawableManager
 import java.util.*
 
 
 class AutocompleteAdapter(private val mContext: Context,
                           private val layout: Int,
-                          private val contactos: List<Persona>) : BaseAdapter(), Filterable {
+                          private val contactos: List<Contact>) : BaseAdapter(), Filterable {
 
-    private val suggestions: MutableList<Persona>
+    private val suggestions: MutableList<Contact>
     private val filter: Filter = FiltroContactos()
 
 
@@ -24,7 +29,7 @@ class AutocompleteAdapter(private val mContext: Context,
 
     override fun getFilter() = filter
 
-    override fun getItem(p0: Int) : Persona = suggestions[p0]
+    override fun getItem(p0: Int) : Contact = suggestions[p0]
 
     override fun getItemId(p0: Int) = 0L
 
@@ -49,19 +54,29 @@ class AutocompleteAdapter(private val mContext: Context,
         return view
     }
 
-    inner class ViewHolder(val view: View) {
+
+    inner class ViewHolder(private val itemView: View) {
 
         private var ivFoto: ImageView? = null
         private var tvNombre: TextView? = null
 
-        fun bindView(persona: Persona) {
-            ivFoto = view.findViewById(R.id.iv_foto)
-            tvNombre = view.findViewById(R.id.tv_nombre)
+        fun bindView(contacto: Contact) {
+            ivFoto = itemView.findViewById(R.id.iv_foto)
+            tvNombre = itemView.findViewById(R.id.tv_nombre)
 
-//            Glide.with(view.context)
-//                    .load(contact.photoThumbnailUri)
-//                    .into(ivFoto)
-            tvNombre?.text = persona.nombre
+            if (TextUtils.isEmpty(contacto.photoThumbnailUri)) {
+                if (contacto.color == -1) {
+                    contacto.color = ColorGenerator.MATERIAL.randomColor
+                }
+                ivFoto?.setImageDrawable(TextDrawableManager.createDrawable(contacto.name.first(),
+                        contacto.color))
+            } else {
+                Glide.with(itemView.context)
+                        .load(contacto.photoThumbnailUri)
+                        .into(ivFoto)
+            }
+
+            tvNombre?.text = contacto.name
         }
     }
 
@@ -71,7 +86,7 @@ class AutocompleteAdapter(private val mContext: Context,
             suggestions.clear()
 
             if (constraint != null) {
-                suggestions.addAll(contactos.filter { it.nombre.toLowerCase().startsWith(constraint.toString().toLowerCase()) })
+                suggestions.addAll(contactos.filter { it.name.toLowerCase().contains(constraint.toString().toLowerCase()) })
             }
 
             val results = FilterResults()
@@ -90,8 +105,8 @@ class AutocompleteAdapter(private val mContext: Context,
         }
 
         override fun convertResultToString(resultValue: Any?): CharSequence {
-            val persona = resultValue as Persona
-            return persona.nombre
+            val persona = resultValue as Contact
+            return persona.name
         }
     }
 }

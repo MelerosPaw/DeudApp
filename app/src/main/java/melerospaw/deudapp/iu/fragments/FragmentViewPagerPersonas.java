@@ -123,7 +123,7 @@ public class FragmentViewPagerPersonas extends Fragment {
                 break;
             case R.id.menu_opcion_eliminar:
                 List<Persona> personasMarcadas = adaptadorPersonas.obtenerMarcados();
-                boolean eliminados = gestor.eliminarPersonas(personasMarcadas);
+                boolean eliminados = gestor.eliminarPersona(personasMarcadas);
                 if (eliminados) {
                     adaptadorPersonas.eliminar(personasMarcadas);
                     adaptadorPersonas.desactivarModoEliminacion();
@@ -343,7 +343,7 @@ public class FragmentViewPagerPersonas extends Fragment {
     }
 
     private void eliminarPersona(Persona persona) {
-        boolean personaEliminada = gestor.eliminarPersonas(Collections.singletonList(persona));
+        boolean personaEliminada = gestor.eliminarPersona(Collections.singletonList(persona));
 
         if (personaEliminada) {
             adaptadorPersonas.eliminarPersona(persona);
