@@ -172,10 +172,10 @@ public class FragmentViewPagerPersonas extends Fragment {
             adaptadorPersonas.desactivarModoEliminacion();
             desactivarModoEliminacion();
             inicializarMensajeVacio();
-            mostrarTotal();
         } else {
             Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
         }
+        desactivarSiProcede();
     }
 
     private void cargarPersonas() {
@@ -241,6 +241,7 @@ public class FragmentViewPagerPersonas extends Fragment {
                     } else {
                         mostrarTotal();
                     }
+                    inicializarMensajeVacio();
                 }
             }
         });
@@ -294,7 +295,6 @@ public class FragmentViewPagerPersonas extends Fragment {
 
         if (adaptadorPersonas.getItemCount() == 0) {
             desactivarModoEliminacion();
-            mostrarTotal();
         } else {
             float total = adaptadorPersonas.obtenerTotal();
             float subtotal = adaptadorPersonas.obtenerSubtotal();
@@ -376,12 +376,22 @@ public class FragmentViewPagerPersonas extends Fragment {
 
         if (personaEliminada) {
             adaptadorPersonas.eliminarPersona(persona);
+            adaptadorPersonas.desactivarModoEliminacion();
+            desactivarModoEliminacion();
             inicializarMensajeVacio();
-            mostrarTotal();
         } else {
             StringUtils.toastCorto(getActivity(),
                     String.format(getString(R.string.imposible_eliminar_deudas),
                             persona.getNombre()));
+        }
+    }
+
+    private void desactivarSiProcede() {
+        if (adaptadorPersonas.obtenerMarcados().isEmpty()) {
+            adaptadorPersonas.desactivarModoEliminacion();
+            desactivarModoEliminacion();
+        } else {
+            mostrarSubtotal();
         }
     }
 
