@@ -328,7 +328,7 @@ public class FragmentViewPagerPersonas extends Fragment {
 
     private void abrirOpciones() {
         MenuContextualPersona menuContextualPersona =
-                MenuContextualPersona.newInstance(personaSeleccionada.getNombre());
+                MenuContextualPersona.newInstance(personaSeleccionada.getNombre(), !modoEliminar);
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .add(menuContextualPersona, MenuContextualPersona.TAG)
@@ -376,8 +376,6 @@ public class FragmentViewPagerPersonas extends Fragment {
 
         if (personaEliminada) {
             adaptadorPersonas.eliminarPersona(persona);
-            adaptadorPersonas.desactivarModoEliminacion();
-            desactivarModoEliminacion();
             inicializarMensajeVacio();
         } else {
             StringUtils.toastCorto(getActivity(),

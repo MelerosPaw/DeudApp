@@ -135,7 +135,6 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         if (getItemCount() == 0) {
             desactivarModoEliminacion();
         }
-        seleccionados.clear();
     }
 
     private boolean haySeleccionados() {

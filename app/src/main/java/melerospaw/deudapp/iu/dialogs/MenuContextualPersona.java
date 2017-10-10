@@ -15,23 +15,29 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 
 public class MenuContextualPersona extends DialogFragment {
 
-    public static final String BUNDLE_NOMBRE_PERSONA = "persona";
     public static final String TAG = MenuContextualPersona.class.getSimpleName();
+    private static final String BUNDLE_NOMBRE_PERSONA = "persona";
+    private static final String BUNDLE_MOSTRAR_ELIMINAR = "mostrar_eliminar";
 
-    @BindView(R.id.tv_titulo)           TextView tvTitulo;
+    @BindView(R.id.tv_titulo)   TextView tvTitulo;
+    @BindView(R.id.tv_eliminar) TextView tvEliminar;
 
     private MenuContextualPersonaCallback callback;
     private String nombrePersona;
+    private boolean mostrarEliminar;
+    private Unbinder unbinder;
 
-    public static MenuContextualPersona newInstance(String nombrePersona) {
-        
+    public static MenuContextualPersona newInstance(String nombrePersona, boolean mostrarEliminar) {
+
         Bundle args = new Bundle();
         args.putString(BUNDLE_NOMBRE_PERSONA, nombrePersona);
-        
+        args.putBoolean(BUNDLE_MOSTRAR_ELIMINAR, mostrarEliminar);
+
         MenuContextualPersona fragment = new MenuContextualPersona();
         fragment.setArguments(args);
         return fragment;
@@ -43,11 +49,10 @@ public class MenuContextualPersona extends DialogFragment {
         retrieveBundleArguments();
     }
 
-
     private void retrieveBundleArguments() {
         nombrePersona = getArguments().getString(BUNDLE_NOMBRE_PERSONA);
+        mostrarEliminar = getArguments().getBoolean(BUNDLE_MOSTRAR_ELIMINAR);
     }
-
 
     @Nullable
     @Override
@@ -55,7 +60,8 @@ public class MenuContextualPersona extends DialogFragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.menu_contextual_persona_layout, container, false);
         if (view != null) {
-            ButterKnife.bind(this, view);
+            unbinder = ButterKnife.bind(this, view);
+            tvEliminar.setEnabled(mostrarEliminar);
         }
         return view;
     }
@@ -66,7 +72,6 @@ public class MenuContextualPersona extends DialogFragment {
         tvTitulo.setText(nombrePersona);
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -74,8 +79,8 @@ public class MenuContextualPersona extends DialogFragment {
     }
 
     // Ajusta el ancho de la ventana. Si el ancho del dialog en modo wrap_content es más grande que
-    // la mitad de la pantalla el ancho se pone a esa cantidad + la mitad de la parte que queda
-    // libre de la pantalla. En cualquier otro caso, se poner a la mitad de la pantalla.
+    // la mitad de la pantalla, el ancho se pone a esa cantidad + la mitad de la parte que queda
+    // libre de la pantalla. En cualquier otro caso, se pone al ancho de la pantalla menos 16dp por cada lado.
     public void ajustarAncho() {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         Window window = getDialog().getWindow();
@@ -92,7 +97,7 @@ public class MenuContextualPersona extends DialogFragment {
         halfScreen = screenWidth / 2;
 
         if (screenWidth < wrapContentWidth || halfScreen > wrapContentWidth) {
-            finalWidth = halfScreen;
+            finalWidth = screenWidth - (int) getContext().getResources().getDisplayMetrics().density * 16;
         } else {
             finalWidth = wrapContentWidth + (screenWidth - wrapContentWidth) / 2;
         }
@@ -107,6 +112,11 @@ public class MenuContextualPersona extends DialogFragment {
         this.callback = callback;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
     @OnClick({R.id.tv_ver, R.id.tv_eliminar, R.id.tv_cambiar_nombre})
     public void onViewClicked(View view) {
