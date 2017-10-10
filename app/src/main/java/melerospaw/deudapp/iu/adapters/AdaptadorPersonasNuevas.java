@@ -121,7 +121,7 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Contact contactoSeleccionado = adapter.getItem(i);
                     ViewHolder.this.contact.setColor(contactoSeleccionado.getColor());
-                    ViewHolder.this.contact.setPhotoUri(contactoSeleccionado.getPhotoUri());
+//                    ViewHolder.this.contact.setPhotoUri(contactoSeleccionado.getPhotoUri());
                 }
             });
 

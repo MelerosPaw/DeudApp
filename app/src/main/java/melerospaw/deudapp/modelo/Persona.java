@@ -74,6 +74,7 @@ public class Persona implements Serializable{
     public Persona(String nombre, String imagen) {
         this.nombre = nombre;
         this.imagen = imagen;
+        this.entidades = new LinkedList<>();
         this.tipo = 0;
         this.color = -1;
         this.cantidadTotal = 0;
@@ -82,6 +83,7 @@ public class Persona implements Serializable{
     public Persona(String nombre, String imagen, int color) {
         this.nombre = nombre;
         this.imagen = imagen;
+        this.entidades = new LinkedList<>();
         this.tipo = 0;
         this.color = color;
         this.cantidadTotal = 0;
