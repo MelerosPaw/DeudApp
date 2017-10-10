@@ -24,7 +24,7 @@
         android:id="@+id/tv_ver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ripple_basic"
+        android:background="@drawable/ripple_white"
         android:padding="16dp"
         android:text="@string/ver_deuda"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -33,16 +33,16 @@
         android:id="@+id/tv_eliminar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ripple_basic"
+        android:background="@drawable/ripple_white"
         android:padding="16dp"
-        android:text="@string/eliminar_deuda"
+        android:text="@string/eliminar_persona"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/tv_cambiar_nombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ripple_basic"
+        android:background="@drawable/ripple_white"
         android:padding="16dp"
         android:text="@string/cambiar_nombre"
         android:textAppearance="?android:attr/textAppearanceMedium" />

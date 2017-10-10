@@ -1,6 +1,7 @@
 package melerospaw.deudapp.iu.fragments;
 
 import android.animation.LayoutTransition;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -122,17 +124,7 @@ public class FragmentViewPagerPersonas extends Fragment {
                 ActivityNuevasEntidades.start(getContext());
                 break;
             case R.id.menu_opcion_eliminar:
-                List<Persona> personasMarcadas = adaptadorPersonas.obtenerMarcados();
-                boolean eliminados = gestor.eliminarPersona(personasMarcadas);
-                if (eliminados) {
-                    adaptadorPersonas.eliminar(personasMarcadas);
-                    adaptadorPersonas.desactivarModoEliminacion();
-                    desactivarModoEliminacion();
-                    inicializarMensajeVacio();
-                    mostrarTotal();
-                } else {
-                    Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
-                }
+                mostrarDialogEliminar(true);
                 break;
             case R.id.menu_seleccionar_todo:
                 adaptadorPersonas.seleccionarTodo();
@@ -147,6 +139,43 @@ public class FragmentViewPagerPersonas extends Fragment {
         }
 
         return true;
+    }
+
+    private void mostrarDialogEliminar(final boolean multiple){
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Eliminar")
+                .setMessage(multiple ? "¿Seguro que quieres eliminar estas personas?" : "¿Seguro que quieres eliminar esta persona?")
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (multiple) {
+                            eliminarMarcados();
+                        } else {
+                            eliminarPersona(personaSeleccionada);
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .create().show();
+    }
+
+    private void eliminarMarcados() {
+        List<Persona> personasMarcadas = adaptadorPersonas.obtenerMarcados();
+        boolean eliminados = gestor.eliminarPersona(personasMarcadas);
+        if (eliminados) {
+            adaptadorPersonas.eliminar(personasMarcadas);
+            adaptadorPersonas.desactivarModoEliminacion();
+            desactivarModoEliminacion();
+            inicializarMensajeVacio();
+            mostrarTotal();
+        } else {
+            Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     private void cargarPersonas() {
@@ -314,7 +343,7 @@ public class FragmentViewPagerPersonas extends Fragment {
 
             @Override
             public void eliminarPersona(MenuContextualPersona dialog) {
-                FragmentViewPagerPersonas.this.eliminarPersona(personaSeleccionada);
+                mostrarDialogEliminar(false);
                 dialog.dismiss();
             }
 
