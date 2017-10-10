@@ -30,6 +30,7 @@
     <string name="crear">Crear</string>
     <string name="eliminar_deuda">Eliminar deuda</string>
     <string name="eliminar_deudas">Eliminar deudas</string>
+    <string name="eliminar_persona">Eliminar persona</string>
     <string name="ver_deuda">Ver deuda</string>
     <string name="aumentar_deuda">Aumentar deuda</string>
     <string name="descontar_deuda">Descontar de la deuda</string>
