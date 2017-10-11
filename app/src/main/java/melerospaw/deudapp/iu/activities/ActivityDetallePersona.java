@@ -308,7 +308,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             gestor.recargarPersona(persona);
             mostrarFoto();
         } else {
-            Toast.makeText(this, "No se ha podido eliminar la foto.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No se ha podido eliminarVarios la foto.", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -153,7 +153,7 @@ public class StringUtils {
     /**
      * Elimimina los espacios de un grupo de cadenas
      *
-     * @param cadenas Array con las cadenas que queremos eliminar
+     * @param cadenas Array con las cadenas que queremos eliminarVarios
      * @return Devuelve las mismas cadenas pero sin espacios. Si no había espacios, las devuelve
      * igualmente
      */

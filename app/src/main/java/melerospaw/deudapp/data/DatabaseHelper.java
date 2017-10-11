@@ -228,7 +228,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             });
 
         } catch (Exception e) {
-            Log.e(TAG, "No se han podido eliminar las deudas de los acreedores. " + e.getMessage());
+            Log.e(TAG, "No se han podido eliminarVarios las deudas de los acreedores. " + e.getMessage());
             borrados = false;
         }
 
@@ -398,7 +398,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             return getEntidadDao().delete(entidades) == entidades.size();
         } catch (SQLException e) {
-            throw new RuntimeException("No se ha podido eliminar las entidades.", e);
+            throw new RuntimeException("No se ha podido eliminarVarios las entidades.", e);
         }
 
     }

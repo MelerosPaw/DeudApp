@@ -36,7 +36,7 @@ public class MenuContextualPersona extends DialogFragment {
 
         Bundle args = new Bundle();
         args.putString(BUNDLE_NOMBRE_PERSONA, nombrePersona);
-        args.putBoolean(BUNDLE_MOSTRAR_ELIMINAR, mostrarEliminar);
+        args.putBoolean(BUNDLE_MOSTRAR_ELIMINAR, true);
 
         MenuContextualPersona fragment = new MenuContextualPersona();
         fragment.setArguments(args);

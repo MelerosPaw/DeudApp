@@ -92,7 +92,7 @@ public class GestorDatos {
             if (persona.tieneImagen()) {
                 Result result = MemoryUtil.deleteFile(persona.getImagen(), false);
                 if (!result.isSuccessful()) {
-                    Log.e("DEUDAPP", String.format("No se ha podido eliminar la foto de %1$s en %2$s.",
+                    Log.e("DEUDAPP", String.format("No se ha podido eliminarVarios la foto de %1$s en %2$s.",
                             persona.getNombre(), persona.getImagen()));
                 }
             }

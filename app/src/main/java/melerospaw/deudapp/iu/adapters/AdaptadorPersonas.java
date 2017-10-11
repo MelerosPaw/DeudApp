@@ -100,11 +100,50 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         return mDatos.indexOf(persona);
     }
 
-    public void eliminar (List<Persona> personas) {
+    private void insertarPersona(Persona persona) {
+        mDatos.add(persona);
+        notifyItemInserted(mDatos.size() - 1);
+    }
+
+    public void eliminarPersona(Persona persona) {
+        int posicion = mDatos.indexOf(persona);
+
+        if (posicion != -1) {
+            mDatos.remove(persona);
+            notifyItemRemoved(posicion);
+            if (seleccionados.get(posicion)) {
+                seleccionados.put(posicion, false);
+                if (haySeleccionados()) {
+                    onPersonaSeleccionadaListener.personaDeseleccionada(false);
+                    reassignSelected(posicion);
+                }
+            }
+        }
+
+        if (getItemCount() == 0) {
+            desactivarModoEliminacion();
+        }
+    }
+
+    public void eliminarVarios(List<Persona> personas) {
         for (Persona persona : personas) {
             int posicion = mDatos.indexOf(persona);
             mDatos.remove(persona);
             notifyItemRemoved(posicion);
+            seleccionados.put(posicion, false);
+            reassignSelected(posicion);
+        }
+
+    }
+
+    public void reassignSelected(int deletedPosition) {
+        int size = seleccionados.size();
+        for (int i = deletedPosition + 1; i < size; i++) {
+            int key = seleccionados.keyAt(i);
+            if (key > deletedPosition && seleccionados.get(key)) {
+                seleccionados.put(key, false);
+                seleccionados.put(key - 1, true);
+            }
         }
     }
 
@@ -121,22 +160,6 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         }
     }
 
-    private void insertarPersona(Persona persona) {
-        mDatos.add(persona);
-        notifyItemInserted(mDatos.size() - 1);
-    }
-
-    public void eliminarPersona(Persona persona) {
-        int posicion = mDatos.indexOf(persona);
-        if (posicion != -1) {
-            mDatos.remove(persona);
-            notifyItemRemoved(posicion);
-        }
-        if (getItemCount() == 0) {
-            desactivarModoEliminacion();
-        }
-    }
-
     private boolean haySeleccionados() {
         for (int i = 0; i <= mDatos.size(); i++) {
             if (seleccionados.get(i))
@@ -148,11 +171,10 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     public void deseleccionarTodo() {
         for (int i = 0; i < mDatos.size(); i++) {
             if (seleccionados.get(i)) {
-                seleccionados.put(i, false);
                 notifyItemChanged(i);
             }
         }
-        modoEliminarActivado = false;
+        desactivarModoEliminacion();
     }
 
     public void seleccionarTodo() {

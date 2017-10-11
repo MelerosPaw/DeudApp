@@ -144,7 +144,7 @@ public class FragmentViewPagerPersonas extends Fragment {
     private void mostrarDialogEliminar(final boolean multiple){
         new AlertDialog.Builder(getActivity())
                 .setTitle("Eliminar")
-                .setMessage(multiple ? "¿Seguro que quieres eliminar estas personas?" : "¿Seguro que quieres eliminar esta persona?")
+                .setMessage(multiple ? "¿Seguro que quieres eliminarVarios estas personas?" : "¿Seguro que quieres eliminarVarios esta persona?")
                 .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -168,14 +168,13 @@ public class FragmentViewPagerPersonas extends Fragment {
         List<Persona> personasMarcadas = adaptadorPersonas.obtenerMarcados();
         boolean eliminados = gestor.eliminarPersona(personasMarcadas);
         if (eliminados) {
-            adaptadorPersonas.eliminar(personasMarcadas);
+            adaptadorPersonas.eliminarVarios(personasMarcadas);
             adaptadorPersonas.desactivarModoEliminacion();
             desactivarModoEliminacion();
             inicializarMensajeVacio();
         } else {
             Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
         }
-        desactivarSiProcede();
     }
 
     private void cargarPersonas() {
@@ -368,6 +367,8 @@ public class FragmentViewPagerPersonas extends Fragment {
     }
 
     private void abrirDetalle(Persona persona) {
+        adaptadorPersonas.deseleccionarTodo();
+        desactivarModoEliminacion();
         ActivityDetallePersona.start(getActivity(), persona.getNombre());
     }
 
@@ -381,15 +382,6 @@ public class FragmentViewPagerPersonas extends Fragment {
             StringUtils.toastCorto(getActivity(),
                     String.format(getString(R.string.imposible_eliminar_deudas),
                             persona.getNombre()));
-        }
-    }
-
-    private void desactivarSiProcede() {
-        if (adaptadorPersonas.obtenerMarcados().isEmpty()) {
-            adaptadorPersonas.desactivarModoEliminacion();
-            desactivarModoEliminacion();
-        } else {
-            mostrarSubtotal();
         }
     }
 
