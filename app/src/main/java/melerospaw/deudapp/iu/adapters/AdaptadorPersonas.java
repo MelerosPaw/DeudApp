@@ -113,10 +113,13 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
             notifyItemRemoved(posicion);
             if (seleccionados.get(posicion)) {
                 seleccionados.put(posicion, false);
-                if (haySeleccionados()) {
-                    onPersonaSeleccionadaListener.personaDeseleccionada(false);
-                    reassignSelected(posicion);
-                }
+            }
+            if (haySeleccionados()) {
+                reassignSelected(posicion);
+                onPersonaSeleccionadaListener.personaDeseleccionada(false);
+            } else {
+                desactivarModoEliminacion();
+                onPersonaSeleccionadaListener.personaDeseleccionada(true);
             }
         }
 
@@ -138,10 +141,16 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
 
     public void reassignSelected(int deletedPosition) {
         int size = seleccionados.size();
-        for (int i = deletedPosition + 1; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             int key = seleccionados.keyAt(i);
-            if (key > deletedPosition && seleccionados.get(key)) {
+            if (key > mDatos.size()) {
                 seleccionados.put(key, false);
+            } else if (key > deletedPosition && seleccionados.get(key)) {
+                seleccionados.put(key, false);
+                if (seleccionados.indexOfKey(key - 1) < 0) {
+                    i++;
+                    size++;
+                }
                 seleccionados.put(key - 1, true);
             }
         }
