@@ -24,6 +24,7 @@
     <string name="mensaje_cantidad_no_valida">No has escrito una cantidad válida.</string>
     <string name="mensaje_disminucion_excesiva">No puedes descontar más de la cantidad debida.</string>
     <string name="euro">€</string>
+    <string name="euro_espacio"> €</string>
     <string name="acreedor">Acreedor</string>
     <string name="concepto">Concepto</string>
     <string name="conceptos_y_cantidades">Conceptos y cantidades</string>

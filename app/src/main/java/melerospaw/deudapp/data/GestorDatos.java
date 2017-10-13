@@ -269,7 +269,7 @@ public class GestorDatos {
     }
 
     public boolean actualizarEntidad(Entidad entidad) {
-        return !databaseHelper.actualizarEntidad(entidad);
+        return databaseHelper.actualizarEntidad(entidad);
     }
 
     /**

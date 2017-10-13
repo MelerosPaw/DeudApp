@@ -14,6 +14,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.widgets.ContextRecyclerView;
 import melerospaw.deudapp.modelo.Entidad;
@@ -83,6 +84,7 @@ public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEnt
         void onAumentarDedudaSeleccionado(Entidad entidad, int adapterPosition);
         void onDescontarDedudaSeleccionado(Entidad entidad, int adapterPosition);
         void onCancelarDedudaSeleccionado(Entidad entidad, int adapterPosition);
+        void onLongClick(Entidad entidad, int adapterPosition);
     }
 
 
@@ -157,6 +159,13 @@ public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEnt
                     break;
             }
         }
+
+        @OnLongClick(R.id.cv_item)
+        public boolean onLongClick() {
+            callback.onLongClick(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
+            return true;
+        }
+
 
         private void toggleOptions() {
             if (callback.sizeAboutToChange()) {

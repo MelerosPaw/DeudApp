@@ -10,6 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -200,5 +201,9 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
         } else {
             return 0;
         }
+    }
+
+    public static Date formatearFecha(String fecha) throws ParseException {
+        return new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(fecha);
     }
 }
