@@ -157,7 +157,7 @@ public class Entidad implements Comparable<Entidad>, Serializable {
         return esMismoDia(otraEntidad) ? 0 : -1;
     }
 
-    private boolean esMismoDia(Entidad otraEntidad) {
+    public boolean esMismoDia(Entidad otraEntidad) {
         Calendar calOtraEntidad = Calendar.getInstance();
         calOtraEntidad.setTime(otraEntidad.getFecha());
         Calendar calEstaEntidad = Calendar.getInstance();
