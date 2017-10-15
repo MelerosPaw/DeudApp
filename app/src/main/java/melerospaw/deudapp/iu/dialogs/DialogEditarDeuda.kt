@@ -1,5 +1,7 @@
 package melerospaw.deudapp.iu.dialogs
 
+import android.animation.LayoutTransition
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
@@ -73,6 +75,9 @@ class DialogEditarDeuda : DialogFragment() {
             tvFecha.setOnClickListener {
                 mostrarDialogFecha()
             }
+        }
+        if (Build.VERSION.SDK_INT >= 16) {
+            flRoot.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
         }
     }
 

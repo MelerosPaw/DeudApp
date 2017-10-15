@@ -69,8 +69,23 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         Collections.sort(mData, Entidad.COMPARATOR);
         int posicionNueva = mData.indexOf(entidad);
         if (posicionNueva != -1 && posicionOriginal != posicionNueva) {
+            reasignarAbiertos(posicionOriginal, posicionNueva);
             notifyItemMoved(posicionOriginal, posicionNueva);
         }
+    }
+
+    private void reasignarAbiertos(int posicionOriginal, int posicionNueva) {
+        boolean estaAbierto = elementosAbiertos.get(posicionOriginal);
+        if (posicionOriginal < posicionNueva) {
+            for (int i = posicionOriginal + 1; i <= posicionNueva; i++) {
+                elementosAbiertos.put(i - 1, elementosAbiertos.get(i));
+            }
+        } else if (posicionOriginal > posicionNueva) {
+            for (int i = posicionOriginal - 1; i >= posicionNueva; i--) {
+                elementosAbiertos.put(i + 1, elementosAbiertos.get(i));
+            }
+        }
+        elementosAbiertos.put(posicionNueva, estaAbierto);
     }
 
     // Indica si una posición existe en el adaptador.

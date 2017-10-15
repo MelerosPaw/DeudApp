@@ -194,10 +194,11 @@ public class Entidad implements Comparable<Entidad>, Serializable {
         public int compare(Entidad entidad, Entidad t1) {
             if (entidad.getFecha().after(t1.getFecha())) {
                 return 1;
-            } else if (entidad.getFecha().before(t1.getFecha())) {
-                return -1;
+//            } else if (entidad.getFecha().before(t1.getFecha())) {
+//                return -1;
             } else {
-                return 0;
+//                return 0;
+                return -1;
             }
         }
     };
