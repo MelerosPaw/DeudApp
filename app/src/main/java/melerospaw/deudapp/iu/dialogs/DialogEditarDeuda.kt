@@ -3,14 +3,22 @@ package melerospaw.deudapp.iu.dialogs
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.PopupMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import kotlinx.android.synthetic.main.dialog_editar_deuda.*
 import melerospaw.deudapp.R
 import melerospaw.deudapp.data.GestorDatos
 import melerospaw.deudapp.modelo.Entidad
 import melerospaw.deudapp.utils.*
+import android.view.MenuInflater
+import melerospaw.deudapp.task.BusProvider
+import melerospaw.deudapp.task.EventoDeudaModificada
+import java.util.*
+
 
 class DialogEditarDeuda : DialogFragment() {
 
@@ -62,6 +70,9 @@ class DialogEditarDeuda : DialogFragment() {
             btnCancelar.setOnClickListener {
                 dismiss()
             }
+            tvFecha.setOnClickListener {
+                mostrarDialogFecha()
+            }
         }
     }
 
@@ -80,9 +91,9 @@ class DialogEditarDeuda : DialogFragment() {
             if (gestor.actualizarEntidad(entidad)) {
                 positiveCallback?.guardar(posicion, entidad)
                 dismiss()
-                shortToast("La deuda se ha modificado")
+                shortToast(getString(R.string.deuda_modificada))
             } else {
-                shortToast("Se ha producido un problema al guardar la deuda")
+                shortToast(getString(R.string.problema_guardar_deuda))
             }
         }
     }
@@ -93,20 +104,32 @@ class DialogEditarDeuda : DialogFragment() {
         when {
             etConcepto.text.toString().isBlank() -> {
                 correcto = false
-                shortToast("El concepto no puede quedarse vacío")
+                shortToast(getString(R.string.concepto_vacio))
             }
             etCantidad.texto.isBlank() -> {
                 correcto = false
-                shortToast("La cantidad no puede quedarse vacía")
+                shortToast(getString(R.string.cantidad_vacia))
             }
             StringUtils.convertible(StringUtils.prepararDecimal(etCantidad.texto)) == "string" -> {
                 correcto = false
-                shortToast("La cantidad tiene que ser un número")
+                shortToast(getString(R.string.cantidad_no_numerica))
             }
             else -> correcto = true
         }
 
         return correcto
+    }
+
+    private fun mostrarDialogFecha() {
+        val fm = activity.supportFragmentManager
+        val ft = fm.beginTransaction().addToBackStack(DialogFechaDeuda.TAG)
+        val dialog = DialogFechaDeuda.newInstance(entidad.fecha.time)
+        dialog.positiveCallback = object : DialogFechaDeuda.PositiveCallback {
+            override fun guardarFecha(fecha: Date) {
+                tvFecha.text = Entidad.formatearFecha(fecha)
+            }
+        }
+        dialog.show(ft, DialogoModificarCantidad.TAG)
     }
 
     interface PositiveCallback {

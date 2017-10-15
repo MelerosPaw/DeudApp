@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -21,14 +22,14 @@ import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 
 
-public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEntidades.ViewHolder> {
+public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas.ViewHolder> {
 
     private List<Entidad> mData;
     private AppCompatActivity mContext;
     private AdaptadorEntidadesCallback callback;
     private SparseBooleanArray elementosAbiertos;
 
-    public AdaptadorEntidades(AppCompatActivity context, List<Entidad> datos) {
+    public AdaptadorDeudas(AppCompatActivity context, List<Entidad> datos) {
         this.mContext = context;
         this.mData = datos;
         this.elementosAbiertos = new SparseBooleanArray();
@@ -62,6 +63,14 @@ public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEnt
     public void alterItemInPosition(int position, Entidad entidad) {
         mData.set(position, entidad);
         notifyItemChanged(position);
+    }
+
+    public void ordenar(int posicionOriginal, Entidad entidad) {
+        Collections.sort(mData, Entidad.COMPARATOR);
+        int posicionNueva = mData.indexOf(entidad);
+        if (posicionNueva != -1 && posicionOriginal != posicionNueva) {
+            notifyItemMoved(posicionOriginal, posicionNueva);
+        }
     }
 
     // Indica si una posición existe en el adaptador.

@@ -70,5 +70,12 @@
     <string name="total_adeudado">Total adeudado</string>
     <string name="deseleccionar_todo">Deseleccionar todo</string>
     <string name="sseleccionar_todo">Seleccionar todo</string>
+    <string name="cantidad_no_numerica">La cantidad tiene que ser un número</string>
+    <string name="cantidad_vacia">La cantidad no puede quedarse vacía</string>
+    <string name="concepto_vacio">El concepto no puede quedarse vacío</string>
+    <string name="deuda_modificada">La deuda se ha modificado</string>
+    <string name="problema_guardar_deuda">Se ha producido un problema al guardar la deuda</string>
+    <string name="fecha_deuda">Fecha de la deuda</string>
+    <string name="datepicker_dialog_mensaje">¿Cuándo se contrajo la deuda?</string>
 
 </resources>

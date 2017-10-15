@@ -8,12 +8,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import org.w3c.dom.Text;
-
 import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -173,6 +170,23 @@ public class Persona implements Serializable{
                     oldest = entidad;
             }
             return oldest.getReadableDate();
+        } else
+            return lista.get(0).getReadableDate();
+    }
+
+    /**Returns newest Deuda human readable date. If there is ony one debt, returns the date.
+     * @return A {@code String} with a date formatted as "05/11/2015".*/
+    public String getNewest(){
+
+        List<Entidad> lista = new LinkedList<>(entidades);
+
+        if (lista.size() > 1){
+            Entidad newest = lista.get(0);
+            for (Entidad entidad : lista){
+                if (entidad.compareTo(newest) < 0)
+                    newest = entidad;
+            }
+            return newest.getReadableDate();
         } else
             return lista.get(0).getReadableDate();
     }

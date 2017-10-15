@@ -18,11 +18,12 @@ import java.util.Date;
 import java.util.Locale;
 
 @DatabaseTable(tableName = "Entidades")
-public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serializable {
+public class Entidad implements Comparable<Entidad>, Serializable {
 
     private static final int INDEFINIDA = -1;
     public static final int DEUDA = 0;
     public static final int DERECHO_COBRO = 1;
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     @IntDef({INDEFINIDA, DEUDA, DERECHO_COBRO})
     @Retention(RetentionPolicy.SOURCE)
@@ -114,12 +115,9 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
         return this.tipoEntidad;
     }
 
-
     public String getReadableDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        return sdf.format(getFecha());
+        return SDF.format(getFecha());
     }
-
 
     // Las deudas pueden tener un deudor o un "ambos". Los derechos de cobro pueden tener un acreedor o un "ambos".
     private boolean esTipoPersonaCorrecto(int tipoPersona){
@@ -129,7 +127,6 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
 
         return esDeudor || esAcreedor || esAmbos;
     }
-
 
     public void aumentar(float cantidad) {
         if (tipoEntidad == DERECHO_COBRO) {
@@ -192,18 +189,24 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
         return concepto + " - " + cantidad;
     }
 
-    @Override
-    public int compare(Entidad o1, Entidad o2) {
-        if (o1.getFecha().after(o2.getFecha())) {
-            return 1;
-        } else if (o1.getFecha().before(o2.getFecha())) {
-            return -1;
-        } else {
-            return 0;
+    public static final Comparator<Entidad> COMPARATOR = new Comparator<Entidad>() {
+        @Override
+        public int compare(Entidad entidad, Entidad t1) {
+            if (entidad.getFecha().after(t1.getFecha())) {
+                return 1;
+            } else if (entidad.getFecha().before(t1.getFecha())) {
+                return -1;
+            } else {
+                return 0;
+            }
         }
-    }
+    };
 
     public static Date formatearFecha(String fecha) throws ParseException {
-        return new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(fecha);
+        return SDF.parse(fecha);
+    }
+
+    public static String formatearFecha(Date fecha) {
+        return SDF.format(fecha);
     }
 }

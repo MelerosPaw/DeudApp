@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -44,7 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
-import melerospaw.deudapp.iu.adapters.AdaptadorEntidades;
+import melerospaw.deudapp.iu.adapters.AdaptadorDeudas;
 import melerospaw.deudapp.iu.dialogs.DialogEditarDeuda;
 import melerospaw.deudapp.iu.dialogs.DialogoModificarCantidad;
 import melerospaw.deudapp.iu.widgets.ContextRecyclerView;
@@ -79,7 +78,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private GestorDatos gestor;
     private Bus bus = BusProvider.getBus();
     private CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(this);
-    private AdaptadorEntidades adapter;
+    private AdaptadorDeudas adapter;
     private Persona persona;
     private Menu menu;
     private boolean animationIsOnGoing;
@@ -139,9 +138,10 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void inicializarAdapter() {
-        Collections.sort(persona.getEntidades());
-        adapter = new AdaptadorEntidades(this, persona.getEntidades());
-        adapter.setCallback(new AdaptadorEntidades.AdaptadorEntidadesCallback() {
+        List<Entidad> entidades = persona.getEntidades();
+        Collections.sort(entidades, Entidad.COMPARATOR);
+        adapter = new AdaptadorDeudas(this, entidades);
+        adapter.setCallback(new AdaptadorDeudas.AdaptadorEntidadesCallback() {
             @Override
             public boolean sizeAboutToChange() {
                 return prepararAnimacion();
@@ -321,8 +321,6 @@ public class ActivityDetallePersona extends AppCompatActivity {
         ContextRecyclerView.RecyclerContextMenuInfo info =
                 (ContextRecyclerView.RecyclerContextMenuInfo) menuInfo;
         Entidad entidadSeleccionada = adapter.getEntidadByPosition(info.position);
-        @MenuRes int menuId = entidadSeleccionada.getTipoEntidad() == Entidad.DEUDA ?
-                R.menu.menu_contextual_deuda : R.menu.menu_contextual_derecho_cobro;
         getMenuInflater().inflate(R.menu.menu_contextual_deuda, menu);
         toggleContextMenuOptions(menu, entidadSeleccionada);
     }
@@ -421,6 +419,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             @Override
             public void guardar(int posicion, @NotNull Entidad entidad) {
                 adapter.alterItemInPosition(posicion, entidad);
+                adapter.ordenar(posicion, entidad);
                 mostrarTotal();
                 BusProvider.getBus().post(new EventoDeudaModificada(persona));
             }
