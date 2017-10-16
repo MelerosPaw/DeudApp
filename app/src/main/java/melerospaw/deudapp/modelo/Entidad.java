@@ -10,6 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -194,11 +195,12 @@ public class Entidad implements Comparable<Entidad>, Serializable {
         public int compare(Entidad entidad, Entidad t1) {
             if (entidad.getFecha().after(t1.getFecha())) {
                 return 1;
-//            } else if (entidad.getFecha().before(t1.getFecha())) {
-//                return -1;
-            } else {
-//                return 0;
+            } else if (entidad.getFecha().before(t1.getFecha())) {
                 return -1;
+            } else {
+                String normalizedConcept1 = Normalizer.normalize(entidad.getConcepto(), Normalizer.Form.NFD);
+                String normalizedConcept2 = Normalizer.normalize(t1.getConcepto(), Normalizer.Form.NFD);
+                return normalizedConcept1.compareToIgnoreCase(normalizedConcept2);
             }
         }
     };

@@ -66,13 +66,19 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
     }
 
     public void ordenar(int posicionOriginal, Entidad entidad) {
-        // Si su anterior es de la misma fecha, no se reordena
-        if (posicionOriginal > 0 && !entidad.esMismoDia(mData.get(posicionOriginal - 1))) {
+        if (mData.size() > 1) {
             Collections.sort(mData, Entidad.COMPARATOR);
             int posicionNueva = mData.indexOf(entidad);
-            if (posicionNueva != -1 && posicionOriginal != posicionNueva) {
-                reasignarAbiertos(posicionOriginal, posicionNueva);
-                notifyItemMoved(posicionOriginal, posicionNueva);
+            reasignarAbiertos(posicionOriginal, posicionNueva);
+            notifyItemMoved(posicionOriginal, posicionNueva);
+            if (posicionOriginal == 0) {
+                notifyItemChanged(0);
+            } else if (posicionOriginal < mData.size() - 1) {
+                notifyItemChanged(posicionOriginal + 1);
+            }
+
+            if (posicionNueva < mData.size() - 1) {
+                notifyItemChanged(posicionNueva + 1);
             }
         }
     }
