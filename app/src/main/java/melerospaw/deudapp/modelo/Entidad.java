@@ -150,7 +150,11 @@ public class Entidad implements Comparable<Entidad>, Serializable {
     }
 
     public boolean estaDefinida() {
-        return getTipoEntidad() != INDEFINIDA && !TextUtils.isEmpty(concepto) && cantidad != 0f;
+        return getTipoEntidad() != INDEFINIDA && estaCompleta();
+    }
+
+    public boolean estaCompleta() {
+        return !TextUtils.isEmpty(concepto.trim()) && cantidad != 0f;
     }
 
     @Override
