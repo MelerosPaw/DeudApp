@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
@@ -295,14 +296,15 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void informarRepetidos(List<String> conceptosRepetidos) {
+        @StringRes int titulo;
         StringBuilder builder = new StringBuilder();
         if (conceptosRepetidos.size() == 1) {
-            builder.append(persona.getNombre())
-                    .append(" ya tiene una deuda con el concepto \"")
-                    .append(conceptosRepetidos.get(0))
-                    .append("\".");
+            titulo = R.string.deuda_repetida;
+            builder.append(String.format(getString(R.string.ya_tiene_una_deuda),
+                    persona.getNombre(), conceptosRepetidos.get(0)));
         } else {
-            builder.append(persona.getNombre()).append(" ya tiene deudas con estos conceptos:\n");
+            titulo = R.string.deudas_repetidas;
+            builder.append(String.format(getString(R.string.ya_tiene_varias_deudas), persona.getNombre()));
             for (String concepto : conceptosRepetidos) {
                 builder.append("\t- ").append(concepto);
                 if (conceptosRepetidos.indexOf(concepto) != conceptosRepetidos.size() - 1) {
@@ -312,10 +314,10 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         }
 
         new AlertDialog.Builder(this)
-                .setTitle("Deudas repetidas")
+                .setTitle(titulo)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setMessage(builder.toString())
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog1, int which) {
                         dialog1.dismiss();

@@ -251,7 +251,7 @@ public class GestorDatos {
         }
 
         // Si se le mete la nueva Entidad a la colección de la persona, parece que después,
-        // cuando se se guarda la Entidad, el objeto Persona se actualiza y contiene la que
+        // cuando se guarda la Entidad, el objeto Persona se actualiza y contiene la que
         // hemos metido y la que hemos guardado en la base de datos. Por eso, cuando luego
         // guardamos la persona, aparecen las Entidades duplicadas.
         // Si se guarda la persona con el objeto nuevo, no se guarda la Entidad en la base de
@@ -260,7 +260,6 @@ public class GestorDatos {
 
         for (Entidad entidad : entidades) {
             entidad.setPersona(persona);
-            entidad.setFecha(Calendar.getInstance().getTime());
         }
 
         boolean entidadesCreadas = nuevasEntidades(entidades);

@@ -1,6 +1,7 @@
 package melerospaw.deudapp.iu.dialogs
 
 import android.animation.LayoutTransition
+import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
@@ -72,7 +73,7 @@ class DialogEditarDeuda : DialogFragment() {
             btnCancelar.setOnClickListener {
                 dismiss()
             }
-            tvFecha.setOnClickListener {
+            ibCambiarFecha.setOnClickListener {
                 mostrarDialogFecha()
             }
         }
@@ -93,42 +94,47 @@ class DialogEditarDeuda : DialogFragment() {
                 concepto = etConcepto.texto
                 cantidad = StringUtils.prepararDecimal(etCantidad.texto).toFloat()
             }
-            if (gestor.actualizarEntidad(entidad)) {
-                positiveCallback?.guardar(posicion, entidad)
-                dismiss()
-                shortToast(getString(R.string.deuda_modificada))
-            } else {
-                shortToast(getString(R.string.problema_guardar_deuda))
-            }
+            positiveCallback?.guardar(posicion, entidad)
+            dismiss()
         }
     }
 
-    private fun verificarDatos(): Boolean {
-        var correcto: Boolean
-
+    private fun verificarDatos() =
         when {
             etConcepto.text.toString().isBlank() -> {
-                correcto = false
                 shortToast(getString(R.string.concepto_vacio))
+                false
             }
             etCantidad.texto.isBlank() -> {
-                correcto = false
                 shortToast(getString(R.string.cantidad_vacia))
+                false
             }
             StringUtils.convertible(StringUtils.prepararDecimal(etCantidad.texto)) == "string" -> {
-                correcto = false
                 shortToast(getString(R.string.cantidad_no_numerica))
+                false
             }
-            else -> correcto = true
+            estaRepetida() -> {
+                longToast(String.format(getString(R.string.nombre_repetido),
+                        entidad.persona.nombre, etConcepto.texto))
+                false
+            }
+            else -> true
         }
 
-        return correcto
+    private fun estaRepetida() : Boolean =
+        when {
+            entidad.concepto == etConcepto.texto -> false
+            else -> {
+                val persona = entidad.persona
+                persona.entidades.any{ it.concepto == etConcepto.texto }
+            }
     }
+
 
     private fun mostrarDialogFecha() {
         val fm = activity.supportFragmentManager
         val ft = fm.beginTransaction().addToBackStack(DialogFechaDeuda.TAG)
-        val dialog = DialogFechaDeuda.newInstance(entidad.fecha.time)
+        val dialog = DialogFechaDeuda.newInstance(Entidad.formatearFecha(tvFecha.text.toString()).time)
         dialog.positiveCallback = object : DialogFechaDeuda.PositiveCallback {
             override fun guardarFecha(fecha: Date) {
                 tvFecha.text = Entidad.formatearFecha(fecha)

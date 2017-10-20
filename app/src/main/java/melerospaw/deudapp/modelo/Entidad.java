@@ -48,12 +48,13 @@ public class Entidad implements Comparable<Entidad>, Serializable {
         this.cantidad = 0.00f;
         this.concepto = "";
         this.tipoEntidad = tipoEntidad;
+        this.fecha = getFechaSimple();
     }
 
     public Entidad(float cantidad, String concepto, @TipoEntidad int tipo) {
         this.tipoEntidad = tipo;
         this.concepto = concepto;
-        this.fecha = Calendar.getInstance().getTime();
+        this.fecha = getFechaSimple();
         setCantidad(cantidad);
     }
 
@@ -215,5 +216,14 @@ public class Entidad implements Comparable<Entidad>, Serializable {
 
     public static String formatearFecha(Date fecha) {
         return SDF.format(fecha);
+    }
+
+    private Date getFechaSimple() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 }

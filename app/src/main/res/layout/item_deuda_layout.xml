@@ -79,7 +79,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
                 android:background="@drawable/ripple_basic"
-                android:textColor="@color/colorPrimary"
                 android:drawableLeft="@android:drawable/ic_menu_add"
                 android:drawablePadding="10dp"
                 android:drawableStart="@android:drawable/ic_menu_add"
@@ -91,6 +90,7 @@
                 android:paddingStart="10dp"
                 android:paddingTop="4dp"
                 android:text="@string/aumentar_deuda"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_detalle_entidad" />
 
             <TextView
@@ -99,7 +99,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="1dp"
                 android:background="@drawable/ripple_basic"
-                android:textColor="@color/colorPrimary"
                 android:drawableLeft="@android:drawable/ic_menu_camera"
                 android:drawablePadding="10dp"
                 android:drawableStart="@android:drawable/ic_menu_camera"
@@ -111,6 +110,7 @@
                 android:paddingStart="10dp"
                 android:paddingTop="4dp"
                 android:text="@string/descontar_deuda"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_detalle_entidad" />
 
             <TextView
@@ -118,7 +118,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_basic"
-                android:textColor="@color/colorPrimary"
                 android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
                 android:drawablePadding="10dp"
                 android:drawableStart="@android:drawable/ic_menu_close_clear_cancel"
@@ -130,6 +129,7 @@
                 android:paddingStart="10dp"
                 android:paddingTop="4dp"
                 android:text="@string/cancelar_deuda"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/text_size_detalle_entidad" />
 
 

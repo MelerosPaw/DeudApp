@@ -55,6 +55,7 @@ import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class ActivityDetallePersona extends AppCompatActivity {
@@ -418,10 +419,15 @@ public class ActivityDetallePersona extends AppCompatActivity {
         dialog.setPositiveCallback(new DialogEditarDeuda.PositiveCallback() {
             @Override
             public void guardar(int posicion, @NotNull Entidad entidad) {
-                adapter.alterItemInPosition(posicion, entidad);
-                adapter.ordenar(posicion, entidad);
-                mostrarTotal();
-                BusProvider.getBus().post(new EventoDeudaModificada(persona));
+                if (gestor.actualizarEntidad(entidad)) {
+                    adapter.alterItemInPosition(posicion, entidad);
+                    adapter.ordenar(posicion, entidad);
+                    mostrarTotal();
+                    BusProvider.getBus().post(new EventoDeudaModificada(persona));
+                    ExtensionFunctionsKt.shortToast(ActivityDetallePersona.this, getString(R.string.deuda_modificada));
+                } else {
+                    ExtensionFunctionsKt.shortToast(ActivityDetallePersona.this, getString(R.string.problema_guardar_deuda));
+                }
             }
         });
         dialog.show(ft, DialogoModificarCantidad.TAG);
