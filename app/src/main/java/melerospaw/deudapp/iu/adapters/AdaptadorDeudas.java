@@ -2,6 +2,7 @@ package melerospaw.deudapp.iu.adapters;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.DiffUtil;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,25 +10,28 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.widgets.ContextRecyclerView;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 
 
-public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEntidades.ViewHolder> {
+public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas.ViewHolder> {
 
     private List<Entidad> mData;
     private AppCompatActivity mContext;
     private AdaptadorEntidadesCallback callback;
     private SparseBooleanArray elementosAbiertos;
 
-    public AdaptadorEntidades(AppCompatActivity context, List<Entidad> datos) {
+    public AdaptadorDeudas(AppCompatActivity context, List<Entidad> datos) {
         this.mContext = context;
         this.mData = datos;
         this.elementosAbiertos = new SparseBooleanArray();
@@ -63,15 +67,75 @@ public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEnt
         notifyItemChanged(position);
     }
 
+    public void ordenar(int posicionOriginal, Entidad entidad) {
+        if (mData.size() > 1) {
+            Collections.sort(mData, Entidad.COMPARATOR);
+            int posicionNueva = mData.indexOf(entidad);
+            reasignarAbiertos(posicionOriginal, posicionNueva);
+            notifyItemMoved(posicionOriginal, posicionNueva);
+            if (posicionOriginal == 0) {
+                notifyItemChanged(0);
+            } else if (posicionOriginal < mData.size() - 1) {
+                notifyItemChanged(posicionOriginal + 1);
+            }
+
+            if (posicionNueva < mData.size() - 1) {
+                notifyItemChanged(posicionNueva + 1);
+            }
+        }
+    }
+
+    private void reasignarAbiertos(int posicionOriginal, int posicionNueva) {
+        boolean estaAbierto = elementosAbiertos.get(posicionOriginal);
+        if (posicionOriginal < posicionNueva) {
+            for (int i = posicionOriginal + 1; i <= posicionNueva; i++) {
+                elementosAbiertos.put(i - 1, elementosAbiertos.get(i));
+            }
+        } else if (posicionOriginal > posicionNueva) {
+            for (int i = posicionOriginal - 1; i >= posicionNueva; i--) {
+                elementosAbiertos.put(i + 1, elementosAbiertos.get(i));
+            }
+        }
+        elementosAbiertos.put(posicionNueva, estaAbierto);
+    }
+
+    private void reasignarAbiertos(int posicionInsercion) {
+        if (posicionInsercion < mData.size() - 1) {
+            for (int i = elementosAbiertos.size() - 1 ; i >= 0; i--) {
+                int posicionAlmacenada = elementosAbiertos.keyAt(i);
+                if (posicionAlmacenada < posicionInsercion) {
+                    break;
+                } else if (elementosAbiertos.valueAt(i)) {
+                    elementosAbiertos.put(posicionAlmacenada + 1, true);
+                    elementosAbiertos.put(posicionAlmacenada, false);
+                }
+            }
+        }
+    }
+
     // Indica si una posición existe en el adaptador.
     public boolean isPositionInAdapter(int position) {
         return getItemCount() > 0 && position >= 0 && position < getItemCount();
     }
 
     public void nuevasEntidades(List<Entidad> entidades) {
-        mData.addAll(0, entidades);
-        notifyItemRangeInserted(0, entidades.size());
-        notifyItemChanged(entidades.size());
+        mData.addAll(entidades);
+        Collections.sort(mData, Entidad.COMPARATOR);
+        for (Entidad entidad: entidades) {
+            int posicionInsertada = mData.indexOf(entidad);
+            reasignarAbiertos(posicionInsertada);
+            notifyItemInserted(posicionInsertada);
+        }
+    }
+
+    private void swapItems(List<Entidad> newData) {
+        List<Entidad> newList = new LinkedList<>(mData);
+        newList.addAll(newData);
+        Collections.sort(newList, Entidad.COMPARATOR);
+        DiffUtilBaseCallback diffCallback = new DiffUtilBaseCallback(mData, newList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        this.mData = newList;
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public void setCallback(AdaptadorEntidadesCallback callback) {
@@ -83,6 +147,7 @@ public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEnt
         void onAumentarDedudaSeleccionado(Entidad entidad, int adapterPosition);
         void onDescontarDedudaSeleccionado(Entidad entidad, int adapterPosition);
         void onCancelarDedudaSeleccionado(Entidad entidad, int adapterPosition);
+        void onLongClick(Entidad entidad, int adapterPosition);
     }
 
 
@@ -157,6 +222,13 @@ public class AdaptadorEntidades extends ContextRecyclerView.Adapter<AdaptadorEnt
                     break;
             }
         }
+
+        @OnLongClick(R.id.cv_item)
+        public boolean onLongClick() {
+            callback.onLongClick(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
+            return true;
+        }
+
 
         private void toggleOptions() {
             if (callback.sizeAboutToChange()) {

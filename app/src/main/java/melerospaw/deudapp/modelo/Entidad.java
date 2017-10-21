@@ -10,6 +10,8 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.text.Normalizer;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -17,23 +19,23 @@ import java.util.Date;
 import java.util.Locale;
 
 @DatabaseTable(tableName = "Entidades")
-public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serializable {
+public class Entidad implements Comparable<Entidad>, Serializable {
 
     private static final int INDEFINIDA = -1;
     public static final int DEUDA = 0;
     public static final int DERECHO_COBRO = 1;
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     @IntDef({INDEFINIDA, DEUDA, DERECHO_COBRO})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TipoEntidad{}
 
-    @DatabaseField(columnName = "id", id = true)         private Integer id;
-    @DatabaseField(columnName = "concepto")              private String concepto;
-    @DatabaseField(columnName = "cantidad")              private float cantidad;
-    @DatabaseField(columnName = "fecha")                 private Date fecha;
-    @DatabaseField(columnName = "tipoEntidad")           private int tipoEntidad;
-    @DatabaseField(columnName = "persona",
-            foreign = true, foreignAutoRefresh = true)   private Persona persona;
+    @DatabaseField(columnName = "id", generatedId = true)                               private Integer id;
+    @DatabaseField(columnName = "concepto")                                             private String concepto;
+    @DatabaseField(columnName = "cantidad")                                             private float cantidad;
+    @DatabaseField(columnName = "fecha")                                                private Date fecha;
+    @DatabaseField(columnName = "tipoEntidad")                                          private int tipoEntidad;
+    @DatabaseField(columnName = "persona", foreign = true, foreignAutoRefresh = true)   private Persona persona;
 
     public Entidad() {
         this.cantidad = 0.00f;
@@ -45,12 +47,13 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
         this.cantidad = 0.00f;
         this.concepto = "";
         this.tipoEntidad = tipoEntidad;
+        this.fecha = getFechaSimple();
     }
 
     public Entidad(float cantidad, String concepto, @TipoEntidad int tipo) {
         this.tipoEntidad = tipo;
         this.concepto = concepto;
-        this.fecha = Calendar.getInstance().getTime();
+        this.fecha = getFechaSimple();
         setCantidad(cantidad);
     }
 
@@ -113,12 +116,9 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
         return this.tipoEntidad;
     }
 
-
     public String getReadableDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        return sdf.format(getFecha());
+        return SDF.format(getFecha());
     }
-
 
     // Las deudas pueden tener un deudor o un "ambos". Los derechos de cobro pueden tener un acreedor o un "ambos".
     private boolean esTipoPersonaCorrecto(int tipoPersona){
@@ -128,7 +128,6 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
 
         return esDeudor || esAcreedor || esAmbos;
     }
-
 
     public void aumentar(float cantidad) {
         if (tipoEntidad == DERECHO_COBRO) {
@@ -151,7 +150,11 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
     }
 
     public boolean estaDefinida() {
-        return getTipoEntidad() != INDEFINIDA && !TextUtils.isEmpty(concepto) && cantidad != 0f;
+        return getTipoEntidad() != INDEFINIDA && estaCompleta();
+    }
+
+    public boolean estaCompleta() {
+        return !TextUtils.isEmpty(concepto.trim()) && cantidad != 0f;
     }
 
     @Override
@@ -159,7 +162,7 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
         return esMismoDia(otraEntidad) ? 0 : -1;
     }
 
-    private boolean esMismoDia(Entidad otraEntidad) {
+    public boolean esMismoDia(Entidad otraEntidad) {
         Calendar calOtraEntidad = Calendar.getInstance();
         calOtraEntidad.setTime(otraEntidad.getFecha());
         Calendar calEstaEntidad = Calendar.getInstance();
@@ -191,14 +194,35 @@ public class Entidad implements Comparable<Entidad>, Comparator<Entidad>, Serial
         return concepto + " - " + cantidad;
     }
 
-    @Override
-    public int compare(Entidad o1, Entidad o2) {
-        if (o1.getFecha().after(o2.getFecha())) {
-            return 1;
-        } else if (o1.getFecha().before(o2.getFecha())) {
-            return -1;
-        } else {
-            return 0;
+    public static final Comparator<Entidad> COMPARATOR = new Comparator<Entidad>() {
+        @Override
+        public int compare(Entidad entidad, Entidad t1) {
+            if (entidad.getFecha().after(t1.getFecha())) {
+                return 1;
+            } else if (entidad.getFecha().before(t1.getFecha())) {
+                return -1;
+            } else {
+                String normalizedConcept1 = Normalizer.normalize(entidad.getConcepto(), Normalizer.Form.NFD);
+                String normalizedConcept2 = Normalizer.normalize(t1.getConcepto(), Normalizer.Form.NFD);
+                return normalizedConcept1.compareToIgnoreCase(normalizedConcept2);
+            }
         }
+    };
+
+    public static Date formatearFecha(String fecha) throws ParseException {
+        return SDF.parse(fecha);
+    }
+
+    public static String formatearFecha(Date fecha) {
+        return SDF.format(fecha);
+    }
+
+    private Date getFechaSimple() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 }

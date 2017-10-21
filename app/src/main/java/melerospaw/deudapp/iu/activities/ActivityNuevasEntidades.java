@@ -1,11 +1,15 @@
 package melerospaw.deudapp.iu.activities;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
@@ -34,6 +38,7 @@ import melerospaw.deudapp.iu.adapters.AdaptadorPersonasNuevas;
 import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
+import melerospaw.deudapp.utils.EntidadesUtil;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
 
@@ -238,8 +243,13 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
             } else if (adaptadorEntidades.hayEntidadesIncompletas()) {
                 Snackbar.make(rvConceptosCantidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
+            } else if (adaptadorEntidades.hayEntidadesRepetidas()) {
+                Snackbar.make(rvConceptosCantidades, "Hay deudas repetidas", Snackbar.LENGTH_LONG).show();
+                sePuedeGuardar = false;
+            } else if (hayEntidadesRepetidas()) {
+                sePuedeGuardar = false;
             } else {
-                return true;
+                sePuedeGuardar = true;
             }
         } else {
             if (!adaptadorNuevaPersona.hayAlguien()) {
@@ -253,6 +263,9 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
                 sePuedeGuardar = false;
             } else if (adaptadorEntidades.hayEntidadesIncompletas()) {
                 Snackbar.make(rvConceptosCantidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
+                sePuedeGuardar = false;
+            } else if (adaptadorEntidades.hayEntidadesRepetidas()) {
+                Snackbar.make(rvConceptosCantidades, "Hay deudas con el mismo concepto", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else {
                 sePuedeGuardar = true;
@@ -272,13 +285,53 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         }
     }
 
+    private boolean hayEntidadesRepetidas() {
+        List<Entidad> entidades = new LinkedList<>(persona.getEntidades());
+        entidades.addAll(adaptadorEntidades.getEntidades());
+        boolean hayRepetidas = EntidadesUtil.hayEntidadesRepetidas(entidades);
+        if (hayRepetidas) {
+            informarRepetidos(EntidadesUtil.getRepetidos(entidades));
+        }
+        return hayRepetidas;
+    }
+
+    private void informarRepetidos(List<String> conceptosRepetidos) {
+        @StringRes int titulo;
+        StringBuilder builder = new StringBuilder();
+        if (conceptosRepetidos.size() == 1) {
+            titulo = R.string.deuda_repetida;
+            builder.append(String.format(getString(R.string.ya_tiene_una_deuda),
+                    persona.getNombre(), conceptosRepetidos.get(0)));
+        } else {
+            titulo = R.string.deudas_repetidas;
+            builder.append(String.format(getString(R.string.ya_tiene_varias_deudas), persona.getNombre()));
+            for (String concepto : conceptosRepetidos) {
+                builder.append("\t- ").append(concepto);
+                if (conceptosRepetidos.indexOf(concepto) != conceptosRepetidos.size() - 1) {
+                    builder.append("\n");
+                }
+            }
+        }
+
+        new AlertDialog.Builder(this)
+                .setTitle(titulo)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setMessage(builder.toString())
+                .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog1, int which) {
+                        dialog1.dismiss();
+                    }
+                }).create().show();
+    }
+
     private void guardar() {
 
         List<Persona> personas = isForResult ?
                 Collections.singletonList(persona) : adaptadorNuevaPersona.getPersonas();
         List<Entidad> entidades = adaptadorEntidades.getEntidades();
 
-        boolean guardados = gestor.crearEntidadesPersonas(this, personas, entidades, tipoPersona);
+        boolean guardados = gestor.crearEntidadesPersonas(personas, entidades, tipoPersona);
 
         if (isForResult) {
             sendCorrectResult(entidades);
@@ -297,7 +350,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
     private void sendCorrectResult(List<Entidad> entidades) {
         Intent intent = new Intent();
-        intent.putExtra(RESULT_ENTITIES_ADDED, new ArrayList<>(entidades));
+        intent.putIntegerArrayListExtra(RESULT_ENTITIES_ADDED, EntidadesUtil.getIds(entidades));
         setResult(RESULT_OK, intent);
         finish();
     }

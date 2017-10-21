@@ -12,7 +12,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -21,6 +20,7 @@ import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.EntidadesUtil;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEntidadesNuevas.ViewHolder> {
@@ -68,18 +68,15 @@ public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEnti
     }
 
     public List<Entidad> getEntidades() {
-        List<Entidad> entidades = new LinkedList<>();
-
-        for (Entidad entidad : mData) {
-            if (!StringUtils.isCadenaVacia(entidad.getConcepto()) && entidad.getCantidad() != 0.00f)
-                entidades.add(entidad);
-        }
-
-        return entidades;
+        return EntidadesUtil.getEntidades(mData);
     }
 
     public boolean hayEntidadesIncompletas() {
-        return getEntidades().size() != mData.size();
+        return EntidadesUtil.hayEntidadesIncompletas(mData);
+    }
+
+    public boolean hayEntidadesRepetidas() {
+        return EntidadesUtil.hayEntidadesRepetidas(mData);
     }
 
     public boolean hayAlgo() {
@@ -87,23 +84,11 @@ public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEnti
     }
 
     public boolean hayDeudas() {
-        for (Entidad entidad : mData) {
-            if (entidad.getTipoEntidad() == Entidad.DEUDA && entidad.estaDefinida()) {
-                return true;
-            }
-        }
-
-        return false;
+        return EntidadesUtil.hayDelTipo(mData, Entidad.DEUDA);
     }
 
     public boolean hayDerechosCobro() {
-        for (Entidad entidad : mData) {
-            if (entidad.getTipoEntidad() == Entidad.DERECHO_COBRO && entidad.estaDefinida()) {
-                return true;
-            }
-        }
-
-        return false;
+        return EntidadesUtil.hayDelTipo(mData, Entidad.DERECHO_COBRO);
     }
 
 

@@ -12,13 +12,14 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.StringUtils;
 
-public class DialogoModificarDeuda extends DialogFragment {
+public class DialogoModificarCantidad extends DialogFragment {
 
-    public static final String TAG = DialogoModificarDeuda.class.getSimpleName();
+    public static final String TAG = DialogoModificarCantidad.class.getSimpleName();
     public static final String TIPO_AUMENTAR = "Aumentar";
     public static final String TIPO_DISMINUIR = "Disminuir";
     public static final String TIPO_CANCELAR = "Cancelar";
@@ -38,12 +39,13 @@ public class DialogoModificarDeuda extends DialogFragment {
     private String modo;
     private int position;
     private int tipoEntidad;
+    private Unbinder unbinder;
     private PositiveCallback positiveCallback;
 
 
-    public static DialogoModificarDeuda getInstance(String modo, Integer position,
-                                                    @Nullable @Entidad.TipoEntidad int tipo) {
-        DialogoModificarDeuda df = new DialogoModificarDeuda();
+    public static DialogoModificarCantidad getInstance(String modo, Integer position,
+                                                       @Nullable @Entidad.TipoEntidad int tipo) {
+        DialogoModificarCantidad df = new DialogoModificarCantidad();
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_MODO, modo);
         bundle.putInt(BUNDLE_POSICION, position);
@@ -66,7 +68,7 @@ public class DialogoModificarDeuda extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_modificar_deuda_layout, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
 
         loadView();
         return v;
@@ -213,6 +215,11 @@ public class DialogoModificarDeuda extends DialogFragment {
         dismiss();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
     public void setPositiveCallback(PositiveCallback positiveCallback){
         this.positiveCallback = positiveCallback;

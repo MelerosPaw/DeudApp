@@ -75,14 +75,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
 
     }
 
-
-    public Dao<Persona, String> getPersonaDao() {
+    private Dao<Persona, String> getPersonaDao() {
 
         if (personaDao == null) {
             try {
@@ -95,8 +93,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return personaDao;
     }
 
-
-    public Dao<Entidad, Integer> getEntidadDao() {
+    private Dao<Entidad, Integer> getEntidadDao() {
         if (entidadDao == null) {
             try {
                 entidadDao = getDao(Entidad.class);
@@ -108,14 +105,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return entidadDao;
     }
 
-
     @Override
     public void close() {
         super.close();
         personaDao = null;
         entidadDao = null;
     }
-
 
     /**
      * Carga los datos de prueba.
@@ -237,9 +232,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     boolean recargarPersona(Persona persona) {
         try {
-            return personaDao.refresh(persona) == 1;
+            return getPersonaDao().refresh(persona) == 1;
         } catch (SQLException e) {
             throw new RuntimeException("No se han podido recargar la persona.", e);
+        }
+    }
+
+    boolean recargarEntidad(Entidad entidad) {
+        try {
+            return getEntidadDao().refresh(entidad) == 1;
+        } catch (SQLException e) {
+            throw new RuntimeException("No se han podido recargar la entidad.", e);
         }
     }
 
@@ -391,6 +394,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             throw new RuntimeException("No se ha podido obtener la entidad.", e);
         }
+    }
+
+    List<Entidad> getEntidades(List<Integer> idsEntidades) {
+        List<Entidad> entidades = new LinkedList<>();
+
+        for (Integer id: idsEntidades) {
+            try {
+                entidades.add(getEntidadDao().queryForId(id));
+            } catch (SQLException e) {
+                throw new RuntimeException("No se ha podido obtener la entidad.", e);
+            }
+        }
+        return entidades;
     }
 
     boolean eliminarEntidades(List<Entidad> entidades) {

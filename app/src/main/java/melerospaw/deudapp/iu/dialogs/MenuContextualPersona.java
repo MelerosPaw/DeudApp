@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import melerospaw.deudapp.R;
+import melerospaw.deudapp.utils.ScreenUtils;
 
 public class MenuContextualPersona extends DialogFragment {
 
@@ -75,37 +76,7 @@ public class MenuContextualPersona extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        ajustarAncho();
-    }
-
-    // Ajusta el ancho de la ventana. Si el ancho del dialog en modo wrap_content es más grande que
-    // la mitad de la pantalla, el ancho se pone a esa cantidad + la mitad de la parte que queda
-    // libre de la pantalla. En cualquier otro caso, se pone al ancho de la pantalla menos 16dp por cada lado.
-    public void ajustarAncho() {
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        Window window = getDialog().getWindow();
-        lp.copyFrom(window.getAttributes());
-
-        int wrapContentWidth, screenWidth, halfScreen, finalWidth;
-
-        window.getDecorView().measure(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        wrapContentWidth = window.getDecorView().getMeasuredWidth();
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        screenWidth = displayMetrics.widthPixels;
-        halfScreen = screenWidth / 2;
-
-        if (screenWidth < wrapContentWidth || halfScreen > wrapContentWidth) {
-            finalWidth = screenWidth - (int) getContext().getResources().getDisplayMetrics().density * 16;
-        } else {
-            finalWidth = wrapContentWidth + (screenWidth - wrapContentWidth) / 2;
-        }
-
-        lp.width = finalWidth;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        window.setAttributes(lp);
-
+        ScreenUtils.ajustarAncho(this);
     }
 
     public void setUp(MenuContextualPersonaCallback callback) {

@@ -191,7 +191,7 @@ public class GestorDatos {
      * Recibe una cantidad de deudas y acreedores, los asocia y los guarda. Si algún acreedor no
      * existe, lo crea.
      */
-    public boolean crearEntidadesPersonas(final Context context, final List<Persona> personas,
+    public boolean crearEntidadesPersonas(final List<Persona> personas,
                                           final List<Entidad> entidades,
                                           @Persona.TipoPersona final int tipoPersona) {
 
@@ -215,7 +215,7 @@ public class GestorDatos {
                             nueva = false;
                         }
 
-                        guardado = guardarActualizar(context, nuevaPersona, nueva, entidades, tipoPersona);
+                        guardado = guardarActualizar(nuevaPersona, nueva, entidades, tipoPersona);
                     }
 
                     return guardado;
@@ -233,7 +233,7 @@ public class GestorDatos {
      * Asigna las deudas al acreedor y viceversa, las guarda en la base de datos y después
      * actualiza el acreedor.
      */
-    private boolean guardarActualizar(Context context, Persona persona, boolean nuevaPersona,
+    private boolean guardarActualizar(Persona persona, boolean nuevaPersona,
                                       List<Entidad> entidades, @Persona.TipoPersona int tipoPersona) {
 
         // Si la persona es nueva, se queda con el tipo inferido de la lista.
@@ -251,7 +251,7 @@ public class GestorDatos {
         }
 
         // Si se le mete la nueva Entidad a la colección de la persona, parece que después,
-        // cuando se se guarda la Entidad, el objeto Persona se actualiza y contiene la que
+        // cuando se guarda la Entidad, el objeto Persona se actualiza y contiene la que
         // hemos metido y la que hemos guardado en la base de datos. Por eso, cuando luego
         // guardamos la persona, aparecen las Entidades duplicadas.
         // Si se guarda la persona con el objeto nuevo, no se guarda la Entidad en la base de
@@ -260,7 +260,6 @@ public class GestorDatos {
 
         for (Entidad entidad : entidades) {
             entidad.setPersona(persona);
-            entidad.setFecha(Calendar.getInstance().getTime());
         }
 
         boolean entidadesCreadas = nuevasEntidades(entidades);
@@ -269,7 +268,7 @@ public class GestorDatos {
     }
 
     public boolean actualizarEntidad(Entidad entidad) {
-        return !databaseHelper.actualizarEntidad(entidad);
+        return databaseHelper.actualizarEntidad(entidad);
     }
 
     /**
@@ -396,5 +395,13 @@ public class GestorDatos {
 
     private boolean isNombreRepetido(String nombre){
         return databaseHelper.doesNameExist(nombre);
+    }
+
+    public List<Entidad> getEntidades(List<Integer> idsEntidades) {
+        return databaseHelper.getEntidades(idsEntidades);
+    }
+
+    public boolean recargarEntidad(Entidad entidad) {
+        return databaseHelper.recargarEntidad(entidad);
     }
 }
