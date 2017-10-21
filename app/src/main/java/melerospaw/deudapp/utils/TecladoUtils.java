@@ -18,7 +18,7 @@ public class TecladoUtils {
     }
 
 
-    public static void showSoftKeyboard(Context context, View view) {
+    public static void mostrarTeclado(Context context, View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         view.requestFocus();
         inputMethodManager.showSoftInput(view, 0);

@@ -144,7 +144,7 @@ public class FragmentViewPagerPersonas extends Fragment {
     private void mostrarDialogEliminar(final boolean multiple){
         new AlertDialog.Builder(getActivity())
                 .setTitle("Eliminar")
-                .setMessage(multiple ? "¿Seguro que quieres eliminarVarios estas personas?" : "¿Seguro que quieres eliminarVarios esta persona?")
+                .setMessage(multiple ? "¿Seguro que quieres eliminar estas personas?" : "¿Seguro que quieres eliminar esta persona?")
                 .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -367,8 +367,8 @@ public class FragmentViewPagerPersonas extends Fragment {
     }
 
     private void abrirDetalle(Persona persona) {
-        adaptadorPersonas.deseleccionarTodo();
-        desactivarModoEliminacion();
+//        adaptadorPersonas.deseleccionarTodo();
+//        desactivarModoEliminacion();
         ActivityDetallePersona.start(getActivity(), persona.getNombre());
     }
 
