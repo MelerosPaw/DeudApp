@@ -30,13 +30,12 @@ public class Entidad implements Comparable<Entidad>, Serializable {
     @Retention(RetentionPolicy.SOURCE)
     public @interface TipoEntidad{}
 
-    @DatabaseField(columnName = "id", id = true)         private Integer id;
-    @DatabaseField(columnName = "concepto")              private String concepto;
-    @DatabaseField(columnName = "cantidad")              private float cantidad;
-    @DatabaseField(columnName = "fecha")                 private Date fecha;
-    @DatabaseField(columnName = "tipoEntidad")           private int tipoEntidad;
-    @DatabaseField(columnName = "persona",
-            foreign = true, foreignAutoRefresh = true)   private Persona persona;
+    @DatabaseField(columnName = "id", generatedId = true)                               private Integer id;
+    @DatabaseField(columnName = "concepto")                                             private String concepto;
+    @DatabaseField(columnName = "cantidad")                                             private float cantidad;
+    @DatabaseField(columnName = "fecha")                                                private Date fecha;
+    @DatabaseField(columnName = "tipoEntidad")                                          private int tipoEntidad;
+    @DatabaseField(columnName = "persona", foreign = true, foreignAutoRefresh = true)   private Persona persona;
 
     public Entidad() {
         this.cantidad = 0.00f;
@@ -220,7 +219,7 @@ public class Entidad implements Comparable<Entidad>, Serializable {
 
     private Date getFechaSimple() {
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);

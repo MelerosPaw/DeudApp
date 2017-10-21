@@ -50,5 +50,8 @@ class EntidadesUtil {
 
         @JvmStatic
         fun getRepetidos(entidades: List<Entidad>) = getRepetidas(entidades).map { it.concepto }
+
+        @JvmStatic
+        fun getIds(entidades: List<Entidad>) = entidades.map { it.id } as ArrayList
     }
 }

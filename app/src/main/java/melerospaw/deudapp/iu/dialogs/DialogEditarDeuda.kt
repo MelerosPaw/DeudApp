@@ -38,10 +38,10 @@ class DialogEditarDeuda : DialogFragment() {
         private val BUNDLE_POSICION = "POSITION"
 
         @JvmStatic
-        fun newInstance(entidad: Entidad, posicion: Int): DialogEditarDeuda {
+        fun newInstance(idEntidad: Int, posicion: Int): DialogEditarDeuda {
             val df = DialogEditarDeuda()
             val bundle = Bundle()
-            bundle.putSerializable(BUNDLE_ENTIDAD, entidad)
+            bundle.putInt(BUNDLE_ENTIDAD, idEntidad)
             bundle.putInt(BUNDLE_POSICION, posicion)
             df.arguments = bundle
             return df
@@ -51,10 +51,10 @@ class DialogEditarDeuda : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gestor = GestorDatos.getGestor(context)
-        entidad = arguments.getSerializable(BUNDLE_ENTIDAD) as Entidad
         posicion = arguments.getInt(BUNDLE_POSICION)
+        var idEntidad = arguments.getInt(BUNDLE_ENTIDAD)
+        entidad = gestor.getEntidad(idEntidad)
     }
-
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?) =

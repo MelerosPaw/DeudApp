@@ -331,7 +331,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
                 Collections.singletonList(persona) : adaptadorNuevaPersona.getPersonas();
         List<Entidad> entidades = adaptadorEntidades.getEntidades();
 
-        boolean guardados = gestor.crearEntidadesPersonas(this, personas, entidades, tipoPersona);
+        boolean guardados = gestor.crearEntidadesPersonas(personas, entidades, tipoPersona);
 
         if (isForResult) {
             sendCorrectResult(entidades);
@@ -350,7 +350,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
     private void sendCorrectResult(List<Entidad> entidades) {
         Intent intent = new Intent();
-        intent.putExtra(RESULT_ENTITIES_ADDED, new ArrayList<>(entidades));
+        intent.putIntegerArrayListExtra(RESULT_ENTITIES_ADDED, EntidadesUtil.getIds(entidades));
         setResult(RESULT_OK, intent);
         finish();
     }

@@ -2,6 +2,7 @@ package melerospaw.deudapp.iu.adapters;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.util.DiffUtil;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -97,15 +99,43 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         elementosAbiertos.put(posicionNueva, estaAbierto);
     }
 
+    private void reasignarAbiertos(int posicionInsercion) {
+        if (posicionInsercion < mData.size() - 1) {
+            for (int i = elementosAbiertos.size() - 1 ; i >= 0; i--) {
+                int posicionAlmacenada = elementosAbiertos.keyAt(i);
+                if (posicionAlmacenada < posicionInsercion) {
+                    break;
+                } else if (elementosAbiertos.valueAt(i)) {
+                    elementosAbiertos.put(posicionAlmacenada + 1, true);
+                    elementosAbiertos.put(posicionAlmacenada, false);
+                }
+            }
+        }
+    }
+
     // Indica si una posición existe en el adaptador.
     public boolean isPositionInAdapter(int position) {
         return getItemCount() > 0 && position >= 0 && position < getItemCount();
     }
 
     public void nuevasEntidades(List<Entidad> entidades) {
-        mData.addAll(0, entidades);
-        notifyItemRangeInserted(0, entidades.size());
-        notifyItemChanged(entidades.size());
+        mData.addAll(entidades);
+        Collections.sort(mData, Entidad.COMPARATOR);
+        for (Entidad entidad: entidades) {
+            int posicionInsertada = mData.indexOf(entidad);
+            reasignarAbiertos(posicionInsertada);
+            notifyItemInserted(posicionInsertada);
+        }
+    }
+
+    private void swapItems(List<Entidad> newData) {
+        List<Entidad> newList = new LinkedList<>(mData);
+        newList.addAll(newData);
+        Collections.sort(newList, Entidad.COMPARATOR);
+        DiffUtilBaseCallback diffCallback = new DiffUtilBaseCallback(mData, newList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        this.mData = newList;
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public void setCallback(AdaptadorEntidadesCallback callback) {

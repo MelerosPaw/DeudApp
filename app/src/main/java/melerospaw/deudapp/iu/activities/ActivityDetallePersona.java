@@ -415,7 +415,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     public void mostrarDialogoEdicionDeuda(Entidad entidad, int posicion) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction().addToBackStack(DialogEditarDeuda.getTAG());
-        DialogEditarDeuda dialog = DialogEditarDeuda.newInstance(entidad, posicion);
+        DialogEditarDeuda dialog = DialogEditarDeuda.newInstance(entidad.getId(), posicion);
         dialog.setPositiveCallback(new DialogEditarDeuda.PositiveCallback() {
             @Override
             public void guardar(int posicion, @NotNull Entidad entidad) {
@@ -527,8 +527,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     @SuppressWarnings("unchecked")
     private void procesarResultNuevasDeudas(Intent data) {
-        gestor.recargarPersona(persona);
-        actualizarLista((ArrayList<Entidad>) data.getSerializableExtra(ActivityNuevasEntidades.RESULT_ENTITIES_ADDED));
+        List<Integer> idsEntidades = data.getIntegerArrayListExtra(ActivityNuevasEntidades.RESULT_ENTITIES_ADDED);
+        List<Entidad> entidades = gestor.getEntidades(idsEntidades);
+        actualizarLista(entidades);
         BusProvider.getBus().post(new EventoDeudaModificada(persona));
     }
 
