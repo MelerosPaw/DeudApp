@@ -83,5 +83,8 @@
     <string name="aceptar">Aceptar</string>
     <string name="ya_tiene_una_deuda">%1$s ya tiene una deuda con el concepto \"%2$s\".</string>
     <string name="ya_tiene_varias_deudas">%1$s ya tiene deudas con estos conceptos:\n\n"</string>
+    <string name="confirmar_eliminar_personas">¿Seguro que quieres eliminar estas personas?</string>
+    <string name="confirmar_eliminar_persona">¿Seguro que quieres eliminar esta persona?</string>
+    <string name="eliminar">Eliminar</string>
 
 </resources>
