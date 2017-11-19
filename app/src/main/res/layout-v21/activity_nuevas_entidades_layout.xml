@@ -33,7 +33,7 @@
                 android:id="@+id/btn_nueva_persona"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_raw"
+                android:background="@drawable/ripple_no_bounds"
                 android:drawableTop="@drawable/ic_nueva_persona"
                 android:textColor="@android:color/white"
                 android:text="@string/nueva_persona" />
@@ -86,7 +86,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/selector_raw"
+                android:background="@drawable/ripple_no_bounds"
                 android:drawableTop="@drawable/ic_deuda"
                 android:textColor="@android:color/white"
                 android:text="@string/nueva_deuda" />
@@ -108,7 +108,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/selector_raw"
+                android:background="@drawable/ripple_no_bounds"
                 android:drawableTop="@drawable/ic_derecho_cobro"
                 android:textColor="@android:color/white"
                 android:text="@string/nuevo_derecho_de_cobro" />
