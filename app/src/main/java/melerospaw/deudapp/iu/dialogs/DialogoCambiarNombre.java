@@ -64,6 +64,7 @@ public class DialogoCambiarNombre extends DialogFragment {
 
 
     public void loadView() {
+        etNombre.setText(persona.getNombre());
         tvMensaje.setText(String.format(getString(R.string.mensaje_dialogo_cambiar_nombre), persona.getNombre()));
     }
 
@@ -78,17 +79,19 @@ public class DialogoCambiarNombre extends DialogFragment {
 
     private void cambiarNombre() {
         String nuevoNombre = etNombre.getText().toString();
-        if (nuevoNombre.isEmpty()) {
-            Toast.makeText(getContext(), "Escribe un nombre.", Toast.LENGTH_SHORT).show();
+        if (nuevoNombre.trim().isEmpty()) {
+            Toast.makeText(getContext(), R.string.escribe_un_nombre, Toast.LENGTH_SHORT).show();
         } else {
             flLoadingView.setVisibility(View.VISIBLE);
-            if (gestor.cambiarNombre(persona, nuevoNombre)) {
-                Toast.makeText(getContext(), "Nombre cambiado", Toast.LENGTH_SHORT).show();
+            if (nuevoNombre.equals(persona.getNombre())) {
+                dismiss();
+            } else if(gestor.cambiarNombre(persona, nuevoNombre)) {
+                Toast.makeText(getContext(), R.string.nombre_cambiado, Toast.LENGTH_SHORT).show();
                 gestor.recargarPersona(persona);
                 callback.onNameChanged(nuevoNombre, posicion);
                 dismiss();
             } else {
-                Toast.makeText(getContext(), "Ya existe una persona con este mismo nombre", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.persona_repetida, Toast.LENGTH_SHORT).show();
                 flLoadingView.setVisibility(View.INVISIBLE);
             }
         }

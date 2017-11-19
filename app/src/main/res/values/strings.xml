@@ -86,5 +86,8 @@
     <string name="confirmar_eliminar_personas">¿Seguro que quieres eliminar estas personas?</string>
     <string name="confirmar_eliminar_persona">¿Seguro que quieres eliminar esta persona?</string>
     <string name="eliminar">Eliminar</string>
+    <string name="escribe_un_nombre">Escribe un nombre</string>
+    <string name="nombre_cambiado">Nombre cambiado</string>
+    <string name="persona_repetida">Ya existe una persona con este mismo nombre</string>
 
 </resources>
