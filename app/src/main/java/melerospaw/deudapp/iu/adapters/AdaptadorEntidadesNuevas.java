@@ -23,39 +23,40 @@ import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtil;
 import melerospaw.deudapp.utils.StringUtils;
 
-public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEntidadesNuevas.ViewHolder> {
+public class AdaptadorEntidadesNuevas
+        extends RecyclerView.Adapter<AdaptadorEntidadesNuevas.EntidadNuevaViewHolder> {
 
-    private List<Entidad> mData;
+    private List<Entidad> mDatos;
     private AppCompatActivity mContext;
 
     public AdaptadorEntidadesNuevas(AppCompatActivity context, List<Entidad> datos) {
         this.mContext = context;
-        this.mData = datos;
+        this.mDatos = datos;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EntidadNuevaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_nuevo_concepto, parent, false);
-        return new ViewHolder(v);
+        return new EntidadNuevaViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Entidad entidad = mData.get(position);
+    public void onBindViewHolder(EntidadNuevaViewHolder holder, int position) {
+        Entidad entidad = mDatos.get(position);
         holder.bindView(entidad);
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mDatos.size();
     }
 
     public Entidad getEntidadByPosition(int position) {
-        return mData.get(position);
+        return mDatos.get(position);
     }
 
     public void alterItemInPosition(int position, Entidad entidad) {
-        mData.set(position, entidad);
+        mDatos.set(position, entidad);
         notifyItemChanged(position);
     }
 
@@ -63,32 +64,38 @@ public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEnti
      * Añade un nuevo hueco para acreedor a la lista
      */
     public void nuevaEntidad(@Entidad.TipoEntidad int tipoEntidad) {
-        mData.add(new Entidad(tipoEntidad));
-        notifyItemInserted(mData.size());
+        mDatos.add(new Entidad(tipoEntidad));
+        notifyItemInserted(mDatos.size());
     }
 
     public List<Entidad> getEntidades() {
-        return EntidadesUtil.getEntidades(mData);
+        return EntidadesUtil.getEntidades(mDatos);
     }
 
     public boolean hayEntidadesIncompletas() {
-        return EntidadesUtil.hayEntidadesIncompletas(mData);
+        return EntidadesUtil.hayEntidadesIncompletas(mDatos);
     }
 
     public boolean hayEntidadesRepetidas() {
-        return EntidadesUtil.hayEntidadesRepetidas(mData);
+        return EntidadesUtil.hayEntidadesRepetidas(mDatos);
     }
 
     public boolean hayAlgo() {
-        return !mData.isEmpty();
+        return !mDatos.isEmpty();
     }
 
     public boolean hayDeudas() {
-        return EntidadesUtil.hayDelTipo(mData, Entidad.DEUDA);
+        return EntidadesUtil.hayDelTipo(mDatos, Entidad.DEUDA);
     }
 
     public boolean hayDerechosCobro() {
-        return EntidadesUtil.hayDelTipo(mData, Entidad.DERECHO_COBRO);
+        return EntidadesUtil.hayDelTipo(mDatos, Entidad.DERECHO_COBRO);
+    }
+
+    public void eliminarItem(RecyclerView.ViewHolder holder) {
+        int posicion = holder.getAdapterPosition();
+        mDatos.remove(holder.getAdapterPosition());
+        notifyItemRemoved(posicion);
     }
 
 
@@ -96,7 +103,7 @@ public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEnti
     /**
      * VIEWHOLDER
      */
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class EntidadNuevaViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.et_concepto) EditText etConcepto;
         @BindView(R.id.et_cantidad) EditText etCantidad;
@@ -104,7 +111,7 @@ public class AdaptadorEntidadesNuevas extends RecyclerView.Adapter<AdaptadorEnti
 
         private Entidad entidad;
 
-        ViewHolder(View itemView) {
+        EntidadNuevaViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

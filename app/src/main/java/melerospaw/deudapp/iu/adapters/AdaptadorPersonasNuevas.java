@@ -23,7 +23,7 @@ import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.StringUtils;
 
-public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPersonasNuevas.ViewHolder> {
+public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPersonasNuevas.NuevaPersonaViewHolder> {
 
     private List<Contact> mDatos;
     private List<Contact> listaContactos;
@@ -39,13 +39,13 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NuevaPersonaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_nueva_persona, parent, false);
-        return new ViewHolder(v);
+        return new NuevaPersonaViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(NuevaPersonaViewHolder holder, int position) {
         Contact contact = mDatos.get(position);
         if (position == mDatos.size() - 1)
             holder.bindView(contact, focus);
@@ -93,17 +93,22 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
         return false;
     }
 
+    public void eliminarItem(RecyclerView.ViewHolder holder) {
+        int posicion = holder.getAdapterPosition();
+        mDatos.remove(holder.getAdapterPosition());
+        notifyItemRemoved(posicion);
+    }
 
 
 
     /**VIEWHOLDER*/
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class NuevaPersonaViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.actv_persona)    AutoCompleteTextView actvAcreedor;
 
         private Contact contact;
 
-        private ViewHolder(View itemView) {
+        private NuevaPersonaViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -120,8 +125,8 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Contact contactoSeleccionado = adapter.getItem(i);
-                    ViewHolder.this.contact.setColor(contactoSeleccionado.getColor());
-//                    ViewHolder.this.contact.setPhotoUri(contactoSeleccionado.getPhotoUri());
+                    NuevaPersonaViewHolder.this.contact.setColor(contactoSeleccionado.getColor());
+//                    NuevaPersonaViewHolder.this.contact.setPhotoUri(contactoSeleccionado.getPhotoUri());
                 }
             });
 

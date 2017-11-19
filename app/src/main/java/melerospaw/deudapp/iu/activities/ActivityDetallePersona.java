@@ -97,9 +97,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_deuda_layout);
 
-        gestor = GestorDatos.getGestor(this);
-
         String nombre = getIntent().getExtras().getString(BUNDLE_PERSONA);
+        gestor = GestorDatos.getGestor(this);
         persona = gestor.getPersona(nombre);
         ButterKnife.bind(this);
         loadView();

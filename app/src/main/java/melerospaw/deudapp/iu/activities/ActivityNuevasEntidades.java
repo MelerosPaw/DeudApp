@@ -1,7 +1,6 @@
 package melerospaw.deudapp.iu.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,12 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,12 +53,12 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     @BindView(R.id.tv_personas_vacias)      TextView tvPersonasVacias;
     @BindView(R.id.rv_personas)             RecyclerView rvPersonas;
     @BindView(R.id.tv_entidades_vacias)     TextView tvEntidadesVacias;
-    @BindView(R.id.rv_conceptosCantidades)  RecyclerView rvConceptosCantidades;
+    @BindView(R.id.rv_conceptosCantidades)  RecyclerView rvNuevasEntidades;
     @BindView(R.id.btn_guardar)             Button btnGuardar;
 
     private GestorDatos gestor;
     private AdaptadorPersonasNuevas adaptadorNuevaPersona;
-    private AdaptadorEntidadesNuevas adaptadorEntidades;
+    private AdaptadorEntidadesNuevas adaptadorNuevasEntidades;
     private RecyclerView.LayoutManager layoutManagerPersonas;
     private RecyclerView.LayoutManager layoutManagerEntidades;
     private Persona persona;
@@ -133,6 +132,21 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         rvPersonas.setLayoutManager(layoutManagerPersonas);
         rvPersonas.setAdapter(adaptadorNuevaPersona);
         rvPersonas.setVisibility(View.VISIBLE);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView,
+                                  RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                adaptadorNuevasEntidades.eliminarItem(viewHolder);
+                toggleMensajeVacioEntidades();
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(rvNuevasEntidades);
         toggleMensajeVacioPersonas();
     }
 
@@ -141,15 +155,30 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void inicializarAdaptadorNuevasEntidades() {
-        adaptadorEntidades = new AdaptadorEntidadesNuevas(this, new LinkedList<Entidad>());
+        adaptadorNuevasEntidades = new AdaptadorEntidadesNuevas(this, new LinkedList<Entidad>());
         layoutManagerEntidades = new LinearLayoutManager(this);
-        rvConceptosCantidades.setLayoutManager(layoutManagerEntidades);
-        rvConceptosCantidades.setAdapter(adaptadorEntidades);
+        rvNuevasEntidades.setLayoutManager(layoutManagerEntidades);
+        rvNuevasEntidades.setAdapter(adaptadorNuevasEntidades);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView,
+                                  RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                adaptadorNuevaPersona.eliminarItem(viewHolder);
+                toggleMensajeVacioPersonas();
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(rvPersonas);
         toggleMensajeVacioEntidades();
     }
 
     private void toggleMensajeVacioEntidades() {
-        tvEntidadesVacias.setVisibility(adaptadorEntidades == null || adaptadorEntidades.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
+        tvEntidadesVacias.setVisibility(adaptadorNuevasEntidades == null || adaptadorNuevasEntidades.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void inicializarBotones() {
@@ -203,8 +232,8 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void nuevaEntidad(@Entidad.TipoEntidad int tipoEntidad) {
-        adaptadorEntidades.nuevaEntidad(tipoEntidad);
-        layoutManagerEntidades.scrollToPosition(adaptadorEntidades.getItemCount() - 1);
+        adaptadorNuevasEntidades.nuevaEntidad(tipoEntidad);
+        layoutManagerEntidades.scrollToPosition(adaptadorNuevasEntidades.getItemCount() - 1);
         toggleMensajeVacioEntidades();
     }
 
@@ -237,14 +266,14 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         boolean sePuedeGuardar;
 
         if (isForResult) {
-            if (!adaptadorEntidades.hayAlgo()){
-                Snackbar.make(rvConceptosCantidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
+            if (!adaptadorNuevasEntidades.hayAlgo()){
+                Snackbar.make(rvNuevasEntidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorEntidades.hayEntidadesIncompletas()) {
-                Snackbar.make(rvConceptosCantidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
+            } else if (adaptadorNuevasEntidades.hayEntidadesIncompletas()) {
+                Snackbar.make(rvNuevasEntidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorEntidades.hayEntidadesRepetidas()) {
-                Snackbar.make(rvConceptosCantidades, "Hay deudas repetidas", Snackbar.LENGTH_LONG).show();
+            } else if (adaptadorNuevasEntidades.hayEntidadesRepetidas()) {
+                Snackbar.make(rvNuevasEntidades, "Hay deudas repetidas", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else if (hayEntidadesRepetidas()) {
                 sePuedeGuardar = false;
@@ -253,19 +282,19 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
             }
         } else {
             if (!adaptadorNuevaPersona.hayAlguien()) {
-                Snackbar.make(rvConceptosCantidades, "No has añadido ninguna persona", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(rvNuevasEntidades, "No has añadido ninguna persona", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else if (adaptadorNuevaPersona.hayNombresRepetidos()) {
-                Snackbar.make(rvConceptosCantidades, "Has añadido más de una vez la misma persona", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(rvNuevasEntidades, "Has añadido más de una vez la misma persona", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (!adaptadorEntidades.hayAlgo()) {
-                Snackbar.make(rvConceptosCantidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
+            } else if (!adaptadorNuevasEntidades.hayAlgo()) {
+                Snackbar.make(rvNuevasEntidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorEntidades.hayEntidadesIncompletas()) {
-                Snackbar.make(rvConceptosCantidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
+            } else if (adaptadorNuevasEntidades.hayEntidadesIncompletas()) {
+                Snackbar.make(rvNuevasEntidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorEntidades.hayEntidadesRepetidas()) {
-                Snackbar.make(rvConceptosCantidades, "Hay deudas con el mismo concepto", Snackbar.LENGTH_LONG).show();
+            } else if (adaptadorNuevasEntidades.hayEntidadesRepetidas()) {
+                Snackbar.make(rvNuevasEntidades, "Hay deudas con el mismo concepto", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else {
                 sePuedeGuardar = true;
@@ -276,9 +305,9 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void inferirTipoPersona() {
-        if (adaptadorEntidades.hayDeudas() && adaptadorEntidades.hayDerechosCobro()) {
+        if (adaptadorNuevasEntidades.hayDeudas() && adaptadorNuevasEntidades.hayDerechosCobro()) {
             tipoPersona = Persona.AMBOS;
-        } else if (adaptadorEntidades.hayDeudas()) {
+        } else if (adaptadorNuevasEntidades.hayDeudas()) {
             tipoPersona = Persona.ACREEDOR;
         } else {
             tipoPersona = Persona.DEUDOR;
@@ -287,7 +316,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
     private boolean hayEntidadesRepetidas() {
         List<Entidad> entidades = new LinkedList<>(persona.getEntidades());
-        entidades.addAll(adaptadorEntidades.getEntidades());
+        entidades.addAll(adaptadorNuevasEntidades.getEntidades());
         boolean hayRepetidas = EntidadesUtil.hayEntidadesRepetidas(entidades);
         if (hayRepetidas) {
             informarRepetidos(EntidadesUtil.getRepetidos(entidades));
@@ -329,7 +358,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
         List<Persona> personas = isForResult ?
                 Collections.singletonList(persona) : adaptadorNuevaPersona.getPersonas();
-        List<Entidad> entidades = adaptadorEntidades.getEntidades();
+        List<Entidad> entidades = adaptadorNuevasEntidades.getEntidades();
 
         boolean guardados = gestor.crearEntidadesPersonas(personas, entidades, tipoPersona);
 

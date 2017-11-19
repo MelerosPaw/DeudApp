@@ -1,6 +1,6 @@
 package melerospaw.deudapp.utils
 
-import android.webkit.JavascriptInterface
+import android.text.TextUtils
 import melerospaw.deudapp.modelo.Entidad
 import java.util.*
 
@@ -27,7 +27,7 @@ class EntidadesUtil {
 
         @JvmStatic
         fun hayEntidadesIncompletas(entidades: List<Entidad>) =
-                entidades.any { it.concepto.isEmpty() || it.cantidad == 0.00F }
+                entidades.any { (it.concepto == null || it.concepto.isBlank()) || it.cantidad == 0.00F }
 
         @JvmStatic
         fun hayDelTipo(entidades: List<Entidad>, @Entidad.TipoEntidad tipo: Int) =
