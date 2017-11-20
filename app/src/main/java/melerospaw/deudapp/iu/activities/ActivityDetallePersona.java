@@ -35,7 +35,6 @@ import com.squareup.otto.Bus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -277,7 +276,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             case android.R.id.home:
                 navigateBack();
                 break;
-            case R.id.nueva:
+            case R.id.menu_nueva:
                 ActivityNuevasEntidades.startForResult(this, persona);
                 break;
             case R.id.imagen:

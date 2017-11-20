@@ -154,7 +154,7 @@ public class Entidad implements Comparable<Entidad>, Serializable {
     }
 
     public boolean estaCompleta() {
-        return !TextUtils.isEmpty(concepto.trim()) && cantidad != 0f;
+        return !concepto.trim().isEmpty() && cantidad != 0f;
     }
 
     @Override

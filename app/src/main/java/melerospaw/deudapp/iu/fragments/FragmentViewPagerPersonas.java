@@ -112,7 +112,7 @@ public class FragmentViewPagerPersonas extends Fragment {
         if (modoEliminar) {
             setMenuEliminar();
         } else {
-            setMenuNormal();
+            setMenuInicial();
         }
     }
 
@@ -120,7 +120,7 @@ public class FragmentViewPagerPersonas extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.nueva:
+            case R.id.menu_nueva:
                 ActivityNuevasEntidades.start(getContext());
                 break;
             case R.id.menu_opcion_eliminar:
@@ -251,7 +251,7 @@ public class FragmentViewPagerPersonas extends Fragment {
         tvVacio.setVisibility(adaptadorPersonas.getItemCount() > 0 ? View.INVISIBLE : View.VISIBLE);
         if (adaptadorPersonas.getItemCount() == 0) {
             SpannableString mensaje = new SpannableString(getString(R.string.mensaje_vacio));
-            Drawable d = ContextCompat.getDrawable(getContext(), android.R.drawable.ic_menu_add);
+            Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_nueva_persona);
             d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
             ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BOTTOM);
             mensaje.setSpan(span, 54, 55, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -313,16 +313,22 @@ public class FragmentViewPagerPersonas extends Fragment {
     }
 
     private void desactivarModoEliminacion() {
-        if (menu != null) {
+        if (menu != null && modoEliminar) {
             modoEliminar = false;
-            setMenuNormal();
+            setMenuInicial();
             mostrarTotal();
         }
     }
 
-    private void setMenuNormal() {
-        menu.clear();
-        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+    private void setMenuInicial() {
+        if (menu != null && !isMenuInicial()) {
+            menu.clear();
+            getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+        }
+    }
+
+    private boolean isMenuInicial() {
+        return menu.findItem(R.id.menu_nueva) != null;
     }
 
     private void abrirOpciones() {
@@ -389,5 +395,12 @@ public class FragmentViewPagerPersonas extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        modoEliminar = false;
+        menu = null;
     }
 }

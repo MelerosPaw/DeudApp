@@ -4,7 +4,7 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/nueva"
+        android:id="@+id/menu_nueva"
         android:orderInCategory="0"
         android:title="@string/nueva_deuda"
         app:showAsAction="never" />

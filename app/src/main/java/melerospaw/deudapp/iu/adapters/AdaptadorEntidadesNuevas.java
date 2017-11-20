@@ -96,8 +96,8 @@ public class AdaptadorEntidadesNuevas
         int posicion = holder.getAdapterPosition();
         mDatos.remove(holder.getAdapterPosition());
         notifyItemRemoved(posicion);
+        ((EntidadNuevaViewHolder) holder).clear();
     }
-
 
 
     /**
@@ -172,6 +172,11 @@ public class AdaptadorEntidadesNuevas
             } else if (v.getId() == R.id.et_cantidad && entidad.getTipoEntidad() == Entidad.DEUDA && entidad.getCantidad() != 0f) {
                 etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad() * -1, 2, ".", ","));
             }
+        }
+
+        private void clear() {
+            etCantidad.setText("");
+            etConcepto.setText("");
         }
     }
 }

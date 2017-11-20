@@ -4,9 +4,9 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/nueva"
+        android:id="@+id/menu_nueva"
         android:title="@string/anadir_deuda"
-        android:orderInCategory="100"
+        android:orderInCategory="0"
         android:icon="@drawable/ic_nueva_persona"
         app:showAsAction="always" />
 

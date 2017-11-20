@@ -94,8 +94,10 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
     private void recuperarPersona() {
         persona = (Persona) getIntent().getSerializableExtra(BUNDLE_PERSONA);
-        gestor.recargarPersona(persona);
         isForResult = persona != null;
+        if (isForResult) {
+            gestor.recargarPersona(persona);
+        }
     }
 
     private void inicializarToolbar() {
@@ -142,11 +144,11 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                adaptadorNuevasEntidades.eliminarItem(viewHolder);
-                toggleMensajeVacioEntidades();
+                adaptadorNuevaPersona.eliminarItem(viewHolder);
+                toggleMensajeVacioPersonas();
             }
         });
-        itemTouchHelper.attachToRecyclerView(rvNuevasEntidades);
+        itemTouchHelper.attachToRecyclerView(rvPersonas);
         toggleMensajeVacioPersonas();
     }
 
@@ -169,11 +171,11 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                adaptadorNuevaPersona.eliminarItem(viewHolder);
-                toggleMensajeVacioPersonas();
+                adaptadorNuevasEntidades.eliminarItem(viewHolder);
+                toggleMensajeVacioEntidades();
             }
         });
-        itemTouchHelper.attachToRecyclerView(rvPersonas);
+        itemTouchHelper.attachToRecyclerView(rvNuevasEntidades);
         toggleMensajeVacioEntidades();
     }
 
