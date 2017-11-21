@@ -1,8 +1,12 @@
 package melerospaw.deudapp.utils;
 
+import android.util.Log;
+
 import java.util.StringTokenizer;
 
 public class DecimalFormatUtils{
+
+    public static final String TAG = DecimalFormatUtils.class.getSimpleName();
 
     /**Formatea un número decimal en una cadena, devolviendo tantos decimales como deseados
      *
@@ -63,15 +67,21 @@ public class DecimalFormatUtils{
         String entero = (String) elementos.nextElement();
         String decimales = (String) elementos.nextElement();
 
-        //Si los decimales valen 0, devuelven solo la parte entera
-        if (Integer.parseInt(decimales) == 0)
-            return entero;
-            //Si los decimales tienen valor, recibir -1 en decimalesDeseados indica que
-            //queremos recibir el número con todos sus decimales
-        else if (decimalesDeseados == -1)
-            return entero + caracterDecimalDeseado + decimales;
-            //Si no, devuelve el número con tantos decimales como se desee
-        else
-            return decimalToString(cantidad, decimalesDeseados, caracterDecimal, caracterDecimalDeseado);
+        try {
+            //Si los decimales valen 0, devuelven solo la parte entera
+            if (Integer.parseInt(decimales) == 0) {
+                return entero;
+                //Si los decimales tienen valor, recibir -1 en decimalesDeseados indica que
+                //queremos recibir el número con todos sus decimales
+            } else if (decimalesDeseados == -1) {
+                return entero + caracterDecimalDeseado + decimales;
+                //Si no, devuelve el número con tantos decimales como se desee
+            } else {
+                return decimalToString(cantidad, decimalesDeseados, caracterDecimal, caracterDecimalDeseado);
+            }
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "decimalToStringIfZero: el número no se ha podido convertir a decimales", e);
+            return String.valueOf(cantidad);
+        }
     }
 }
