@@ -20,8 +20,8 @@ android {
         applicationId "melerospaw.deudapp"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
         vectorDrawables.useSupportLibrary true
     }
 
@@ -40,6 +40,7 @@ android {
             ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            resValue "string", "app_name", "DeudApp"
         }
 
         pre {
@@ -48,6 +49,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             applicationIdSuffix ".test"
+            resValue "string", "app_name", "DeudApp PRE"
         }
 
         debug {
@@ -55,6 +57,7 @@ android {
             ext.enableCrashlytics = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             applicationIdSuffix ".dev"
+            resValue "string", "app_name", "DeudApp DEV"
 //            Tu aplicación no cambiará a menos que descomentes el sufijo de debug
         }
     }
