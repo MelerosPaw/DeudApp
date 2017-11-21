@@ -79,9 +79,10 @@ public class FragmentViewPagerPersonas extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mTipo = getArguments().getString(BUNDLE_TIPO);
+        mTipo = getArguments().getString(BUNDLE_TIPO);
         gestor = GestorDatos.getGestor(getActivity());
         setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
 
     @Nullable
@@ -400,7 +401,7 @@ public class FragmentViewPagerPersonas extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        modoEliminar = false;
-        menu = null;
+//        modoEliminar = false;
+//        menu = null;
     }
 }

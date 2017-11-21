@@ -139,7 +139,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
 
     }
 
-    public void reassignSelected(int deletedPosition) {
+    private void reassignSelected(int deletedPosition) {
         int size = seleccionados.size();
         for (int i = 0; i < size; i++) {
             int key = seleccionados.keyAt(i);
