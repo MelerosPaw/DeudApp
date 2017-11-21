@@ -390,11 +390,15 @@ public class GestorDatos {
     }
 
     public boolean cambiarNombre(Persona persona, String nuevoNombre) {
-        return !isNombreRepetido(nuevoNombre) && databaseHelper.cambiarNombre(persona, nuevoNombre);
+        return !isNombreRepetido(procesarNombreEntrante(nuevoNombre)) && databaseHelper.cambiarNombre(persona, nuevoNombre);
     }
 
     private boolean isNombreRepetido(String nombre){
         return databaseHelper.doesNameExist(nombre);
+    }
+
+    private String procesarNombreEntrante(String nombreEntrante) {
+        return nombreEntrante.replaceAll("'","''");
     }
 
     public List<Entidad> getEntidades(List<Integer> idsEntidades) {

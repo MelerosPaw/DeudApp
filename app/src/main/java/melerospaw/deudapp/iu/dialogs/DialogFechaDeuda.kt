@@ -33,14 +33,14 @@ class DialogFechaDeuda : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fecha = Date(arguments.getLong(BUNDLE_FECHA))
+        fecha = Date(arguments!!.getLong(BUNDLE_FECHA))
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?) =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? =
             inflate(inflater, R.layout.dialog_time_picker, container)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val cal = Calendar.getInstance()
         cal.time = fecha
         dpFecha.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null)

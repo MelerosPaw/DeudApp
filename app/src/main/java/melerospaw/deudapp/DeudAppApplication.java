@@ -14,7 +14,9 @@ public class DeudAppApplication extends Application {
         super.onCreate();
         // Set up Crashlytics, disabled for debug builds
         Crashlytics crashlyticsKit = new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .core(new CrashlyticsCore.Builder()
+                        .disabled(BuildConfig.DEBUG)
+                        .build())
                 .build();
 
         // Initialize Fabric with the debug-disabled crashlytics.

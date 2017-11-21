@@ -410,13 +410,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     boolean eliminarEntidades(List<Entidad> entidades) {
-
         try {
             return getEntidadDao().delete(entidades) == entidades.size();
         } catch (SQLException e) {
             throw new RuntimeException("No se ha podido eliminarVarios las entidades.", e);
         }
-
     }
 
     List<String> getNombresExistentes() {
@@ -461,6 +459,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
 
         try {
+            Log.i(TAG, "getImagenesMatching: query = " + queryBuilder.prepareStatementString());
+        } catch (SQLException e) {
+            Log.i(TAG, "getImagenesMatching: cannot print SQLite query.");
+        }
+
+        try {
             return getPersonaDao().countOf(preparedQuery);
         } catch (SQLException e) {
             throw new RuntimeException("No se han podido obtener los contactos de imágenes " +
@@ -482,6 +486,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             throw new RuntimeException("Error al crear la sentencia preparada para " +
                     "obtener personas simples.", e);
+        }
+
+        try {
+            Log.i(TAG, "getNombreEImagen: query = " + queryBuilder.prepareStatementString());
+        } catch (SQLException e) {
+            Log.i(TAG, "getNombreEImagen: cannot print SQLite query.");
         }
 
         try {
@@ -540,9 +550,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
 
         try {
+            Log.i(TAG, "doesNameExist: query = " + queryBuilder.prepareStatementString());
+        } catch (SQLException e) {
+            Log.i(TAG, "doesNameExist: cannot print SQLite query.");
+        }
+
+        try {
             return getPersonaDao().countOf(preparedQuery) > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("No se han podido comprobar si un nombre ya existe.", e);
+            throw new RuntimeException("No se ha podido comprobar si un nombre ya existe.", e);
         }
     }
 }

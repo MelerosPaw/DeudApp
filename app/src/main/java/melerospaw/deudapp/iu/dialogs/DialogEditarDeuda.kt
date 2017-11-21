@@ -51,21 +51,21 @@ class DialogEditarDeuda : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         gestor = GestorDatos.getGestor(context)
-        posicion = arguments.getInt(BUNDLE_POSICION)
-        var idEntidad = arguments.getInt(BUNDLE_ENTIDAD)
+        posicion = if (arguments != null) arguments!!.getInt(BUNDLE_POSICION, posicion) else posicion
+        var idEntidad = if (arguments != null) arguments!!.getInt(BUNDLE_ENTIDAD) else 0
         entidad = gestor.getEntidad(idEntidad)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?) =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? =
             inflate(inflater, R.layout.dialog_editar_deuda, container)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(entidad) {
             tvFecha.text = readableDate
             etConcepto.setText(concepto)
             etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(Math.abs(cantidad), 2, ".", ","))
-            etCantidad.setTextColor(ContextCompat.getColor(context,
+            etCantidad.setTextColor(ContextCompat.getColor(context!!,
                     if (entidad.tipoEntidad == Entidad.DEUDA) R.color.red else R.color.green))
             btnGuardar.setOnClickListener {
                 guardar()
@@ -130,17 +130,18 @@ class DialogEditarDeuda : DialogFragment() {
             }
     }
 
-
     private fun mostrarDialogFecha() {
-        val fm = activity.supportFragmentManager
-        val ft = fm.beginTransaction().addToBackStack(DialogFechaDeuda.TAG)
-        val dialog = DialogFechaDeuda.newInstance(Entidad.formatearFecha(tvFecha.text.toString()).time)
-        dialog.positiveCallback = object : DialogFechaDeuda.PositiveCallback {
-            override fun guardarFecha(fecha: Date) {
-                tvFecha.text = Entidad.formatearFecha(fecha)
+        if (activity != null) {
+            val fm = activity!!.supportFragmentManager
+            val ft = fm.beginTransaction().addToBackStack(DialogFechaDeuda.TAG)
+            val dialog = DialogFechaDeuda.newInstance(Entidad.formatearFecha(tvFecha.text.toString()).time)
+            dialog.positiveCallback = object : DialogFechaDeuda.PositiveCallback {
+                override fun guardarFecha(fecha: Date) {
+                    tvFecha.text = Entidad.formatearFecha(fecha)
+                }
             }
+            dialog.show(ft, DialogoModificarCantidad.TAG)
         }
-        dialog.show(ft, DialogoModificarCantidad.TAG)
     }
 
     interface PositiveCallback {

@@ -9,15 +9,15 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 
-fun Fragment.inflate(layoutInflater: LayoutInflater?, @LayoutRes layoutRes: Int, container: ViewGroup?) =
+fun inflate(layoutInflater: LayoutInflater?, @LayoutRes layoutRes: Int, container: ViewGroup?) =
         layoutInflater?.inflate(layoutRes, container, false)
 
 fun Fragment.shortToast(message: String) {
-    Toast.makeText(context.applicationContext, message, Toast.LENGTH_SHORT).show()
+    Toast.makeText(context!!.applicationContext, message, Toast.LENGTH_SHORT).show()
 }
 
 fun Fragment.longToast(message: String) {
-    Toast.makeText(context.applicationContext, message, Toast.LENGTH_LONG).show()
+    Toast.makeText(context!!.applicationContext, message, Toast.LENGTH_LONG).show()
 }
 
 fun Context.shortToast(message: String) {
