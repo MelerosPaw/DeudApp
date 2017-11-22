@@ -1,9 +1,4 @@
 <resources>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-
-
-    <!--Dialog modificar deuda-->
     <string name="pregunta_aumentar_deuda">¿Cuánto aumenta la deuda?</string>
     <string name="pregunta_aumentar_derecho_cobro">¿Cuánto aumenta el derecho de cobro?</string>
     <string name="pregunta_descontar_deuda">¿Cuánto quieres descontar de esta deuda?</string>
@@ -18,9 +13,8 @@
     <string name="disminuir">Disminuir</string>
     <string name="cancelar_deuda">Cancelar deuda</string>
     <string name="cancelar_todas">Cancelar todas las deudas</string>
-    <string name="mensaje_no_se_puede_cancelar_deuda">No se ha podido cancelar la deuda. Prueba más tarde.</string>
-    <string name="mensaje_cantidad_no_valida">No has escrito una cantidad válida.</string>
-    <string name="mensaje_disminucion_excesiva">No puedes descontar más de la cantidad debida.</string>
+    <string name="mensaje_cantidad_no_valida">No has escrito una cantidad válida</string>
+    <string name="mensaje_disminucion_excesiva">No puedes descontar más de la cantidad debida</string>
     <string name="euro">€</string>
     <string name="euro_espacio"> €</string>
     <string name="acreedor">Acreedor</string>
@@ -40,19 +34,19 @@
     <string name="nueva_deuda">Nueva deuda</string>
     <string name="nuevo_derecho_de_cobro">Nuevo derecho de cobro</string>
     <string name="nueva_persona">Nueva persona</string>
-    <string name="entidades_vacio">Añade una deduda seleccionando NUEVA DEUDA o NUEVO DERECHO DE COBRO.</string>
-    <string name="personas_vacio">Añade una persona seleccionando NUEVA PERSONA.</string>
+    <string name="entidades_vacio">Añade una deduda seleccionando NUEVA DEUDA o NUEVO DERECHO DE COBRO</string>
+    <string name="personas_vacio">Añade una persona seleccionando NUEVA PERSONA</string>
     <string name="nombre">Nombre</string>
     <string name="anadir_deuda">Añadir deuda</string>
-    <string name="faltan_datos">Faltan datos por especificar.</string>
-    <string name="imposible_borrar_deudas">No se han podido borrar las deudas.</string>
+    <string name="faltan_datos">Faltan datos por especificar</string>
+    <string name="imposible_borrar_deudas">No se han podido borrar las deudas</string>
     <string name="aumentar_derecho_cobro">Aumentar derecho de cobro</string>
     <string name="descontar_derecho_cobro">Descontar del derecho de cobro</string>
     <string name="cancelar_derecho_cobro">Cancelar el derecho de cobro</string>
     <string name="anadir_derecho_cobro">Añadir derecho de cobro</string>
     <string name="anadir">Añadir</string>
     <string name="imposible_eliminar_deudas">No se ha podido eliminar las deudas de %1$s. Prueba más tarde.</string>
-    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior.</string>
+    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior</string>
     <string name="deudas_canceladas">Deudas canceladas</string>
     <string name="debes_un_total_de">Debes un total de:</string>
     <string name="te_deben_un_total_de">Te deben un total de:</string>
@@ -79,7 +73,7 @@
     <string name="deudas_repetidas">Deudas repetidas</string>
     <string name="deuda_repetida">Deuda repetida</string>
     <string name="aceptar">Aceptar</string>
-    <string name="ya_tiene_una_deuda">%1$s ya tiene una deuda con el concepto \"%2$s\".</string>
+    <string name="ya_tiene_una_deuda">%1$s ya tiene una deuda con el concepto \"%2$s\"</string>
     <string name="ya_tiene_varias_deudas">%1$s ya tiene deudas con estos conceptos:\n\n"</string>
     <string name="confirmar_eliminar_personas">¿Seguro que quieres eliminar estas personas?</string>
     <string name="confirmar_eliminar_persona">¿Seguro que quieres eliminar esta persona?</string>
