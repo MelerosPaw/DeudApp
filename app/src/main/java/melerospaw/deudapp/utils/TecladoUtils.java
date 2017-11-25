@@ -2,6 +2,7 @@ package melerospaw.deudapp.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -18,9 +19,15 @@ public class TecladoUtils {
     }
 
 
-    public static void mostrarTeclado(Context context, View view) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        view.requestFocus();
-        inputMethodManager.showSoftInput(view, 0);
+    public static void mostrarTeclado(final View view) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                view.requestFocus();
+                inputMethodManager.showSoftInput(view, 0);
+            }
+        }, 50);
     }
 }

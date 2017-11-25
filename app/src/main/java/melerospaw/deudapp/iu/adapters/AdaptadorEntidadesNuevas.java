@@ -22,12 +22,14 @@ import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtil;
 import melerospaw.deudapp.utils.StringUtils;
+import melerospaw.deudapp.utils.TecladoUtils;
 
 public class AdaptadorEntidadesNuevas
         extends RecyclerView.Adapter<AdaptadorEntidadesNuevas.EntidadNuevaViewHolder> {
 
     private List<Entidad> mDatos;
     private AppCompatActivity mContext;
+    private boolean justAdded;
 
     public AdaptadorEntidadesNuevas(AppCompatActivity context, List<Entidad> datos) {
         this.mContext = context;
@@ -64,8 +66,13 @@ public class AdaptadorEntidadesNuevas
      * Añade un nuevo hueco para acreedor a la lista
      */
     public void nuevaEntidad(@Entidad.TipoEntidad int tipoEntidad) {
+        setJustAdded(true);
         mDatos.add(new Entidad(tipoEntidad));
         notifyItemInserted(mDatos.size());
+    }
+
+    private void setJustAdded(boolean justAdded) {
+        this.justAdded = justAdded;
     }
 
     public List<Entidad> getEntidades() {
@@ -138,6 +145,11 @@ public class AdaptadorEntidadesNuevas
                     return false;
                 }
             });
+
+            if (justAdded) {
+                TecladoUtils.mostrarTeclado(etConcepto);
+                setJustAdded(false);
+            }
         }
 
         private void setTextColor() {

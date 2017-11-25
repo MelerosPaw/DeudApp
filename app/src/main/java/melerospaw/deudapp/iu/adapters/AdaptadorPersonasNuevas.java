@@ -22,14 +22,17 @@ import melerospaw.deudapp.data.ContactManager;
 import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.StringUtils;
+import melerospaw.deudapp.utils.TecladoUtils;
 
-public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPersonasNuevas.NuevaPersonaViewHolder> {
+public class AdaptadorPersonasNuevas
+        extends RecyclerView.Adapter<AdaptadorPersonasNuevas.NuevaPersonaViewHolder> {
 
     private List<Contact> mDatos;
     private List<Contact> listaContactos;
     private Context mContext;
     private AutocompleteAdapter adapter;
     private boolean focus;
+    private boolean isJustAdded;
 
     public AdaptadorPersonasNuevas(Context context, List<Contact> mDatos,
                                    List<Contact> personas) {
@@ -50,7 +53,7 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
         if (position == mDatos.size() - 1)
             holder.bindView(contact, focus);
         else
-            holder.bindView(contact, null);
+            holder.bindView(contact, false);
     }
 
     @Override
@@ -60,8 +63,7 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
 
     /**Añade un nuevo hueco para contact a la lista*/
     public void nuevaPersona() {
-        Contact contact = new Contact();
-        mDatos.add(contact);
+        mDatos.add(new Contact());
         notifyItemInserted(mDatos.size());
         focus = true;
     }
@@ -113,7 +115,7 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
             ButterKnife.bind(this, itemView);
         }
 
-        private void bindView(Contact contact, Boolean focus){
+        private void bindView(Contact contact, boolean focus){
 
             this.contact = contact;
 
@@ -130,9 +132,10 @@ public class AdaptadorPersonasNuevas extends RecyclerView.Adapter<AdaptadorPerso
                 }
             });
 
-            if (StringUtils.isCadenaVacia(this.contact.getName()) && focus != null && focus) {
+            if (StringUtils.isCadenaVacia(this.contact.getName()) && focus) {
                 actvAcreedor.setVisibility(View.VISIBLE);
                 actvAcreedor.requestFocus();
+                TecladoUtils.mostrarTeclado(actvAcreedor);
             }
 
             actvAcreedor.setOnEditorActionListener(new TextView.OnEditorActionListener() {

@@ -146,6 +146,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 adaptadorNuevaPersona.eliminarItem(viewHolder);
                 toggleMensajeVacioPersonas();
+                TecladoUtils.ocultarTeclado(ActivityNuevasEntidades.this);
             }
         });
         itemTouchHelper.attachToRecyclerView(rvPersonas);
@@ -173,6 +174,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 adaptadorNuevasEntidades.eliminarItem(viewHolder);
                 toggleMensajeVacioEntidades();
+                TecladoUtils.ocultarTeclado(ActivityNuevasEntidades.this);
             }
         });
         itemTouchHelper.attachToRecyclerView(rvNuevasEntidades);
