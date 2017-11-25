@@ -303,7 +303,7 @@ public class GestorDatos {
             if (persona.tieneImagen()) {
                 MemoryUtil.deleteFile(persona.getImagen(), false);
             }
-            String nombreImagen = getUniqueName(persona.getNombre());
+            String nombreImagen = getUniqueName(procesarNombreEntrante(persona.getNombre()));
             Path rutaPath = databaseHelper.getRutaCarpetaImagenes()
                     .file(nombreImagen)
                     .build();

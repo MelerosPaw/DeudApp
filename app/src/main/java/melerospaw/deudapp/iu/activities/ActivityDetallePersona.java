@@ -3,8 +3,10 @@ package melerospaw.deudapp.iu.activities;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,8 +17,10 @@ import android.support.transition.TransitionManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -56,6 +60,7 @@ import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.StringUtils;
+import melerospaw.memoryutil.MemoryUtil;
 
 public class ActivityDetallePersona extends AppCompatActivity {
 
@@ -127,6 +132,11 @@ public class ActivityDetallePersona extends AppCompatActivity {
             tvToolbarSubtitulo.setText("Primera deuda contraída el " + persona.getOldest());
             tvToolbarSubtitulo.setVisibility(View.VISIBLE);
             tvToolbarTitulo.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+//            Palette palette = Palette.from(MemoryUtil.loadBitmap(persona.getImagen()).getResult()).generate();
+//            @ColorInt int color = palette.getVibrantColor(ContextCompat.getColor(this, android.R.color.white));
+//            tvTitulo.setTextColor(color);
+//            tvSubtitulo.setTextColor(color);
+
         } else {
             tvToolbarSubtitulo.setVisibility(View.GONE);
             tvToolbarTitulo.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);

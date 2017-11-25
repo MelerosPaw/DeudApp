@@ -384,6 +384,7 @@ public class FragmentViewPagerPersonas extends Fragment {
 
         if (personaEliminada) {
             adaptadorPersonas.eliminarPersona(persona);
+            mostrarTotal();
             inicializarMensajeVacio();
         } else {
             StringUtils.toastCorto(getActivity(),
@@ -396,12 +397,5 @@ public class FragmentViewPagerPersonas extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        modoEliminar = false;
-//        menu = null;
     }
 }

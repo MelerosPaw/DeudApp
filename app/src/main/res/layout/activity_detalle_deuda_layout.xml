@@ -51,6 +51,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:behaviour_expandedSubtitleTopMargin="-8dp"
+            app:behaviour_expandedTitleColor="@color/colorPrimary"
+            app:behaviour_expandedSubtitleColor="@color/colorPrimary"
             app:layout_behavior="com.melerospaw.coordinatorbehaviour.HeaderBehaviour">
 
             <TextView
@@ -58,7 +60,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:textColor="@android:color/white"
                 android:scrollbars="horizontal"
                 android:textSize="32sp"
                 tools:text="Andrés Márquez" />
@@ -69,7 +70,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@android:color/white"
                 tools:text="Fecha primera deuda: 24/02/1988"/>
 
         </LinearLayout>
