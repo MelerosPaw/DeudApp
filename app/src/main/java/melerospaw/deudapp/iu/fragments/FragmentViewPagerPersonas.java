@@ -384,7 +384,11 @@ public class FragmentViewPagerPersonas extends Fragment {
 
         if (personaEliminada) {
             adaptadorPersonas.eliminarPersona(persona);
-            mostrarTotal();
+            if (modoEliminar) {
+                mostrarSubtotal();
+            } else {
+                mostrarTotal();
+            }
             inicializarMensajeVacio();
         } else {
             StringUtils.toastCorto(getActivity(),
