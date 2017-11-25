@@ -129,11 +129,15 @@ public class AdaptadorEntidadesNuevas
 
             if (!StringUtils.isCadenaVacia(entidad.getConcepto())) {
                 etConcepto.setText(entidad.getConcepto());
+            } else {
+                etConcepto.setText("");
             }
 
             if (entidad.getCantidad() != 0.00f) {
                 String cantidad = DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad(), 2, ".", ",");
                 etCantidad.setText(cantidad);
+            } else {
+                etCantidad.setText("");
             }
 
             etConcepto.setOnEditorActionListener(new EditText.OnEditorActionListener() {

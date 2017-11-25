@@ -249,8 +249,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         }
     }
 
-    // Makes any focus to dissappear from both RecyclerViews so OnFocusChange listeners
-    // are triggered
+    // Makes any focus dissappear from both RecyclerViews so OnFocusChange listeners are triggered
     private void clearFocus() {
         if (!isForResult) {
             View v = layoutManagerPersonas.getFocusedChild();
