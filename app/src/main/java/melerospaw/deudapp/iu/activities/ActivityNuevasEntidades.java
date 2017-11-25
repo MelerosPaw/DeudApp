@@ -211,13 +211,13 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
                 break;
             case R.id.btn_cancelar:
                 cerrar();
+                TecladoUtils.ocultarTeclado(this);
                 break;
             case R.id.btn_guardar:
                 iniciarProcesoGuardado();
+                TecladoUtils.ocultarTeclado(this);
                 break;
         }
-
-        TecladoUtils.ocultarTeclado(this);
     }
 
     private void nuevaPersona() {
