@@ -3,12 +3,12 @@ package melerospaw.deudapp.iu.activities;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -17,11 +17,11 @@ import android.support.transition.TransitionManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -60,7 +60,6 @@ import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.StringUtils;
-import melerospaw.memoryutil.MemoryUtil;
 
 public class ActivityDetallePersona extends AppCompatActivity {
 
@@ -83,10 +82,21 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private GestorDatos gestor;
     private Bus bus = BusProvider.getBus();
     private CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(this);
-    private AdaptadorDeudas adapter;
+    private AdaptadorDeudas adaptador;
     private Persona persona;
     private Menu menu;
-    private boolean animationIsOnGoing;
+    private boolean isAnimationOnGoing;
+    private boolean isDeshacerShowing;
+    private Snackbar snackbar;
+    private BaseTransientBottomBar.BaseCallback<Snackbar> snackbarCallback =
+            new BaseTransientBottomBar.BaseCallback<Snackbar>() {
+        @Override
+        public void onDismissed(Snackbar transientBottomBar, int event) {
+            super.onDismissed(transientBottomBar, event);
+            eliminarProvisionalDefinitivo();
+            isDeshacerShowing = false;
+        }
+    };
 
     public static void start(Context context, String nombre) {
         Intent starter = new Intent(context, ActivityDetallePersona.class);
@@ -113,7 +123,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         inicializarAdapter();
         cargarColorTotal();
         mostrarFoto();
-        mostrarTotal();
+        mostrarTotal(null);
     }
 
     private void setToolbar() {
@@ -149,8 +159,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private void inicializarAdapter() {
         List<Entidad> entidades = persona.getEntidades();
         Collections.sort(entidades, Entidad.COMPARATOR);
-        adapter = new AdaptadorDeudas(this, entidades);
-        adapter.setCallback(new AdaptadorDeudas.AdaptadorEntidadesCallback() {
+        adaptador = new AdaptadorDeudas(this, entidades);
+        adaptador.setCallback(new AdaptadorDeudas.AdaptadorEntidadesCallback() {
             @Override
             public boolean sizeAboutToChange() {
                 return prepararAnimacion();
@@ -177,14 +187,65 @@ public class ActivityDetallePersona extends AppCompatActivity {
             }
         });
         rvDeudas.setLayoutManager(layoutManager);
-        rvDeudas.setAdapter(adapter);
+        rvDeudas.setAdapter(adaptador);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                        if (isDeshacerShowing) {
+                            eliminarProvisionalDefinitivo();
+                            if (snackbar != null) {
+                                snackbar.removeCallback(snackbarCallback);
+                            }
+                        }
+                        adaptador.eliminarItem(viewHolder);
+                        mostrarDeshacer();
+                        mostrarTotal(adaptador.getItemProvisional());
+                    }
+                });
+        itemTouchHelper.attachToRecyclerView(rvDeudas);
+    }
+
+    private void mostrarDeshacer() {
+        snackbar = Snackbar.make(rvDeudas, R.string.undo_deleting_debt,
+                Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.undo, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adaptador.deshacerEliminar();
+                mostrarTotal(null);
+                cargarColorTotal();
+                isDeshacerShowing = false;
+            }
+        });
+
+        snackbar.addCallback(snackbarCallback);
+        snackbar.show();
+        isDeshacerShowing = true;
+    }
+
+    private void eliminarProvisionalDefinitivo() {
+        if (adaptador.getItemProvisional() != null) {
+            gestor.eliminarEntidades(Collections.singletonList(adaptador.getItemProvisional()));
+            actualizarTotal();
+            toggleDeleteAllMenuOption();
+            bus.post(new EventoDeudaModificada(persona));
+            adaptador.eliminarProvisionales();
+        }
     }
 
     private boolean prepararAnimacion() {
-        if (animationIsOnGoing) {
+        if (isAnimationOnGoing) {
             return false;
         }
-        animationIsOnGoing = true;
+        isAnimationOnGoing = true;
         CustomTransitionSet transitionSet = new CustomTransitionSet();
         transitionSet.addListener(new Transition.TransitionListener() {
             @Override
@@ -195,13 +256,13 @@ public class ActivityDetallePersona extends AppCompatActivity {
             @Override
             public void onTransitionEnd(@NonNull Transition transition) {
                 layoutManager.setScrollEnabled(true);
-                animationIsOnGoing = false;
+                isAnimationOnGoing = false;
             }
 
             @Override
             public void onTransitionCancel(@NonNull Transition transition) {
                 layoutManager.setScrollEnabled(true);
-                animationIsOnGoing = false;
+                isAnimationOnGoing = false;
             }
 
             @Override
@@ -222,8 +283,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
         ColorManager.pintarColorDeuda(llBarraTotal, persona.getCantidadTotal());
     }
 
-    private void mostrarTotal() {
-        float cantidadTotal = persona.getCantidadTotal();
+    private void mostrarTotal(@Nullable Entidad entidadOmitida) {
+        float cantidadTotal = entidadOmitida == null ? persona.getCantidadTotal() : persona.getCantidadTotal() - entidadOmitida.getCantidad();
         boolean mostrarConcepto;
         CharSequence concepto, cantidad;
 
@@ -253,7 +314,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     concepto = "";
                     mostrarConcepto = false;
             }
-            cantidad = String.format("%1$s €", DecimalFormatUtils.decimalToStringIfZero(persona.getCantidadTotal(), 2, ".", ","));
+            cantidad = String.format("%1$s €", DecimalFormatUtils.decimalToStringIfZero(cantidadTotal,
+                    2, ".", ","));
         }
 
         tvConcepto.setText(concepto);
@@ -329,7 +391,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         ContextRecyclerView.RecyclerContextMenuInfo info =
                 (ContextRecyclerView.RecyclerContextMenuInfo) menuInfo;
-        Entidad entidadSeleccionada = adapter.getEntidadByPosition(info.position);
+        Entidad entidadSeleccionada = adaptador.getEntidadByPosition(info.position);
         getMenuInflater().inflate(R.menu.menu_contextual_deuda, menu);
         toggleContextMenuOptions(menu, entidadSeleccionada);
     }
@@ -377,16 +439,16 @@ public class ActivityDetallePersona extends AppCompatActivity {
     public void actualizarTotal() {
         boolean actualizada = gestor.actualizarPersona(persona, persona.getTipo());
         if (!actualizada) {
-            StringUtils.toastCorto(this, "No se ha podido actualizar la persona.");
+            StringUtils.toastCorto(this, getString(R.string.cannot_update_person));
         }
-        mostrarTotal();
+        mostrarTotal(null);
         cargarColorTotal();
     }
 
     private void modificarEntidad(String tipo, int position) {
 
-        if (adapter.isPositionInAdapter(position)) {
-            mostrarDialog(tipo, position, adapter.getEntidadByPosition(position).getTipoEntidad());
+        if (adaptador.isPositionInAdapter(position)) {
+            mostrarDialog(tipo, position, adaptador.getEntidadByPosition(position).getTipoEntidad());
         } else if (position == -1) {
             mostrarDialog(tipo, position, Entidad.DEUDA);
         }
@@ -428,9 +490,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
             @Override
             public void guardar(int posicion, @NotNull Entidad entidad) {
                 if (gestor.actualizarEntidad(entidad)) {
-                    adapter.alterItemInPosition(posicion, entidad);
-                    adapter.ordenar(posicion, entidad);
-                    mostrarTotal();
+                    adaptador.alterItemInPosition(posicion, entidad);
+                    adaptador.ordenar(posicion, entidad);
+                    mostrarTotal(null);
                     BusProvider.getBus().post(new EventoDeudaModificada(persona));
                     ExtensionFunctionsKt.shortToast(ActivityDetallePersona.this, getString(R.string.deuda_modificada));
                 } else {
@@ -443,24 +505,24 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     /**
      * Builds a <i>Dialog</i> to ask for an amount and adds it to the debt indicated by its
-     * position on the adapter data set.
+     * position on the adaptador data set.
      *
-     * @param position Position of the debt in the adapter's data set.
+     * @param position Position of the debt in the adaptador's data set.
      */
     private void aumentarDeuda(int position, String aumento) {
 
-        Entidad deuda = gestor.getEntidad(adapter.getEntidadByPosition(position).getId());
+        Entidad entidad = gestor.getEntidad(adaptador.getEntidadByPosition(position).getId());
 
-        if (deuda == null) {
-            StringUtils.toastCorto(this, "No se han podido obtener la deuda por su id.");
+        if (entidad == null) {
+            StringUtils.toastCorto(this, "No se han podido obtener la entidad por su id.");
         } else {
-            deuda.aumentar(Float.parseFloat(StringUtils.prepararDecimal(aumento)));
-            actualizarEntidadYAdapter(position, deuda);
+            entidad.aumentar(Float.parseFloat(StringUtils.prepararDecimal(aumento)));
+            actualizarEntidadYAdapter(position, entidad);
         }
     }
 
     private void disminuirDeuda(int position, String cantidadDesiminuida) {
-        Entidad entidad = adapter.getEntidadByPosition(position);
+        Entidad entidad = adaptador.getEntidadByPosition(position);
         float descuento = Float.parseFloat(StringUtils.prepararDecimal(cantidadDesiminuida));
 
         boolean descuentoEsMayorQueDerechoCobro = entidad.getTipoEntidad() == Entidad.DERECHO_COBRO
@@ -478,7 +540,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void cancelarDeuda(int position) {
-        Entidad entidad = adapter.getEntidadByPosition(position);
+        Entidad entidad = adaptador.getEntidadByPosition(position);
         entidad.setCantidad(0);
 
         actualizarEntidadYAdapter(position, entidad);
@@ -486,22 +548,22 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void actualizarEntidadYAdapter(int position, Entidad entidad) {
         gestor.actualizarEntidad(entidad);
-        adapter.alterItemInPosition(position, entidad);
+        adaptador.alterItemInPosition(position, entidad);
         actualizarTotal();
         toggleDeleteAllMenuOption();
         bus.post(new EventoDeudaModificada(persona));
     }
 
     private void cancelarDeudas() {
-        for (int i = 0; i < adapter.getItemCount(); i++) {
+        for (int i = 0; i < adaptador.getItemCount(); i++) {
             cancelarDeuda(i);
         }
     }
 
     public void actualizarLista(List<Entidad> entidades) {
-        adapter.nuevasEntidades(entidades);
+        adaptador.nuevasEntidades(entidades);
         layoutManager.scrollToPosition(0);
-        mostrarTotal();
+        mostrarTotal(null);
         cargarColorTotal();
     }
 

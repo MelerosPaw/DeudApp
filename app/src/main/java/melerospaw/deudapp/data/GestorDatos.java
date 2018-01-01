@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.j256.ormlite.misc.TransactionManager;
@@ -15,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.Normalizer;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Callable;
 

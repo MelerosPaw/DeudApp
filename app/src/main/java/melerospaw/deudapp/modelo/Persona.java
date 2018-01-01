@@ -104,14 +104,14 @@ public class Persona implements Serializable{
     }
 
     public List<Entidad> getDeudas() {
-        List<Entidad> deudas = new ArrayList<>();
+        List<Entidad> entidads = new ArrayList<>();
         for (Entidad entidad : entidades) {
             if (entidad.getTipoEntidad() == Entidad.DEUDA) {
-                deudas.add(entidad);
+                entidads.add(entidad);
             }
         }
 
-        return deudas;
+        return entidads;
     }
 
     public List<Entidad> getDerechosCobro() {
@@ -157,7 +157,7 @@ public class Persona implements Serializable{
         this.imagen = imagen;
     }
 
-    /**Returns oldest Deuda human readable date. If there is ony one debt for this , returns the date.
+    /**Returns oldest Entidad human readable date. If there is ony one debt for this , returns the date.
      * @return A {@code String} with a date formatted as "05/11/2015".*/
     public String getOldest(){
 
@@ -174,7 +174,7 @@ public class Persona implements Serializable{
             return lista.get(0).getReadableDate();
     }
 
-    /**Returns newest Deuda human readable date. If there is ony one debt, returns the date.
+    /**Returns newest Entidad human readable date. If there is ony one debt, returns the date.
      * @return A {@code String} with a date formatted as "05/11/2015".*/
     public String getNewest(){
 

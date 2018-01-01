@@ -2,7 +2,6 @@ package melerospaw.deudapp.modelo;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -56,7 +55,6 @@ public class Entidad implements Comparable<Entidad>, Serializable {
         this.fecha = getFechaSimple();
         setCantidad(cantidad);
     }
-
 
     public Integer getId() {
         return id;

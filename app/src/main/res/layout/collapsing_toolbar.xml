@@ -32,7 +32,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@android:color/white"
-            tools:text="Fecha primera deuda: 24/02/1988" />
+            tools:text="Fecha primera entidad: 24/02/1988" />
 
     </LinearLayout>
 

@@ -28,7 +28,7 @@
 
         <activity
             android:name=".iu.activities.ActivityDetallePersona"
-            android:label="Your deuda is very grande"
+            android:label="Your entidad is very grande"
             android:screenOrientation="portrait"
             android:parentActivityName=".iu.activities.MainActivity" >
 
