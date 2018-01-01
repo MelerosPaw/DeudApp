@@ -1,6 +1,5 @@
 package melerospaw.deudapp.utils
 
-import android.text.TextUtils
 import melerospaw.deudapp.modelo.Entidad
 import java.util.*
 

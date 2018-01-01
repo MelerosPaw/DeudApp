@@ -81,5 +81,8 @@
     <string name="escribe_un_nombre">Escribe un nombre</string>
     <string name="nombre_cambiado">Nombre cambiado</string>
     <string name="persona_repetida">Ya existe una persona con este mismo nombre</string>
+    <string name="slash">/</string>
+    <string name="both_total">Total ambos</string>
+    <string name="total">Total</string>
 
 </resources>

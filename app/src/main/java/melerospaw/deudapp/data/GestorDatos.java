@@ -22,6 +22,7 @@ import java.util.concurrent.Callable;
 import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
+import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.memoryutil.MemoryUtil;
 import melerospaw.memoryutil.Path;
 import melerospaw.memoryutil.Result;
@@ -407,5 +408,32 @@ public class GestorDatos {
 
     public boolean recargarEntidad(Entidad entidad) {
         return databaseHelper.recargarEntidad(entidad);
+    }
+
+    public float getTotalAcreedores() {
+        float total = 0F;
+        List<Persona> acreedores = getAcreedores();
+        for (Persona acreedor : acreedores) {
+            total += acreedor.getCantidadTotal();
+        }
+        return total;
+    }
+
+    public float getTotalDeudores() {
+        float total = 0F;
+        List<Persona> deudores = getDeudores();
+        for (Persona deudor : deudores) {
+            total += deudor.getCantidadTotal();
+        }
+        return total;
+    }
+
+    public float getTotalAmbos() {
+        float total = 0F;
+        List<Persona> ambos = getAmbos();
+        for (Persona ambo : ambos) {
+            total += ambo.getCantidadTotal();
+        }
+        return total;
     }
 }

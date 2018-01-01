@@ -3,10 +3,8 @@ package melerospaw.deudapp.iu.activities;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -17,10 +15,8 @@ import android.support.transition.TransitionManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -60,7 +56,6 @@ import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.StringUtils;
-import melerospaw.memoryutil.MemoryUtil;
 
 public class ActivityDetallePersona extends AppCompatActivity {
 
@@ -77,7 +72,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
     @BindView(R.id.app_bar)                     AppBarLayout appBar;
     @BindView(R.id.collapsing_toolbar_layout)   CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.ll_barra_total)              LinearLayout llBarraTotal;
+    @BindView(R.id.fl_barra_total)              LinearLayout llBarraTotal;
     @BindView(R.id.iv_foto)                     ImageView ivFoto;
 
     private GestorDatos gestor;
