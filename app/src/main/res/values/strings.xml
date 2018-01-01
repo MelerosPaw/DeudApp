@@ -34,7 +34,7 @@
     <string name="nueva_deuda">Nueva deuda</string>
     <string name="nuevo_derecho_de_cobro">Nuevo derecho de cobro</string>
     <string name="nueva_persona">Nueva persona</string>
-    <string name="deudaes_vacio">Añade una deduda seleccionando NUEVA DEUDA o NUEVO DERECHO DE COBRO</string>
+    <string name="entidades_vacio">Añade una deduda seleccionando NUEVA DEUDA o NUEVO DERECHO DE COBRO</string>
     <string name="personas_vacio">Añade una persona seleccionando NUEVA PERSONA</string>
     <string name="nombre">Nombre</string>
     <string name="anadir_deuda">Añadir deuda</string>
@@ -46,7 +46,7 @@
     <string name="anadir_derecho_cobro">Añadir derecho de cobro</string>
     <string name="anadir">Añadir</string>
     <string name="imposible_eliminar_deudas">No se ha podido eliminar las deudas de %1$s. Prueba más tarde.</string>
-    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior</string>
+    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior.</string>
     <string name="deudas_canceladas">Deudas canceladas</string>
     <string name="debes_un_total_de">Debes un total de:</string>
     <string name="te_deben_un_total_de">Te deben un total de:</string>
