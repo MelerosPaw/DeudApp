@@ -84,5 +84,6 @@
     <string name="undo_deleting_debt">¿Quieres deshacer esta acción?</string>
     <string name="undo">DESHACER</string>
     <string name="cannot_update_person">No se ha podido actualizar la persona.</string>
+    <string name="total_seleccionado">Total seleccionado</string>
 
 </resources>

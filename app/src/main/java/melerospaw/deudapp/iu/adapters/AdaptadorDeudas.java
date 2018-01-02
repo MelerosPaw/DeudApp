@@ -211,7 +211,8 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             }
 
             tvConcepto.setText(entidad.getConcepto());
-            String cantidad = DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad(), 2, ".", ",") + " €";
+            String cantidad = String.format(mContext.getString(R.string.cantidad),
+                    DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad(), 2, ".", ","));
             tvCantidad.setText(cantidad);
             if (entidad.getCantidad() == 0.00f) {
                 tvCantidad.setTextColor(ContextCompat.getColor(mContext, R.color.inactive));
