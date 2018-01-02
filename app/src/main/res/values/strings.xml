@@ -85,5 +85,6 @@
     <string name="undo">DESHACER</string>
     <string name="cannot_update_person">No se ha podido actualizar la persona.</string>
     <string name="total_seleccionado">Total seleccionado</string>
+    <string name="cantidad_deuda_vacía">0</string>
 
 </resources>

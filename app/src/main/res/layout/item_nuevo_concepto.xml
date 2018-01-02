@@ -11,9 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:hint="@string/concepto"
+        android:imeOptions="actionNext"
         android:inputType="text"
         android:maxLines="1"
-        android:imeOptions="actionNext"
         android:nextFocusRight="@+id/et_cantidad"
         android:textSize="18sp" />
 
@@ -23,12 +23,12 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
+        android:digits="1234567890,."
         android:ems="6"
         android:gravity="end"
-        android:hint="0"
+        android:hint="@string/cantidad_deuda_vacía"
         android:imeOptions="actionDone"
         android:inputType="numberDecimal"
-        android:digits="1234567890,."
         android:maxLines="1"
         android:textSize="18sp" />
 
@@ -40,5 +40,10 @@
         android:gravity="end"
         android:text="@string/euro"
         android:textSize="18sp" />
+
+    <CheckBox
+        android:id="@+id/chk_deuda_grupal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

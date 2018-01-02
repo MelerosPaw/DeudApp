@@ -16,6 +16,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
@@ -29,6 +30,7 @@ public class AdaptadorEntidadesNuevas
 
     private List<Entidad> mDatos;
     private AppCompatActivity mContext;
+    private OnMostrarDialogoEplicativoListener mostrarDialogoExplicativoListener;
     private boolean justAdded;
 
     public AdaptadorEntidadesNuevas(AppCompatActivity context, List<Entidad> datos) {
@@ -115,6 +117,7 @@ public class AdaptadorEntidadesNuevas
         @BindView(R.id.et_concepto) EditText etConcepto;
         @BindView(R.id.et_cantidad) EditText etCantidad;
         @BindView(R.id.tv_euro)     TextView tvEuro;
+        @BindView(R.id.et_cantidad) EditText chkDeudaGrupal;
 
         private Entidad entidad;
 
@@ -194,5 +197,20 @@ public class AdaptadorEntidadesNuevas
             etCantidad.setText("");
             etConcepto.setText("");
         }
+
+        @OnCheckedChanged(R.id.chk_deuda_grupal)
+        public void onCheckedChanged(boolean isCheked) {
+            if (isCheked) {
+                mostrarDialogoExplicativoListener.onMostrarCuadroIndicativo();
+            }
+        }
+    }
+
+    public void setMostrarDialogoExplicativoListener(OnMostrarDialogoEplicativoListener mostrarDialogoExplicativoListener) {
+        this.mostrarDialogoExplicativoListener = mostrarDialogoExplicativoListener;
+    }
+
+    public interface OnMostrarDialogoEplicativoListener {
+        void onMostrarCuadroIndicativo();
     }
 }

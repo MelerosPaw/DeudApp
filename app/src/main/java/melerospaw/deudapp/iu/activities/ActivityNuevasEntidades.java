@@ -180,6 +180,13 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         });
         itemTouchHelper.attachToRecyclerView(rvNuevasEntidades);
         toggleMensajeVacioEntidades();
+        adaptadorNuevasEntidades.setMostrarDialogoExplicativoListener(
+                new AdaptadorEntidadesNuevas.OnMostrarDialogoEplicativoListener() {
+            @Override
+            public void onMostrarCuadroIndicativo() {
+                // TODO: 02/01/2018 mostrar un DialogFragment.
+            }
+        });
     }
 
     private void toggleMensajeVacioEntidades() {
