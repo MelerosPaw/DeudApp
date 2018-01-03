@@ -1,14 +1,15 @@
 package melerospaw.deudapp.iu.adapters;
 
+import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -29,13 +30,16 @@ public class AdaptadorEntidadesNuevas
         extends RecyclerView.Adapter<AdaptadorEntidadesNuevas.EntidadNuevaViewHolder> {
 
     private List<Entidad> mDatos;
-    private AppCompatActivity mContext;
-    private OnMostrarDialogoEplicativoListener mostrarDialogoExplicativoListener;
+    private Context mContext;
+    private boolean debeMostrarDialogoExplicativo;
+    private OnMostrarDialogoExplicativoListener mostrarDialogoExplicativoListener;
     private boolean justAdded;
 
-    public AdaptadorEntidadesNuevas(AppCompatActivity context, List<Entidad> datos) {
+    public AdaptadorEntidadesNuevas(Context context, List<Entidad> datos,
+                                    boolean debeMostrarDialogExplicativo) {
         this.mContext = context;
         this.mDatos = datos;
+        this.debeMostrarDialogoExplicativo = debeMostrarDialogExplicativo;
     }
 
     @Override
@@ -114,10 +118,10 @@ public class AdaptadorEntidadesNuevas
      */
     class EntidadNuevaViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.et_concepto) EditText etConcepto;
-        @BindView(R.id.et_cantidad) EditText etCantidad;
-        @BindView(R.id.tv_euro)     TextView tvEuro;
-        @BindView(R.id.et_cantidad) EditText chkDeudaGrupal;
+        @BindView(R.id.et_concepto)         EditText etConcepto;
+        @BindView(R.id.et_cantidad)         EditText etCantidad;
+        @BindView(R.id.tv_euro)             TextView tvEuro;
+        @BindView(R.id.chk_deuda_grupal)    CheckBox chkDeudaGrupal;
 
         private Entidad entidad;
 
@@ -206,11 +210,11 @@ public class AdaptadorEntidadesNuevas
         }
     }
 
-    public void setMostrarDialogoExplicativoListener(OnMostrarDialogoEplicativoListener mostrarDialogoExplicativoListener) {
+    public void setMostrarDialogoExplicativoListener(OnMostrarDialogoExplicativoListener mostrarDialogoExplicativoListener) {
         this.mostrarDialogoExplicativoListener = mostrarDialogoExplicativoListener;
     }
 
-    public interface OnMostrarDialogoEplicativoListener {
+    public interface OnMostrarDialogoExplicativoListener {
         void onMostrarCuadroIndicativo();
     }
 }

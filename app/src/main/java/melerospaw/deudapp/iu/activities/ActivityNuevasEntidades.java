@@ -34,10 +34,12 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.adapters.AdaptadorEntidadesNuevas;
 import melerospaw.deudapp.iu.adapters.AdaptadorPersonasNuevas;
+import melerospaw.deudapp.iu.dialogs.DialogExplicativo;
 import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.EntidadesUtil;
+import melerospaw.deudapp.utils.SharedPreferencesManager;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
 
@@ -158,35 +160,51 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void inicializarAdaptadorNuevasEntidades() {
-        adaptadorNuevasEntidades = new AdaptadorEntidadesNuevas(this, new LinkedList<Entidad>());
+        adaptadorNuevasEntidades = new AdaptadorEntidadesNuevas(this,
+                new LinkedList<Entidad>(), !new SharedPreferencesManager(this).esPrimeraVez());
         layoutManagerEntidades = new LinearLayoutManager(this);
         rvNuevasEntidades.setLayoutManager(layoutManagerEntidades);
         rvNuevasEntidades.setAdapter(adaptadorNuevasEntidades);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView,
-                                  RecyclerView.ViewHolder viewHolder,
-                                  RecyclerView.ViewHolder target) {
-                return true;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                adaptadorNuevasEntidades.eliminarItem(viewHolder);
-                toggleMensajeVacioEntidades();
-                TecladoUtils.ocultarTeclado(ActivityNuevasEntidades.this);
-            }
-        });
-        itemTouchHelper.attachToRecyclerView(rvNuevasEntidades);
-        toggleMensajeVacioEntidades();
         adaptadorNuevasEntidades.setMostrarDialogoExplicativoListener(
-                new AdaptadorEntidadesNuevas.OnMostrarDialogoEplicativoListener() {
+                new AdaptadorEntidadesNuevas.OnMostrarDialogoExplicativoListener() {
             @Override
             public void onMostrarCuadroIndicativo() {
-                // TODO: 02/01/2018 mostrar un DialogFragment.
+                mostrarDialogExplicativo();
             }
         });
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                        adaptadorNuevasEntidades.eliminarItem(viewHolder);
+                        toggleMensajeVacioEntidades();
+                        TecladoUtils.ocultarTeclado(ActivityNuevasEntidades.this);
+                    }
+                });
+        itemTouchHelper.attachToRecyclerView(rvNuevasEntidades);
+        toggleMensajeVacioEntidades();
+    }
+
+    private void mostrarDialogExplicativo() {
+        final SharedPreferencesManager spm = new SharedPreferencesManager(ActivityNuevasEntidades.this);
+        if (spm.mustShowExplanatoryDialog()) {
+            final DialogExplicativo dialogExplicativo = new DialogExplicativo();
+            dialogExplicativo.setCallback(new DialogExplicativo.PositiveCallback() {
+                @Override
+                public void onDialogClosed(boolean stopShow) {
+                    spm.setMustShowExplanatoryDialog(!stopShow);
+                    spm.setNoEsPrimeraVez(true);
+                }
+            });
+            dialogExplicativo.show(getSupportFragmentManager(), DialogExplicativo.getTAG());
+        }
     }
 
     private void toggleMensajeVacioEntidades() {

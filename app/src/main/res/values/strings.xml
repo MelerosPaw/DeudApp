@@ -86,5 +86,9 @@
     <string name="cannot_update_person">No se ha podido actualizar la persona.</string>
     <string name="total_seleccionado">Total seleccionado</string>
     <string name="cantidad_deuda_vacía">0</string>
+    <string name="deuda_grupal_explicacion">Al marcar un concepto como \"deuda grupal\" su cantidad será divida entre todos los deudores.</string>
+    <string name="no_mostrar_dialogo">No volver a mostar este diálogo</string>
+    <string name="entendido">Entendido</string>
+    <string name="deuda_grupal">Deuda grupal</string>
 
 </resources>
