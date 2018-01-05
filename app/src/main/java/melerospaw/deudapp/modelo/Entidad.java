@@ -70,7 +70,7 @@ public class Entidad implements Comparable<Entidad>, Serializable {
 
     public void setCantidad(float cantidad) {
 
-        if (tipoEntidad == DEUDA) {
+        if (tipoEntidad == DEUDA && cantidad > 0) {
             this.cantidad = -cantidad;
         } else {
             this.cantidad = cantidad;

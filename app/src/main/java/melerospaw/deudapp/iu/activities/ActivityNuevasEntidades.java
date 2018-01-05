@@ -32,9 +32,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
-import melerospaw.deudapp.iu.adapters.AdaptadorEntidadesNuevas;
+import melerospaw.deudapp.iu.adapters.AdaptadorNuevasEntidades;
 import melerospaw.deudapp.iu.adapters.AdaptadorPersonasNuevas;
 import melerospaw.deudapp.iu.dialogs.DialogExplicativo;
+import melerospaw.deudapp.iu.vo.EntidadVO;
 import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
@@ -59,8 +60,8 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     @BindView(R.id.btn_guardar)             Button btnGuardar;
 
     private GestorDatos gestor;
-    private AdaptadorPersonasNuevas adaptadorNuevaPersona;
-    private AdaptadorEntidadesNuevas adaptadorNuevasEntidades;
+    private AdaptadorPersonasNuevas adaptadorNuevasPersonas;
+    private AdaptadorNuevasEntidades adaptadorNuevasEntidades;
     private RecyclerView.LayoutManager layoutManagerPersonas;
     private RecyclerView.LayoutManager layoutManagerEntidades;
     private Persona persona;
@@ -130,11 +131,11 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         if (tieneAccesoAContactos) {
             personasSimples.addAll(gestor.getContacts(this));
         }
-        adaptadorNuevaPersona = new AdaptadorPersonasNuevas(
+        adaptadorNuevasPersonas = new AdaptadorPersonasNuevas(
                 this, new LinkedList<Contact>(), personasSimples);
         layoutManagerPersonas = new LinearLayoutManager(this);
         rvPersonas.setLayoutManager(layoutManagerPersonas);
-        rvPersonas.setAdapter(adaptadorNuevaPersona);
+        rvPersonas.setAdapter(adaptadorNuevasPersonas);
         rvPersonas.setVisibility(View.VISIBLE);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
@@ -146,7 +147,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                adaptadorNuevaPersona.eliminarItem(viewHolder);
+                adaptadorNuevasPersonas.eliminarItem(viewHolder);
                 toggleMensajeVacioPersonas();
                 TecladoUtils.ocultarTeclado(ActivityNuevasEntidades.this);
             }
@@ -156,17 +157,16 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void toggleMensajeVacioPersonas() {
-        tvPersonasVacias.setVisibility(!isForResult && adaptadorNuevaPersona == null || adaptadorNuevaPersona.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
+        tvPersonasVacias.setVisibility(!isForResult && adaptadorNuevasPersonas == null || adaptadorNuevasPersonas.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void inicializarAdaptadorNuevasEntidades() {
-        adaptadorNuevasEntidades = new AdaptadorEntidadesNuevas(this,
-                new LinkedList<Entidad>(), !new SharedPreferencesManager(this).esPrimeraVez());
+        adaptadorNuevasEntidades = new AdaptadorNuevasEntidades(this, new LinkedList<Entidad>());
         layoutManagerEntidades = new LinearLayoutManager(this);
         rvNuevasEntidades.setLayoutManager(layoutManagerEntidades);
         rvNuevasEntidades.setAdapter(adaptadorNuevasEntidades);
         adaptadorNuevasEntidades.setMostrarDialogoExplicativoListener(
-                new AdaptadorEntidadesNuevas.OnMostrarDialogoExplicativoListener() {
+                new AdaptadorNuevasEntidades.OnMostrarDialogoExplicativoListener() {
             @Override
             public void onMostrarCuadroIndicativo() {
                 mostrarDialogExplicativo();
@@ -247,8 +247,8 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void nuevaPersona() {
-        adaptadorNuevaPersona.nuevaPersona();
-        layoutManagerPersonas.scrollToPosition(adaptadorNuevaPersona.getItemCount() - 1);
+        adaptadorNuevasPersonas.nuevaPersona();
+        layoutManagerPersonas.scrollToPosition(adaptadorNuevasPersonas.getItemCount() - 1);
         toggleMensajeVacioPersonas();
     }
 
@@ -310,10 +310,10 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
                 sePuedeGuardar = true;
             }
         } else {
-            if (!adaptadorNuevaPersona.hayAlguien()) {
+            if (!adaptadorNuevasPersonas.hayAlguien()) {
                 Snackbar.make(rvNuevasEntidades, "No has añadido ninguna persona", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorNuevaPersona.hayNombresRepetidos()) {
+            } else if (adaptadorNuevasPersonas.hayNombresRepetidos()) {
                 Snackbar.make(rvNuevasEntidades, "Has añadido más de una vez la misma persona", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else if (!adaptadorNuevasEntidades.hayAlgo()) {
@@ -346,7 +346,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     private boolean hayEntidadesRepetidas() {
         List<Entidad> entidades = new LinkedList<>(persona.getEntidades());
         entidades.addAll(adaptadorNuevasEntidades.getEntidades());
-        boolean hayRepetidas = EntidadesUtil.hayEntidadesRepetidas(entidades);
+        boolean hayRepetidas = EntidadesUtil.hayEntidadesRepetidas(adaptadorNuevasEntidades.getEntidadesVO());
         if (hayRepetidas) {
             informarRepetidos(EntidadesUtil.getRepetidos(entidades));
         }
@@ -386,7 +386,10 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     private void guardar() {
 
         List<Persona> personas = isForResult ?
-                Collections.singletonList(persona) : adaptadorNuevaPersona.getPersonas();
+                Collections.singletonList(persona) : adaptadorNuevasPersonas.getPersonas();
+        if (adaptadorNuevasEntidades.hayEntidadesGrupales()) {
+            resolverEntidadesGrupales(adaptadorNuevasEntidades.getEntidadesVO(), adaptadorNuevasPersonas.getItemCount());
+        }
         List<Entidad> entidades = adaptadorNuevasEntidades.getEntidades();
 
         boolean guardados = gestor.crearEntidadesPersonas(personas, entidades, tipoPersona);
@@ -396,6 +399,10 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         } else {
             navigateBack(guardados);
         }
+    }
+
+    private void resolverEntidadesGrupales(List<EntidadVO> entidades, int cantidadDeudores) {
+        EntidadesUtil.repartirEntidadesGrupales(entidades, cantidadDeudores);
     }
 
     private void navigateBack(boolean guardados) {

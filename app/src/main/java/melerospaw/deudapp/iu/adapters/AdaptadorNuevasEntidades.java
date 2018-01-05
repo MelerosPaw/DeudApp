@@ -13,33 +13,33 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
+import melerospaw.deudapp.iu.vo.EntidadVO;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtil;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
 
-public class AdaptadorEntidadesNuevas
-        extends RecyclerView.Adapter<AdaptadorEntidadesNuevas.EntidadNuevaViewHolder> {
+public class AdaptadorNuevasEntidades
+        extends RecyclerView.Adapter<AdaptadorNuevasEntidades.EntidadNuevaViewHolder> {
 
-    private List<Entidad> mDatos;
+    private List<EntidadVO> mDatos;
     private Context mContext;
-    private boolean debeMostrarDialogoExplicativo;
     private OnMostrarDialogoExplicativoListener mostrarDialogoExplicativoListener;
     private boolean justAdded;
 
-    public AdaptadorEntidadesNuevas(Context context, List<Entidad> datos,
-                                    boolean debeMostrarDialogExplicativo) {
+    public AdaptadorNuevasEntidades(Context context, List<Entidad> datos) {
         this.mContext = context;
-        this.mDatos = datos;
-        this.debeMostrarDialogoExplicativo = debeMostrarDialogExplicativo;
+        this.mDatos = toEntidadVOList(datos);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class AdaptadorEntidadesNuevas
 
     @Override
     public void onBindViewHolder(EntidadNuevaViewHolder holder, int position) {
-        Entidad entidad = mDatos.get(position);
+        Entidad entidad = mDatos.get(position).getEntidad();
         holder.bindView(entidad);
     }
 
@@ -59,11 +59,11 @@ public class AdaptadorEntidadesNuevas
         return mDatos.size();
     }
 
-    public Entidad getEntidadByPosition(int position) {
+    public EntidadVO getEntidadByPosition(int position) {
         return mDatos.get(position);
     }
 
-    public void alterItemInPosition(int position, Entidad entidad) {
+    public void alterItemInPosition(int position, EntidadVO entidad) {
         mDatos.set(position, entidad);
         notifyItemChanged(position);
     }
@@ -73,7 +73,7 @@ public class AdaptadorEntidadesNuevas
      */
     public void nuevaEntidad(@Entidad.TipoEntidad int tipoEntidad) {
         setJustAdded(true);
-        mDatos.add(new Entidad(tipoEntidad));
+        mDatos.add(new EntidadVO(new Entidad(tipoEntidad)));
         notifyItemInserted(mDatos.size());
     }
 
@@ -83,6 +83,10 @@ public class AdaptadorEntidadesNuevas
 
     public List<Entidad> getEntidades() {
         return EntidadesUtil.getEntidades(mDatos);
+    }
+
+    public List<EntidadVO> getEntidadesVO() {
+        return EntidadesUtil.getEntidadesVO(mDatos);
     }
 
     public boolean hayEntidadesIncompletas() {
@@ -105,11 +109,27 @@ public class AdaptadorEntidadesNuevas
         return EntidadesUtil.hayDelTipo(mDatos, Entidad.DERECHO_COBRO);
     }
 
+    public boolean hayEntidadesGrupales() {
+        return EntidadesUtil.hayEntidadesGrupales(mDatos);
+    }
+
     public void eliminarItem(RecyclerView.ViewHolder holder) {
         int posicion = holder.getAdapterPosition();
         mDatos.remove(holder.getAdapterPosition());
         notifyItemRemoved(posicion);
         ((EntidadNuevaViewHolder) holder).clear();
+    }
+
+    private List<EntidadVO> toEntidadVOList(List<Entidad> entidades) {
+        return EntidadesUtil.toEntidadVOList(entidades);
+    }
+
+    public void setMostrarDialogoExplicativoListener(OnMostrarDialogoExplicativoListener mostrarDialogoExplicativoListener) {
+        this.mostrarDialogoExplicativoListener = mostrarDialogoExplicativoListener;
+    }
+
+    public interface OnMostrarDialogoExplicativoListener {
+        void onMostrarCuadroIndicativo();
     }
 
 
@@ -161,6 +181,8 @@ public class AdaptadorEntidadesNuevas
                 TecladoUtils.mostrarTeclado(etConcepto);
                 setJustAdded(false);
             }
+
+            chkDeudaGrupal.setChecked(getEntidadByPosition(getAdapterPosition()).getEsGrupal());
         }
 
         private void setTextColor() {
@@ -197,24 +219,17 @@ public class AdaptadorEntidadesNuevas
             }
         }
 
-        private void clear() {
-            etCantidad.setText("");
-            etConcepto.setText("");
-        }
-
         @OnCheckedChanged(R.id.chk_deuda_grupal)
         public void onCheckedChanged(boolean isCheked) {
             if (isCheked) {
                 mostrarDialogoExplicativoListener.onMostrarCuadroIndicativo();
             }
+            getEntidadByPosition(getAdapterPosition()).setEsGrupal(isCheked);
         }
-    }
 
-    public void setMostrarDialogoExplicativoListener(OnMostrarDialogoExplicativoListener mostrarDialogoExplicativoListener) {
-        this.mostrarDialogoExplicativoListener = mostrarDialogoExplicativoListener;
-    }
-
-    public interface OnMostrarDialogoExplicativoListener {
-        void onMostrarCuadroIndicativo();
+        private void clear() {
+            etCantidad.setText("");
+            etConcepto.setText("");
+        }
     }
 }
