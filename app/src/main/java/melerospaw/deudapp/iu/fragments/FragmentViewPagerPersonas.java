@@ -276,13 +276,13 @@ public class FragmentViewPagerPersonas extends Fragment {
         String texto;
         switch (mTipo) {
             case ConstantesGenerales.DEBO:
-                texto = "Total debido";
+                texto = getString(R.string.total_debido);
                 break;
             case ConstantesGenerales.ME_DEBEN:
-                texto = "Total adeudado";
+                texto = getString(R.string.total_adeudado);
                 break;
             default:
-                texto = "Balance total";
+                texto = getString(R.string.balance_total);
                 break;
         }
 

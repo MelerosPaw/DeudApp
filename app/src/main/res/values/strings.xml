@@ -47,7 +47,7 @@
     <string name="anadir">Añadir</string>
     <string name="imposible_eliminar_deudas">No se ha podido eliminar las deudas de %1$s. Prueba más tarde.</string>
     <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior.</string>
-    <string name="deudas_canceladas">Deudas canceladas</string>
+    <string name="deudas_canceladas">DEUDAS CANCELADAS</string>
     <string name="debes_un_total_de">Debes un total de:</string>
     <string name="te_deben_un_total_de">Te deben un total de:</string>
     <string name="cuenta_a_deber">La cuenta te sale a deber:</string>
@@ -91,5 +91,6 @@
     <string name="entendido">Entendido</string>
     <string name="deuda_grupal">Deuda grupal</string>
     <string name="imposible_borrar_foto">No se ha podido eliminar la foto.</string>
+    <string name="balance_total">Balance total:</string>
 
 </resources>
