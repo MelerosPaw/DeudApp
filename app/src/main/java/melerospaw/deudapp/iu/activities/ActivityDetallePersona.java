@@ -121,7 +121,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     public void loadView(){
         setToolbar();
         inicializarAdapter();
-        cargarColorTotal();
+        cambiarColorTotal(null);
         mostrarFoto();
         mostrarTotal(null);
     }
@@ -167,17 +167,17 @@ public class ActivityDetallePersona extends AppCompatActivity {
             }
 
             @Override
-            public void onAumentarDedudaSeleccionado(Entidad entidad, int adapterPosition) {
+            public void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
                 mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad.getTipoEntidad());
             }
 
             @Override
-            public void onDescontarDedudaSeleccionado(Entidad entidad, int adapterPosition) {
+            public void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
                 mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad.getTipoEntidad());
             }
 
             @Override
-            public void onCancelarDedudaSeleccionado(Entidad entidad, int adapterPosition) {
+            public void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
                 mostrarDialog(DialogoModificarCantidad.TIPO_CANCELAR, adapterPosition, entidad.getTipoEntidad());
             }
 
@@ -189,7 +189,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
         rvDeudas.setLayoutManager(layoutManager);
         rvDeudas.setAdapter(adaptador);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
+                        | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
                     @Override
                     public boolean onMove(RecyclerView recyclerView,
                                           RecyclerView.ViewHolder viewHolder,
@@ -208,6 +209,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                         adaptador.eliminarItem(viewHolder);
                         mostrarDeshacer();
                         mostrarTotal(adaptador.getItemProvisional());
+                        cambiarColorTotal(adaptador.getItemProvisional());
                     }
                 });
         itemTouchHelper.attachToRecyclerView(rvDeudas);
@@ -221,7 +223,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             public void onClick(View view) {
                 adaptador.deshacerEliminar();
                 mostrarTotal(null);
-                cargarColorTotal();
+                cambiarColorTotal(null);
                 isDeshacerShowing = false;
             }
         });
@@ -279,8 +281,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
         return true;
     }
 
-    private void cargarColorTotal() {
-        ColorManager.pintarColorDeuda(llBarraTotal, persona.getCantidadTotal());
+    private void cambiarColorTotal(@Nullable Entidad deudaOmitida) {
+        ColorManager.pintarColorDeuda(llBarraTotal, deudaOmitida == null ?
+                persona.getCantidadTotal() : persona.getCantidadTotal() - deudaOmitida.getCantidad());
     }
 
     private void mostrarTotal(@Nullable Entidad entidadOmitida) {
@@ -302,9 +305,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     concepto = getString(R.string.te_deben_un_total_de);
                     break;
                 case Persona.AMBOS:
-                    if (cantidadTotal < 0f) {
+                    if (cantidadTotal < 0F) {
                         concepto = getString(R.string.cuenta_a_deber);
-                    } else if (cantidadTotal > 0f) {
+                    } else if (cantidadTotal > 0F) {
                         concepto = getString(R.string.cuenta_a_cobrar);
                     } else {
                         concepto = getString(R.string.puedes_cancelar_deuda);
@@ -314,7 +317,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     concepto = "";
                     mostrarConcepto = false;
             }
-            cantidad = String.format("%1$s €", DecimalFormatUtils.decimalToStringIfZero(cantidadTotal,
+            cantidad = String.format(getString(R.string.cantidad), DecimalFormatUtils.decimalToStringIfZero(cantidadTotal,
                     2, ".", ","));
         }
 
@@ -349,7 +352,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 navigateBack();
                 break;
             case R.id.menu_nueva:
-                ActivityNuevasEntidades.startForResult(this, persona);
+                ActivityNuevasDeudas.startForResult(this, persona);
                 break;
             case R.id.imagen:
                 buscarImagen();
@@ -372,7 +375,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             gestor.recargarPersona(persona);
             mostrarFoto();
         } else {
-            Toast.makeText(this, "No se ha podido eliminarVarios la foto.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.imposible_borrar_foto, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -442,7 +445,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             StringUtils.toastCorto(this, getString(R.string.cannot_update_person));
         }
         mostrarTotal(null);
-        cargarColorTotal();
+        cambiarColorTotal(null);
     }
 
     private void modificarEntidad(String tipo, int position) {
@@ -504,7 +507,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     /**
-     * Builds a <i>Dialog</i> to ask for an amount and adds it to the debt indicated by its
+     * Builds a {@code Dialog} to ask for an amount and adds it to the debt indicated by its
      * position on the adaptador data set.
      *
      * @param position Position of the debt in the adaptador's data set.
@@ -564,7 +567,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         adaptador.nuevasEntidades(entidades);
         layoutManager.scrollToPosition(0);
         mostrarTotal(null);
-        cargarColorTotal();
+        cambiarColorTotal(null);
     }
 
     @Override
@@ -573,7 +576,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == RC_FOTO) {
                 procesarResultFoto(data);
-            } else if (requestCode == ActivityNuevasEntidades.REQUEST_CODE_ADD_ENTITIES){
+            } else if (requestCode == ActivityNuevasDeudas.REQUEST_CODE_ADD_ENTITIES){
                 procesarResultNuevasDeudas(data);
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
@@ -597,7 +600,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     @SuppressWarnings("unchecked")
     private void procesarResultNuevasDeudas(Intent data) {
-        List<Integer> idsEntidades = data.getIntegerArrayListExtra(ActivityNuevasEntidades.RESULT_ENTITIES_ADDED);
+        List<Integer> idsEntidades = data.getIntegerArrayListExtra(ActivityNuevasDeudas.RESULT_ENTITIES_ADDED);
         List<Entidad> entidades = gestor.getEntidades(idsEntidades);
         actualizarLista(entidades);
         BusProvider.getBus().post(new EventoDeudaModificada(persona));

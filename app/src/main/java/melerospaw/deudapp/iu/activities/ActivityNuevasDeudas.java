@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
-import melerospaw.deudapp.iu.adapters.AdaptadorNuevasEntidades;
+import melerospaw.deudapp.iu.adapters.AdaptadorNuevasDeudas;
 import melerospaw.deudapp.iu.adapters.AdaptadorPersonasNuevas;
 import melerospaw.deudapp.iu.dialogs.DialogExplicativo;
 import melerospaw.deudapp.iu.vo.EntidadVO;
@@ -44,7 +44,7 @@ import melerospaw.deudapp.utils.SharedPreferencesManager;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
 
-public class ActivityNuevasEntidades extends AppCompatActivity {
+public class ActivityNuevasDeudas extends AppCompatActivity {
 
     public static final String BUNDLE_PERSONA = "PERSONA";
     public static final int REQUEST_CODE_ADD_ENTITIES = 1;
@@ -61,7 +61,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
     private GestorDatos gestor;
     private AdaptadorPersonasNuevas adaptadorNuevasPersonas;
-    private AdaptadorNuevasEntidades adaptadorNuevasEntidades;
+    private AdaptadorNuevasDeudas adaptadorNuevasDeudas;
     private RecyclerView.LayoutManager layoutManagerPersonas;
     private RecyclerView.LayoutManager layoutManagerEntidades;
     private Persona persona;
@@ -69,14 +69,14 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     private @Persona.TipoPersona int tipoPersona;
 
     public static void start(Context context) {
-        Intent starter = new Intent(context, ActivityNuevasEntidades.class);
+        Intent starter = new Intent(context, ActivityNuevasDeudas.class);
         context.startActivity(starter);
     }
 
     public static void startForResult(AppCompatActivity activity, Persona persona) {
-        Intent intent = new Intent(activity, ActivityNuevasEntidades.class);
-        intent.putExtra(ActivityNuevasEntidades.BUNDLE_PERSONA, persona);
-        activity.startActivityForResult(intent, ActivityNuevasEntidades.REQUEST_CODE_ADD_ENTITIES);
+        Intent intent = new Intent(activity, ActivityNuevasDeudas.class);
+        intent.putExtra(ActivityNuevasDeudas.BUNDLE_PERSONA, persona);
+        activity.startActivityForResult(intent, ActivityNuevasDeudas.REQUEST_CODE_ADD_ENTITIES);
     }
 
     @Override
@@ -137,7 +137,9 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         rvPersonas.setLayoutManager(layoutManagerPersonas);
         rvPersonas.setAdapter(adaptadorNuevasPersonas);
         rvPersonas.setVisibility(View.VISIBLE);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
+                        | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
             @Override
             public boolean onMove(RecyclerView recyclerView,
                                   RecyclerView.ViewHolder viewHolder,
@@ -149,7 +151,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 adaptadorNuevasPersonas.eliminarItem(viewHolder);
                 toggleMensajeVacioPersonas();
-                TecladoUtils.ocultarTeclado(ActivityNuevasEntidades.this);
+                TecladoUtils.ocultarTeclado(ActivityNuevasDeudas.this);
             }
         });
         itemTouchHelper.attachToRecyclerView(rvPersonas);
@@ -161,19 +163,20 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void inicializarAdaptadorNuevasEntidades() {
-        adaptadorNuevasEntidades = new AdaptadorNuevasEntidades(this, new LinkedList<Entidad>());
+        adaptadorNuevasDeudas = new AdaptadorNuevasDeudas(this, new LinkedList<Entidad>());
         layoutManagerEntidades = new LinearLayoutManager(this);
         rvNuevasEntidades.setLayoutManager(layoutManagerEntidades);
-        rvNuevasEntidades.setAdapter(adaptadorNuevasEntidades);
-        adaptadorNuevasEntidades.setMostrarDialogoExplicativoListener(
-                new AdaptadorNuevasEntidades.OnMostrarDialogoExplicativoListener() {
+        rvNuevasEntidades.setAdapter(adaptadorNuevasDeudas);
+        adaptadorNuevasDeudas.setMostrarDialogoExplicativoListener(
+                new AdaptadorNuevasDeudas.OnMostrarDialogoExplicativoListener() {
             @Override
             public void onMostrarCuadroIndicativo() {
                 mostrarDialogExplicativo();
             }
         });
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
+                        | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
                     @Override
                     public boolean onMove(RecyclerView recyclerView,
                                           RecyclerView.ViewHolder viewHolder,
@@ -183,9 +186,9 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                        adaptadorNuevasEntidades.eliminarItem(viewHolder);
+                        adaptadorNuevasDeudas.eliminarItem(viewHolder);
                         toggleMensajeVacioEntidades();
-                        TecladoUtils.ocultarTeclado(ActivityNuevasEntidades.this);
+                        TecladoUtils.ocultarTeclado(ActivityNuevasDeudas.this);
                     }
                 });
         itemTouchHelper.attachToRecyclerView(rvNuevasEntidades);
@@ -193,7 +196,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void mostrarDialogExplicativo() {
-        final SharedPreferencesManager spm = new SharedPreferencesManager(ActivityNuevasEntidades.this);
+        final SharedPreferencesManager spm = new SharedPreferencesManager(ActivityNuevasDeudas.this);
         if (spm.mustShowExplanatoryDialog()) {
             final DialogExplicativo dialogExplicativo = new DialogExplicativo();
             dialogExplicativo.setCallback(new DialogExplicativo.PositiveCallback() {
@@ -208,7 +211,7 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void toggleMensajeVacioEntidades() {
-        tvEntidadesVacias.setVisibility(adaptadorNuevasEntidades == null || adaptadorNuevasEntidades.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
+        tvEntidadesVacias.setVisibility(adaptadorNuevasDeudas == null || adaptadorNuevasDeudas.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void inicializarBotones() {
@@ -262,8 +265,8 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void nuevaEntidad(@Entidad.TipoEntidad int tipoEntidad) {
-        adaptadorNuevasEntidades.nuevaEntidad(tipoEntidad);
-        layoutManagerEntidades.scrollToPosition(adaptadorNuevasEntidades.getItemCount() - 1);
+        adaptadorNuevasDeudas.nuevaEntidad(tipoEntidad);
+        layoutManagerEntidades.scrollToPosition(adaptadorNuevasDeudas.getItemCount() - 1);
         toggleMensajeVacioEntidades();
     }
 
@@ -295,13 +298,13 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
         boolean sePuedeGuardar;
 
         if (isForResult) {
-            if (!adaptadorNuevasEntidades.hayAlgo()){
+            if (!adaptadorNuevasDeudas.hayAlgo()){
                 Snackbar.make(rvNuevasEntidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorNuevasEntidades.hayEntidadesIncompletas()) {
+            } else if (adaptadorNuevasDeudas.hayEntidadesIncompletas()) {
                 Snackbar.make(rvNuevasEntidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorNuevasEntidades.hayEntidadesRepetidas()) {
+            } else if (adaptadorNuevasDeudas.hayEntidadesRepetidas()) {
                 Snackbar.make(rvNuevasEntidades, "Hay deudas repetidas", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else if (hayEntidadesRepetidas()) {
@@ -316,13 +319,13 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
             } else if (adaptadorNuevasPersonas.hayNombresRepetidos()) {
                 Snackbar.make(rvNuevasEntidades, "Has añadido más de una vez la misma persona", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (!adaptadorNuevasEntidades.hayAlgo()) {
+            } else if (!adaptadorNuevasDeudas.hayAlgo()) {
                 Snackbar.make(rvNuevasEntidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorNuevasEntidades.hayEntidadesIncompletas()) {
+            } else if (adaptadorNuevasDeudas.hayEntidadesIncompletas()) {
                 Snackbar.make(rvNuevasEntidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorNuevasEntidades.hayEntidadesRepetidas()) {
+            } else if (adaptadorNuevasDeudas.hayEntidadesRepetidas()) {
                 Snackbar.make(rvNuevasEntidades, "Hay deudas con el mismo concepto", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else {
@@ -334,9 +337,9 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
     }
 
     private void inferirTipoPersona() {
-        if (adaptadorNuevasEntidades.hayDeudas() && adaptadorNuevasEntidades.hayDerechosCobro()) {
+        if (adaptadorNuevasDeudas.hayDeudas() && adaptadorNuevasDeudas.hayDerechosCobro()) {
             tipoPersona = Persona.AMBOS;
-        } else if (adaptadorNuevasEntidades.hayDeudas()) {
+        } else if (adaptadorNuevasDeudas.hayDeudas()) {
             tipoPersona = Persona.ACREEDOR;
         } else {
             tipoPersona = Persona.DEUDOR;
@@ -345,8 +348,8 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
     private boolean hayEntidadesRepetidas() {
         List<Entidad> entidades = new LinkedList<>(persona.getEntidades());
-        entidades.addAll(adaptadorNuevasEntidades.getEntidades());
-        boolean hayRepetidas = EntidadesUtil.hayEntidadesRepetidas(adaptadorNuevasEntidades.getEntidadesVO());
+        entidades.addAll(adaptadorNuevasDeudas.getEntidades());
+        boolean hayRepetidas = EntidadesUtil.hayEntidadesRepetidas(adaptadorNuevasDeudas.getEntidadesVO());
         if (hayRepetidas) {
             informarRepetidos(EntidadesUtil.getRepetidos(entidades));
         }
@@ -387,10 +390,10 @@ public class ActivityNuevasEntidades extends AppCompatActivity {
 
         List<Persona> personas = isForResult ?
                 Collections.singletonList(persona) : adaptadorNuevasPersonas.getPersonas();
-        if (adaptadorNuevasEntidades.hayEntidadesGrupales()) {
-            resolverEntidadesGrupales(adaptadorNuevasEntidades.getEntidadesVO(), adaptadorNuevasPersonas.getItemCount());
+        if (adaptadorNuevasDeudas.hayEntidadesGrupales()) {
+            resolverEntidadesGrupales(adaptadorNuevasDeudas.getEntidadesVO(), adaptadorNuevasPersonas.getItemCount());
         }
-        List<Entidad> entidades = adaptadorNuevasEntidades.getEntidades();
+        List<Entidad> entidades = adaptadorNuevasDeudas.getEntidades();
 
         boolean guardados = gestor.crearEntidadesPersonas(personas, entidades, tipoPersona);
 

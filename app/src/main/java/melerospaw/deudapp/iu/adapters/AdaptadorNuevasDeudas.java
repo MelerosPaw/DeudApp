@@ -13,9 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,15 +27,15 @@ import melerospaw.deudapp.utils.EntidadesUtil;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
 
-public class AdaptadorNuevasEntidades
-        extends RecyclerView.Adapter<AdaptadorNuevasEntidades.EntidadNuevaViewHolder> {
+public class AdaptadorNuevasDeudas
+        extends RecyclerView.Adapter<AdaptadorNuevasDeudas.EntidadNuevaViewHolder> {
 
     private List<EntidadVO> mDatos;
     private Context mContext;
     private OnMostrarDialogoExplicativoListener mostrarDialogoExplicativoListener;
     private boolean justAdded;
 
-    public AdaptadorNuevasEntidades(Context context, List<Entidad> datos) {
+    public AdaptadorNuevasDeudas(Context context, List<Entidad> datos) {
         this.mContext = context;
         this.mDatos = toEntidadVOList(datos);
     }

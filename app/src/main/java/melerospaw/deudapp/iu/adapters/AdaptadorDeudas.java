@@ -176,9 +176,9 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
 
     public interface AdaptadorEntidadesCallback {
         boolean sizeAboutToChange();
-        void onAumentarDedudaSeleccionado(Entidad entidad, int adapterPosition);
-        void onDescontarDedudaSeleccionado(Entidad entidad, int adapterPosition);
-        void onCancelarDedudaSeleccionado(Entidad entidad, int adapterPosition);
+        void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition);
+        void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition);
+        void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition);
         void onLongClick(Entidad entidad, int adapterPosition);
     }
 
@@ -245,13 +245,13 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
                     toggleOptions();
                     break;
                 case R.id.tv_aumentar:
-                    callback.onAumentarDedudaSeleccionado(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
+                    callback.onAumentarDeudaSeleccionado(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
                     break;
                 case R.id.tv_descontar:
-                    callback.onDescontarDedudaSeleccionado(getEntidadByPosition(getAdapterPosition()) ,getAdapterPosition());
+                    callback.onDescontarDeudaSeleccionado(getEntidadByPosition(getAdapterPosition()) ,getAdapterPosition());
                     break;
                 case R.id.tv_cancelar:
-                    callback.onCancelarDedudaSeleccionado(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
+                    callback.onCancelarDeudaSeleccionado(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
                     break;
             }
         }
