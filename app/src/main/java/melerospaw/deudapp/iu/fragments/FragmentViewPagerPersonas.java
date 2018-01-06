@@ -278,6 +278,7 @@ public class FragmentViewPagerPersonas extends Fragment {
                 texto = "Total debido";
                 break;
             case ConstantesGenerales.ME_DEBEN:
+                // Useless comment
                 texto = "Total adeudado";
                 break;
             default:
