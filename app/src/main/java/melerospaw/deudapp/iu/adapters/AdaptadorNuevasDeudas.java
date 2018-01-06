@@ -34,10 +34,12 @@ public class AdaptadorNuevasDeudas
     private Context mContext;
     private OnMostrarDialogoExplicativoListener mostrarDialogoExplicativoListener;
     private boolean justAdded;
+    private boolean mostrarNuevasDeudas;
 
-    public AdaptadorNuevasDeudas(Context context, List<Entidad> datos) {
+    public AdaptadorNuevasDeudas(Context context, List<Entidad> datos, boolean mostrarNuevasDeudas) {
         this.mContext = context;
         this.mDatos = toEntidadVOList(datos);
+        this.mostrarNuevasDeudas = mostrarNuevasDeudas;
     }
 
     @Override
@@ -180,7 +182,10 @@ public class AdaptadorNuevasDeudas
                 setJustAdded(false);
             }
 
-            chkDeudaGrupal.setChecked(getEntidadByPosition(getAdapterPosition()).getEsGrupal());
+            chkDeudaGrupal.setVisibility(mostrarNuevasDeudas ? View.VISIBLE : View.GONE);
+            if (mostrarNuevasDeudas) {
+                chkDeudaGrupal.setChecked(getEntidadByPosition(getAdapterPosition()).getEsGrupal());
+            }
         }
 
         private void setTextColor() {

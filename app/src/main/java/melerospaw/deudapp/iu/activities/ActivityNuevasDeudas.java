@@ -163,7 +163,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     private void inicializarAdaptadorNuevasEntidades() {
-        adaptadorNuevasDeudas = new AdaptadorNuevasDeudas(this, new LinkedList<Entidad>());
+        adaptadorNuevasDeudas = new AdaptadorNuevasDeudas(this, new LinkedList<Entidad>(), !isForResult);
         layoutManagerEntidades = new LinearLayoutManager(this);
         rvNuevasEntidades.setLayoutManager(layoutManagerEntidades);
         rvNuevasEntidades.setAdapter(adaptadorNuevasDeudas);
