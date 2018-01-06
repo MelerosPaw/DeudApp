@@ -376,8 +376,6 @@ public class FragmentViewPagerPersonas extends Fragment {
     }
 
     private void abrirDetalle(Persona persona) {
-//        adaptadorPersonas.deseleccionarTodo();
-//        desactivarModoEliminacion();
         ActivityDetallePersona.start(getActivity(), persona.getNombre());
     }
 
