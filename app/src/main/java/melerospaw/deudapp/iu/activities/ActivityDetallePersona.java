@@ -138,8 +138,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void setTextIfImagePresent() {
         if (persona.tieneImagen()) {
-            tvSubtitulo.setText("Primera deuda contraída el " + persona.getOldest());
-            tvToolbarSubtitulo.setText("Primera deuda contraída el " + persona.getOldest());
+            tvSubtitulo.setText(getString(R.string.primera_deuda_contraida) + persona.getOldest());
+            tvToolbarSubtitulo.setText(getString(R.string.primera_deuda_contraida) + persona.getOldest());
             tvToolbarSubtitulo.setVisibility(View.VISIBLE);
             tvToolbarTitulo.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 //            Palette palette = Palette.from(MemoryUtil.loadBitmap(persona.getImagen()).getResult()).generate();
@@ -433,12 +433,10 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private void buscarImagen() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen..."), RC_FOTO);
+        startActivityForResult(Intent.createChooser(intent,
+                getString(R.string.selecciona_una_imagen)),RC_FOTO);
     }
 
-    /**
-     * Actualiza el total
-     */
     public void actualizarTotal() {
         boolean actualizada = gestor.actualizarPersona(persona, persona.getTipo());
         if (!actualizada) {
@@ -576,7 +574,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == RC_FOTO) {
                 procesarResultFoto(data);
-            } else if (requestCode == ActivityNuevasDeudas.REQUEST_CODE_ADD_ENTITIES){
+            } else if (requestCode == ActivityNuevasDeudas.REQUEST_CODE_ADD_ENTITIES) {
                 procesarResultNuevasDeudas(data);
             } else {
                 super.onActivityResult(requestCode, resultCode, data);
@@ -593,8 +591,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 mostrarFoto();
             }
         } else {
-            Snackbar.make(ivFoto, "No se ha podido obtener la foto correctamente.",
-                    Snackbar.LENGTH_LONG).show();
+            Snackbar.make(ivFoto, R.string.imposible_obtener_foto, Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -633,10 +630,13 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private void setExpandEnabled(boolean enabled) {
         appBar.setExpanded(enabled);
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
+
         if (enabled) {
-            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL| AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
+            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
         } else {
-            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
+            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
         }
     }
 }

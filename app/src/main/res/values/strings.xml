@@ -84,7 +84,7 @@
     <string name="undo_deleting_debt">¿Quieres deshacer esta acción?</string>
     <string name="undo">DESHACER</string>
     <string name="cannot_update_person">No se ha podido actualizar la persona.</string>
-    <string name="total_seleccionado">Total seleccionado</string>
+    <string name="total_seleccionado">Total seleccionado:</string>
     <string name="cantidad_deuda_vacía">0</string>
     <string name="deuda_grupal_explicacion">Al marcar un concepto como \"deuda grupal\" su cantidad será divida entre todos los deudores especificados.</string>
     <string name="no_mostrar_dialogo">No volver a mostar este diálogo</string>
@@ -95,5 +95,8 @@
     <string name="slash">/</string>
     <string name="both_total">Total ambos</string>
     <string name="total">Total</string>
+    <string name="selecciona_una_imagen">Selecciona una imagen…</string>
+    <string name="imposible_obtener_foto">No se ha podido obtener la foto correctamente.</string>
+    <string name="primera_deuda_contraida">Primera deuda contraída el</string>
 
 </resources>

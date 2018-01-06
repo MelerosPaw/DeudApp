@@ -48,7 +48,7 @@ import melerospaw.deudapp.utils.StringUtils;
 
 public class FragmentViewPagerPersonas extends Fragment {
 
-    public static final String BUNDLE_TIPO = "tipo";
+    public static final String BUNDLE_TIPO = "TIPO";
 
     @BindView(R.id.rv_personas)             RecyclerView rvPersonas;
     @BindView(R.id.tv_vacio)                TextView tvVacio;
@@ -298,15 +298,22 @@ public class FragmentViewPagerPersonas extends Fragment {
         flBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
         llSubtotal.getLayoutParams().width = 0;
 
-        float totalAcreedores = mTipo.equals(ConstantesGenerales.DEBO)? adaptadorPersonas.obtenerTotal() : gestor.getTotalAcreedores();
-        float totalDeudores= mTipo.equals(ConstantesGenerales.ME_DEBEN) ? adaptadorPersonas.obtenerTotal() : gestor.getTotalDeudores();
-        float totalAmbos = mTipo.equals(ConstantesGenerales.AMBOS) ? adaptadorPersonas.obtenerTotal() : gestor.getTotalAmbos();
+        float totalAcreedores = mTipo.equals(ConstantesGenerales.DEBO)?
+                adaptadorPersonas.obtenerTotal() : gestor.getTotalAcreedores();
+        float totalDeudores= mTipo.equals(ConstantesGenerales.ME_DEBEN) ?
+                adaptadorPersonas.obtenerTotal() : gestor.getTotalDeudores();
+        float totalAmbos = mTipo.equals(ConstantesGenerales.AMBOS) ?
+                adaptadorPersonas.obtenerTotal() : gestor.getTotalAmbos();
         float totalTotal = totalAcreedores + totalDeudores + totalAmbos;
 
-        tvTotalDebido.setText(DecimalFormatUtils.decimalToStringIfZero(totalAcreedores, 2, ".", ",") + " €");
-        tvTotalAdeudado.setText(DecimalFormatUtils.decimalToStringIfZero(totalDeudores, 2, ".", ",") + " €");
-        tvTotalAmbos.setText(DecimalFormatUtils.decimalToStringIfZero(totalAmbos, 2, ".", ",") + " €");
-        tvTotalTotal.setText(DecimalFormatUtils.decimalToStringIfZero(totalTotal, 2, ".", ",") + " €");
+        tvTotalDebido.setText(String.format(getString(R.string.cantidad),
+                DecimalFormatUtils.decimalToStringIfZero(totalAcreedores, 2, ".", ",")));
+        tvTotalAdeudado.setText(String.format(getString(R.string.cantidad),
+                DecimalFormatUtils.decimalToStringIfZero(totalDeudores, 2, ".", ",")));
+        tvTotalAmbos.setText(String.format(getString(R.string.cantidad),
+                DecimalFormatUtils.decimalToStringIfZero(totalAmbos, 2, ".", ",")));
+        tvTotalTotal.setText(String.format(getString(R.string.cantidad),
+                DecimalFormatUtils.decimalToStringIfZero(totalTotal, 2, ".", ",")));
     }
 
     private void mostrarSubtotal() {
