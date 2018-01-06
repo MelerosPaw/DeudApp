@@ -36,7 +36,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.activities.ActivityDetallePersona;
-import melerospaw.deudapp.iu.activities.ActivityNuevasEntidades;
+import melerospaw.deudapp.iu.activities.ActivityNuevasDeudas;
 import melerospaw.deudapp.iu.adapters.AdaptadorPersonas;
 import melerospaw.deudapp.iu.dialogs.DialogoCambiarNombre;
 import melerospaw.deudapp.iu.dialogs.MenuContextualPersona;
@@ -122,7 +122,7 @@ public class FragmentViewPagerPersonas extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.menu_nueva:
-                ActivityNuevasEntidades.start(getContext());
+                ActivityNuevasDeudas.start(getContext());
                 break;
             case R.id.menu_opcion_eliminar:
                 mostrarDialogEliminar(true);
@@ -270,18 +270,19 @@ public class FragmentViewPagerPersonas extends Fragment {
     private void mostrarTotal() {
 
         float total = adaptadorPersonas.obtenerTotal();
-        tvCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",") + " €");
+        tvCantidad.setText(String.format(getString(R.string.cantidad),
+                DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",")));
 
         String texto;
         switch (mTipo) {
             case ConstantesGenerales.DEBO:
-                texto = "Total debido";
+                texto = getString(R.string.total_debido);
                 break;
             case ConstantesGenerales.ME_DEBEN:
-                texto = "Total adeudado";
+                texto = getString(R.string.total_adeudado);
                 break;
             default:
-                texto = "Balance total";
+                texto = getString(R.string.balance_total);
                 break;
         }
 
@@ -299,9 +300,10 @@ public class FragmentViewPagerPersonas extends Fragment {
             float total = adaptadorPersonas.obtenerTotal();
             float subtotal = adaptadorPersonas.obtenerSubtotal();
 
-            tvTotal.setText("Total seleccionado");
+            tvTotal.setText(R.string.total_seleccionado);
             tvSubtotal.setText(DecimalFormatUtils.decimalToStringIfZero(subtotal, 2, ".", ","));
-            tvCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",") + " €");
+            tvCantidad.setText(String.format(getString(R.string.cantidad),
+                    DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",")));
             ColorManager.pintarColorDeuda(llBarraTotal, total);
             llBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
             llSubtotal.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -374,8 +376,6 @@ public class FragmentViewPagerPersonas extends Fragment {
     }
 
     private void abrirDetalle(Persona persona) {
-//        adaptadorPersonas.deseleccionarTodo();
-//        desactivarModoEliminacion();
         ActivityDetallePersona.start(getActivity(), persona.getNombre());
     }
 

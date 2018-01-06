@@ -13,7 +13,8 @@ public class ScreenUtils {
 
     // Ajusta el ancho de la ventana. Si el ancho del dialog en modo wrap_content es más grande que
     // la mitad de la pantalla, el ancho se pone a esa cantidad + la mitad de la parte que queda
-    // libre de la pantalla. En cualquier otro caso, se pone al ancho de la pantalla menos 16dp por cada lado.
+    // libre de la pantalla. En cualquier otro caso, se pone al ancho de la pantalla menos 16dp por
+    // cada lado.
     public static void ajustarAncho(DialogFragment dialogFragment) {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         Window window = dialogFragment.getDialog().getWindow();
@@ -48,7 +49,8 @@ public class ScreenUtils {
      * @param transparentBackground Indica si queremos que el elemento raíz del layout sea
      *                              transparente o no.
      */
-    public static void pantallaCompleta(DialogFragment dialogFragment, boolean transparentBackground) {
+    public static void pantallaCompleta(DialogFragment dialogFragment,
+                                        boolean transparentBackground) {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         Window window = dialogFragment.getDialog().getWindow();
         lp.copyFrom(window.getAttributes());
@@ -56,7 +58,8 @@ public class ScreenUtils {
         lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(lp);
         if (transparentBackground) {
-            dialogFragment.getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialogFragment.getDialog().getWindow()
+                    .setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         }
 
     }

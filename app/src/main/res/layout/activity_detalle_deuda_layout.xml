@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                tools:text="Fecha primera deuda: 24/02/1988"/>
+                tools:text="Fecha primera entidad: 24/02/1988"/>
 
         </LinearLayout>
 

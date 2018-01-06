@@ -16,7 +16,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -124,11 +123,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         Persona acreedor2 = new Persona("Fernando Pérez", Persona.ACREEDOR);
         Persona ambos1 = new Persona("Cristina Amodeo", Persona.AMBOS);
         Persona ambos2 = new Persona("Rocío Pérez", Persona.AMBOS);
-        Entidad deuda1 = new Entidad(15f, "Cosa cañera", Entidad.DEUDA);
-        Entidad deuda2 = new Entidad(2f, "Putas gratis", Entidad.DEUDA);
-        Entidad deuda3 = new Entidad(325.56f, "La causa perdida", Entidad.DEUDA);
-        Entidad deuda4 = new Entidad(7025.33f, "Película que no salió bien pero que la rodamos igualmente", Entidad.DEUDA);
-        Entidad deuda5 = new Entidad(143f, "Hacienda", Entidad.DEUDA);
+        Entidad entidad1 = new Entidad(15f, "Cosa cañera", Entidad.DEUDA);
+        Entidad entidad2 = new Entidad(2f, "Putas gratis", Entidad.DEUDA);
+        Entidad entidad3 = new Entidad(325.56f, "La causa perdida", Entidad.DEUDA);
+        Entidad entidad4 = new Entidad(7025.33f, "Película que no salió bien pero que la rodamos igualmente", Entidad.DEUDA);
+        Entidad entidad5 = new Entidad(143f, "Hacienda", Entidad.DEUDA);
         Entidad derechoCobro1 = new Entidad(30.15f, "Conde de Burra", Entidad.DERECHO_COBRO);
         Entidad derechoCobro2 = new Entidad(150.25f, "Pasacalles", Entidad.DERECHO_COBRO);
         Entidad derechoCobro3 = new Entidad(150.25f, "Pasacalles", Entidad.DERECHO_COBRO);
@@ -140,11 +139,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         derechoCobro3.setPersona(deudor3);
         derechoCobro4.setPersona(ambos1);
         derechoCobro5.setPersona(ambos2);
-        deuda1.setPersona(ambos1);
-        deuda2.setPersona(ambos1);
-        deuda3.setPersona(ambos2);
-        deuda4.setPersona(acreedor1);
-        deuda5.setPersona(acreedor2);
+        entidad1.setPersona(ambos1);
+        entidad2.setPersona(ambos1);
+        entidad3.setPersona(ambos2);
+        entidad4.setPersona(acreedor1);
+        entidad5.setPersona(acreedor2);
 
         nuevaPersona(deudor1);
         nuevaPersona(deudor2);
@@ -154,11 +153,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         nuevaPersona(ambos1);
         nuevaPersona(ambos2);
 
-        nuevaEntidad(deuda1);
-        nuevaEntidad(deuda2);
-        nuevaEntidad(deuda3);
-        nuevaEntidad(deuda4);
-        nuevaEntidad(deuda5);
+        nuevaEntidad(entidad1);
+        nuevaEntidad(entidad2);
+        nuevaEntidad(entidad3);
+        nuevaEntidad(entidad4);
+        nuevaEntidad(entidad5);
         nuevaEntidad(derechoCobro1);
         nuevaEntidad(derechoCobro2);
         nuevaEntidad(derechoCobro3);

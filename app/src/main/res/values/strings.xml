@@ -34,7 +34,7 @@
     <string name="nueva_deuda">Nueva deuda</string>
     <string name="nuevo_derecho_de_cobro">Nuevo derecho de cobro</string>
     <string name="nueva_persona">Nueva persona</string>
-    <string name="entidades_vacio">Añade una deduda seleccionando NUEVA DEUDA o NUEVO DERECHO DE COBRO</string>
+    <string name="entidades_vacio">Añade una deuda seleccionando NUEVA DEUDA o NUEVO DERECHO DE COBRO</string>
     <string name="personas_vacio">Añade una persona seleccionando NUEVA PERSONA</string>
     <string name="nombre">Nombre</string>
     <string name="anadir_deuda">Añadir deuda</string>
@@ -46,20 +46,20 @@
     <string name="anadir_derecho_cobro">Añadir derecho de cobro</string>
     <string name="anadir">Añadir</string>
     <string name="imposible_eliminar_deudas">No se ha podido eliminar las deudas de %1$s. Prueba más tarde.</string>
-    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior</string>
-    <string name="deudas_canceladas">Deudas canceladas</string>
+    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior.</string>
+    <string name="deudas_canceladas">DEUDAS CANCELADAS</string>
     <string name="debes_un_total_de">Debes un total de:</string>
     <string name="te_deben_un_total_de">Te deben un total de:</string>
-    <string name="cuenta_a_deber">La cuenta te sale a deber</string>
-    <string name="cuenta_a_cobrar">La cuenta te sale a cobrar</string>
+    <string name="cuenta_a_deber">La cuenta te sale a deber:</string>
+    <string name="cuenta_a_cobrar">La cuenta te sale a cobrar:</string>
     <string name="puedes_cancelar_deuda">Puedes cancelar la deuda</string>
     <string name="anadir_imagen">Añadir imagen</string>
     <string name="borrar_imagen">Borrar imagen</string>
     <string name="cambiar_nombre">Cambiar nombre</string>
     <string name="cambiar">Cambiar</string>
     <string name="mensaje_dialogo_cambiar_nombre">Introduce un nuevo nombre para %1$s:</string>
-    <string name="total_debido">Total debido</string>
-    <string name="total_adeudado">Total adeudado</string>
+    <string name="total_debido">Total debido:</string>
+    <string name="total_adeudado">Total adeudado:</string>
     <string name="deseleccionar_todo">Deseleccionar todo</string>
     <string name="sseleccionar_todo">Seleccionar todo</string>
     <string name="cantidad_no_numerica">La cantidad tiene que ser un número</string>
@@ -81,5 +81,16 @@
     <string name="escribe_un_nombre">Escribe un nombre</string>
     <string name="nombre_cambiado">Nombre cambiado</string>
     <string name="persona_repetida">Ya existe una persona con este mismo nombre</string>
+    <string name="undo_deleting_debt">¿Quieres deshacer esta acción?</string>
+    <string name="undo">DESHACER</string>
+    <string name="cannot_update_person">No se ha podido actualizar la persona.</string>
+    <string name="total_seleccionado">Total seleccionado</string>
+    <string name="cantidad_deuda_vacía">0</string>
+    <string name="deuda_grupal_explicacion">Al marcar un concepto como \"deuda grupal\" su cantidad será divida entre todos los deudores especificados.</string>
+    <string name="no_mostrar_dialogo">No volver a mostar este diálogo</string>
+    <string name="entendido">Entendido</string>
+    <string name="deuda_grupal">Deuda grupal</string>
+    <string name="imposible_borrar_foto">No se ha podido eliminar la foto.</string>
+    <string name="balance_total">Balance total:</string>
 
 </resources>

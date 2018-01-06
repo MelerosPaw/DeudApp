@@ -2,7 +2,7 @@ package melerospaw.deudapp.iu.adapters;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,6 +29,8 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
     private AppCompatActivity mContext;
     private AdaptadorEntidadesCallback callback;
     private SparseBooleanArray elementosAbiertos;
+    private Entidad itemProvisional;
+    private int posicionProvisional;
 
     public AdaptadorDeudas(AppCompatActivity context, List<Entidad> datos) {
         this.mContext = context;
@@ -113,6 +114,21 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         }
     }
 
+    private void reasignarAbiertosTrasEliminacion() {
+        elementosAbiertos.delete(posicionProvisional);
+        if (posicionProvisional < mData.size() - 1) {
+            for (int i = elementosAbiertos.size() - 1 ; i >= 0; i--) {
+                int posicionAlmacenada = elementosAbiertos.keyAt(i);
+                if (posicionAlmacenada < posicionProvisional) {
+                    break;
+                } else if (elementosAbiertos.valueAt(i)) {
+                    elementosAbiertos.put(posicionAlmacenada - 1, true);
+                    elementosAbiertos.put(posicionAlmacenada, false);
+                }
+            }
+        }
+    }
+
     // Indica si una posición existe en el adaptador.
     public boolean isPositionInAdapter(int position) {
         return getItemCount() > 0 && position >= 0 && position < getItemCount();
@@ -121,21 +137,37 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
     public void nuevasEntidades(List<Entidad> entidades) {
         mData.addAll(entidades);
         Collections.sort(mData, Entidad.COMPARATOR);
-        for (Entidad entidad: entidades) {
+        for (Entidad entidad : entidades) {
             int posicionInsertada = mData.indexOf(entidad);
             reasignarAbiertos(posicionInsertada);
             notifyItemInserted(posicionInsertada);
         }
     }
 
-    private void swapItems(List<Entidad> newData) {
-        List<Entidad> newList = new LinkedList<>(mData);
-        newList.addAll(newData);
-        Collections.sort(newList, Entidad.COMPARATOR);
-        DiffUtilBaseCallback diffCallback = new DiffUtilBaseCallback(mData, newList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-        this.mData = newList;
-        diffResult.dispatchUpdatesTo(this);
+    public void eliminarItem(RecyclerView.ViewHolder holder) {
+        posicionProvisional = holder.getAdapterPosition();
+        itemProvisional = mData.get(posicionProvisional);
+        mData.remove(holder.getAdapterPosition());
+        reasignarAbiertosTrasEliminacion();
+        notifyItemRemoved(posicionProvisional);
+        notifyItemChanged(posicionProvisional);
+    }
+
+    public Entidad getItemProvisional() {
+        return itemProvisional;
+    }
+
+    public void deshacerEliminar() {
+        mData.add(posicionProvisional, itemProvisional);
+        reasignarAbiertos(posicionProvisional);
+        notifyItemInserted(posicionProvisional);
+        notifyItemChanged(posicionProvisional + 1);
+        eliminarProvisionales();
+    }
+
+    public void eliminarProvisionales() {
+        itemProvisional = null;
+        posicionProvisional = -1;
     }
 
     public void setCallback(AdaptadorEntidadesCallback callback) {
@@ -144,9 +176,9 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
 
     public interface AdaptadorEntidadesCallback {
         boolean sizeAboutToChange();
-        void onAumentarDedudaSeleccionado(Entidad entidad, int adapterPosition);
-        void onDescontarDedudaSeleccionado(Entidad entidad, int adapterPosition);
-        void onCancelarDedudaSeleccionado(Entidad entidad, int adapterPosition);
+        void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition);
+        void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition);
+        void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition);
         void onLongClick(Entidad entidad, int adapterPosition);
     }
 
@@ -171,7 +203,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         }
 
         void bindView(final Entidad entidad, final Entidad anterior) {
-            if ((anterior != null && anterior.compareTo(entidad) == 0))
+            if ((anterior != null && anterior.esMismoDia(entidad)))
                 tvFecha.setVisibility(View.GONE);
             else {
                 tvFecha.setVisibility(View.VISIBLE);
@@ -179,7 +211,8 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             }
 
             tvConcepto.setText(entidad.getConcepto());
-            String cantidad = DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad(), 2, ".", ",") + " €";
+            String cantidad = String.format(mContext.getString(R.string.cantidad),
+                    DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad(), 2, ".", ","));
             tvCantidad.setText(cantidad);
             if (entidad.getCantidad() == 0.00f) {
                 tvCantidad.setTextColor(ContextCompat.getColor(mContext, R.color.inactive));
@@ -212,13 +245,13 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
                     toggleOptions();
                     break;
                 case R.id.tv_aumentar:
-                    callback.onAumentarDedudaSeleccionado(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
+                    callback.onAumentarDeudaSeleccionado(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
                     break;
                 case R.id.tv_descontar:
-                    callback.onDescontarDedudaSeleccionado(getEntidadByPosition(getAdapterPosition()) ,getAdapterPosition());
+                    callback.onDescontarDeudaSeleccionado(getEntidadByPosition(getAdapterPosition()) ,getAdapterPosition());
                     break;
                 case R.id.tv_cancelar:
-                    callback.onCancelarDedudaSeleccionado(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
+                    callback.onCancelarDeudaSeleccionado(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
                     break;
             }
         }
