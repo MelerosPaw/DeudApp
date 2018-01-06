@@ -1,5 +1,6 @@
 package melerospaw.deudapp.utils
 
+import kotlinx.android.synthetic.main.dialog_editar_deuda.*
 import melerospaw.deudapp.iu.vo.EntidadVO
 import melerospaw.deudapp.modelo.Entidad
 import java.util.*
@@ -14,8 +15,7 @@ class EntidadesUtil {
             for (i in 0 until entidades.size) {
                 val entidad: Entidad = entidades[i].entidad
                 for (j in i + 1 until entidades.size) {
-                    if (entidad.concepto == entidades[j].entidad.concepto
-                            && entidad.esMismoDia(entidades[j].entidad)) {
+                    if (esRepetida(entidad, entidades[j].entidad)) {
                         return true
                     }
                 }
@@ -23,6 +23,13 @@ class EntidadesUtil {
 
             return false
         }
+
+        @JvmStatic
+        fun estaContenida(entidad: Entidad, entidades: List<Entidad>) =
+                entidades.any { esRepetida(entidad, it) }
+
+        fun esRepetida(entidad: Entidad, otraEntidad: Entidad) =
+                entidad.concepto == otraEntidad.concepto && entidad.esMismoDia(otraEntidad)
 
         @JvmStatic
         fun getEntidadesVO(entidades: List<EntidadVO>) =

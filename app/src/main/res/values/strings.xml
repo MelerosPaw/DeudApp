@@ -69,7 +69,7 @@
     <string name="problema_guardar_deuda">Se ha producido un problema al guardar la deuda</string>
     <string name="fecha_deuda">Fecha de la deuda</string>
     <string name="datepicker_dialog_mensaje">¿Cuándo se contrajo la deuda?</string>
-    <string name="nombre_repetido">%1$s ya tiene una deuda con el concepto %2$s</string>
+    <string name="nombre_repetido">%1$s ya tiene una deuda con el concepto %2$s contraída el %3$s</string>
     <string name="deudas_repetidas">Deudas repetidas</string>
     <string name="deuda_repetida">Deuda repetida</string>
     <string name="aceptar">Aceptar</string>

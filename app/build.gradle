@@ -32,24 +32,22 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            ext.enableCrashlytics = true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", "app_name", "DeudApp"
         }
 
         pre {
             minifyEnabled false
+            ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            versionNameSuffix '.test'
-            resValue "string", "app_name", "DeudApp PRE"
         }
 
         debug {
             minifyEnabled false
+            ext.enableCrashlytics = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            applicationIdSuffix ".dev"
-            resValue "string", "app_name", "DeudApp DEV"
-//            Tu aplicación no cambiará a menos que descomentes el sufijo de debug
         }
     }
 
@@ -65,21 +63,21 @@ android {
     productFlavors {
 
         store {
-            ext.enableCrashlytics = true
-            signingConfig signingConfigs.release
             versionCode 1
             versionName "1.0.0"
+            resValue "string", "app_name", "DeudApp"
         }
 
         fabric {
-            ext.enableCrashlytics = true
-            signingConfig signingConfigs.release
             versionCode 4
             versionName '1.1.0'
+            versionNameSuffix '.test'
+            resValue "string", "app_name", "DeudApp PRE"
         }
 
         dev {
-            ext.enableCrashlytics = false
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "DeudApp DEV"
         }
     }
 }

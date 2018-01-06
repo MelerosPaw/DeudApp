@@ -83,7 +83,7 @@ class DialogEditarDeuda : DialogFragment() {
     private fun guardar() {
         if (verificarDatos()) {
             with(entidad) {
-                fecha = Entidad.formatearFecha(tvFecha.text.toString())
+                fecha = Entidad.formatearFecha(tvFecha.texto)
                 concepto = etConcepto.texto
                 cantidad = StringUtils.prepararDecimal(etCantidad.texto).toFloat()
             }
@@ -94,7 +94,7 @@ class DialogEditarDeuda : DialogFragment() {
 
     private fun verificarDatos() =
         when {
-            etConcepto.text.toString().isBlank() -> {
+            etConcepto.texto.isBlank() -> {
                 shortToast(getString(R.string.concepto_vacio))
                 false
             }
@@ -108,7 +108,8 @@ class DialogEditarDeuda : DialogFragment() {
             }
             estaRepetida() -> {
                 longToast(String.format(getString(R.string.nombre_repetido),
-                        entidad.persona.nombre, etConcepto.texto))
+                        entidad.persona.nombre, etConcepto.texto,
+                        Entidad.formatearFecha(tvFecha.texto)))
                 false
             }
             else -> true
@@ -116,10 +117,13 @@ class DialogEditarDeuda : DialogFragment() {
 
     private fun estaRepetida() : Boolean =
         when {
-            entidad.concepto == etConcepto.texto -> false
+            // Si no ha cambiado nada importante, no se considera repetida
+            entidad.concepto == etConcepto.texto && entidad.fecha == Entidad.formatearFecha(tvFecha.texto) ->
+                false
             else -> {
-                val persona = entidad.persona
-                persona.entidades.any{ it.concepto == etConcepto.texto }
+                val fakeDebt = Entidad(0F, etConcepto.texto, Entidad.DEUDA)
+                fakeDebt.fecha = Entidad.formatearFecha(tvFecha.text.toString())
+                EntidadesUtil.estaContenida(fakeDebt, entidad.persona.entidades)
             }
     }
 
