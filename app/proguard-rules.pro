@@ -33,3 +33,8 @@
 -dontwarn com.j256.ormlite.android.**
 -dontwarn com.j256.ormlite.logger.**
 -dontwarn com.j256.ormlite.misc.**
+
+-keepclassmembers class melerospaw.deudapp.iu.** {
+    @com.squareup.otto.Subscribe *;
+    @com.squareup.otto.Produce *;
+}
