@@ -1,10 +1,9 @@
 package melerospaw.deudapp.iu.fragments;
 
-import android.animation.LayoutTransition;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -26,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,20 +43,28 @@ import melerospaw.deudapp.iu.dialogs.MenuContextualPersona;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class FragmentViewPagerPersonas extends Fragment {
 
     public static final String BUNDLE_TIPO = "tipo";
 
-    @BindView(R.id.rv_personas)     RecyclerView rvPersonas;
-    @BindView(R.id.tv_vacio)        TextView tvVacio;
-    @BindView(R.id.ll_barra_total)  LinearLayout llBarraTotal;
-    @BindView(R.id.fl_total)        FrameLayout flTotal;
-    @BindView(R.id.tv_total)        TextView tvTotal;
-    @BindView(R.id.ll_subtotal)     LinearLayout llSubtotal;
-    @BindView(R.id.tv_subtotal)     TextView tvSubtotal;
-    @BindView(R.id.tv_cantidad)     TextView tvCantidad;
+    @BindView(R.id.rv_personas)             RecyclerView rvPersonas;
+    @BindView(R.id.tv_vacio)                TextView tvVacio;
+    @BindView(R.id.fl_barra_total)          FrameLayout flBarraTotal;
+    @BindView(R.id.fl_total)                FrameLayout flTotal;
+    @BindView(R.id.tv_total)                TextView tvTotal;
+    @BindView(R.id.ll_subtotal)             LinearLayout llSubtotal;
+    @BindView(R.id.tv_subtotal)             TextView tvSubtotal;
+    @BindView(R.id.tv_cantidad)             TextView tvCantidad;
+    @BindView(R.id.ll_total_simple)         LinearLayout llTotalSimple;
+    @BindView(R.id.ll_barra_total_resumen)  LinearLayout llTotalResumen;
+    @BindView(R.id.tv_total_debido)         TextView tvTotalDebido;
+    @BindView(R.id.tv_total_adeudado)       TextView tvTotalAdeudado;
+    @BindView(R.id.tv_total_ambos)          TextView tvTotalAmbos;
+    @BindView(R.id.tv_total_total)          TextView tvTotalTotal;
+
 
     private GestorDatos gestor;
     private AdaptadorPersonas adaptadorPersonas;
@@ -65,6 +73,7 @@ public class FragmentViewPagerPersonas extends Fragment {
     private Persona personaSeleccionada;
     private Menu menu;
     private Unbinder unbinder;
+    private boolean showResumen;
 
     public static FragmentViewPagerPersonas newInstance(String tipo) {
         FragmentViewPagerPersonas f = new FragmentViewPagerPersonas();
@@ -87,7 +96,7 @@ public class FragmentViewPagerPersonas extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_lista_personas, container, false);
         unbinder = ButterKnife.bind(this, rootView);
@@ -101,10 +110,8 @@ public class FragmentViewPagerPersonas extends Fragment {
         inicializarMensajeVacio();
         desactivarModoEliminacion();
         mostrarTotal();
-        if (Build.VERSION.SDK_INT >= 16) {
-            llSubtotal.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
-            flTotal.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
-        }
+        asignarListenerTotal();
+        ExtensionFunctionsKt.enableAnimateChanges(Arrays.asList(llSubtotal, flTotal, flBarraTotal));
     }
 
     @Override
@@ -287,9 +294,19 @@ public class FragmentViewPagerPersonas extends Fragment {
         }
 
         tvTotal.setText(texto);
-        ColorManager.pintarColorDeuda(llBarraTotal, total);
-        llBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
+        ColorManager.pintarColorDeuda(flBarraTotal, total);
+        flBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
         llSubtotal.getLayoutParams().width = 0;
+
+        float totalAcreedores = mTipo.equals(ConstantesGenerales.DEBO)? adaptadorPersonas.obtenerTotal() : gestor.getTotalAcreedores();
+        float totalDeudores= mTipo.equals(ConstantesGenerales.ME_DEBEN) ? adaptadorPersonas.obtenerTotal() : gestor.getTotalDeudores();
+        float totalAmbos = mTipo.equals(ConstantesGenerales.AMBOS) ? adaptadorPersonas.obtenerTotal() : gestor.getTotalAmbos();
+        float totalTotal = totalAcreedores + totalDeudores + totalAmbos;
+
+        tvTotalDebido.setText(DecimalFormatUtils.decimalToStringIfZero(totalAcreedores, 2, ".", ",") + " €");
+        tvTotalAdeudado.setText(DecimalFormatUtils.decimalToStringIfZero(totalDeudores, 2, ".", ",") + " €");
+        tvTotalAmbos.setText(DecimalFormatUtils.decimalToStringIfZero(totalAmbos, 2, ".", ",") + " €");
+        tvTotalTotal.setText(DecimalFormatUtils.decimalToStringIfZero(totalTotal, 2, ".", ",") + " €");
     }
 
     private void mostrarSubtotal() {
@@ -304,10 +321,25 @@ public class FragmentViewPagerPersonas extends Fragment {
             tvSubtotal.setText(DecimalFormatUtils.decimalToStringIfZero(subtotal, 2, ".", ","));
             tvCantidad.setText(String.format(getString(R.string.cantidad),
                     DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",")));
-            ColorManager.pintarColorDeuda(llBarraTotal, total);
-            llBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
+            ColorManager.pintarColorDeuda(flBarraTotal, total);
+            flBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
             llSubtotal.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
         }
+    }
+
+    private void asignarListenerTotal() {
+        flBarraTotal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleTotal();
+            }
+        });
+    }
+
+    public void toggleTotal() {
+        showResumen = !showResumen;
+        llTotalSimple.setVisibility(showResumen ? View.GONE : View.VISIBLE);
+        llTotalResumen.setVisibility(showResumen ? View.VISIBLE : View.GONE);
     }
 
     private void setMenuEliminar() {

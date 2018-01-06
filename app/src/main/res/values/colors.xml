@@ -10,9 +10,11 @@
 
     <color name="native_background_color">#FAFAFA</color>
     <color name="inactive">#555555</color>
+    <color name="divider">#22FF5722</color>
     <color name="green">#66CC22</color>
     <color name="light_green">#2266CC22</color>
     <color name="red">#CC0000</color>
+    <color name="blue">#1122FF</color>
     <color name="light_red">#22CC0000</color>
     <color name="light_gray">#EEE</color>
     <color name="transparent_white">#88FFFFFF</color>

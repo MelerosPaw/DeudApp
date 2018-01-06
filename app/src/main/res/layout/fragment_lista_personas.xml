@@ -30,67 +30,188 @@
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             tools:listitem="@layout/item_acreedores_layout" />
 
-        <LinearLayout
-            android:id="@+id/ll_barra_total"
+        <FrameLayout
+            android:id="@+id/fl_barra_total"
+            android:animateLayoutChanges="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/light_blue"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
             android:padding="10dp">
 
-            <FrameLayout
-                android:id="@+id/fl_total"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:animateLayoutChanges="true"
+            <LinearLayout
+                android:id="@+id/ll_total_simple"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tv_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                tools:text="@string/total_adeudado"/>
+                <FrameLayout
+                    android:id="@+id/fl_total"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:animateLayoutChanges="true">
 
-            </FrameLayout>
+                    <TextView
+                        android:id="@+id/tv_total"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        tools:text="@string/total_adeudado" />
 
-            <LinearLayout
-                android:id="@+id/ll_subtotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:animateLayoutChanges="true">
+                </FrameLayout>
 
-            <TextView
-                android:id="@+id/tv_subtotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="20sp"
-                android:maxLines="1"
-                tools:text="25"/>
+                <LinearLayout
+                    android:id="@+id/ll_subtotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="30sp"
-                android:text="/"
-                android:layout_marginRight="4dp"
-                android:layout_marginLeft="4dp"/>
+                    <TextView
+                        android:id="@+id/tv_subtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="20sp"
+                        tools:text="25" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:text="@string/slash"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="30sp" />
 
                 </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_cantidad"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="30sp"
-                tools:text="30 €" />
+                <TextView
+                    android:id="@+id/tv_cantidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="30sp"
+                    tools:text="30 €" />
 
-        </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_barra_total_resumen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:visibility="visible"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:maxLines="1"
+                        android:text="@string/total_debido" />
+
+                    <TextView
+                        android:id="@+id/tv_total_debido"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="30sp"
+                        android:textColor="@color/red"
+                        tools:text="30 €" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:maxLines="1"
+                        android:text="@string/total_adeudado" />
+
+                    <TextView
+                        android:id="@+id/tv_total_adeudado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/green"
+                        android:textSize="30sp"
+                        android:layout_gravity="center_vertical"
+                        tools:text="134,50 €" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLines="1"
+                        android:text="@string/both_total" />
+
+                    <TextView
+                        android:id="@+id/tv_total_ambos"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/blue"
+                        android:textSize="30sp"
+                        tools:text="79,25 €" />
+
+                </LinearLayout>
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/divider"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:maxLines="1"
+                        android:text="@string/total" />
+
+                    <TextView
+                        android:id="@+id/tv_total_total"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="40sp"
+                        tools:text="1250,25 €" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 

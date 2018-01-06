@@ -1,6 +1,5 @@
 package melerospaw.deudapp.utils
 
-import android.support.annotation.ColorRes
 import android.support.v4.content.ContextCompat
 import android.view.View
 import melerospaw.deudapp.R

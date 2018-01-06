@@ -92,5 +92,8 @@
     <string name="deuda_grupal">Deuda grupal</string>
     <string name="imposible_borrar_foto">No se ha podido eliminar la foto.</string>
     <string name="balance_total">Balance total:</string>
+    <string name="slash">/</string>
+    <string name="both_total">Total ambos</string>
+    <string name="total">Total</string>
 
 </resources>
