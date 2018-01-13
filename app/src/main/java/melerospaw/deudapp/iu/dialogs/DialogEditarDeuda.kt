@@ -108,8 +108,7 @@ class DialogEditarDeuda : DialogFragment() {
             }
             estaRepetida() -> {
                 longToast(String.format(getString(R.string.nombre_repetido),
-                        entidad.persona.nombre, etConcepto.texto,
-                        Entidad.formatearFecha(tvFecha.texto)))
+                        entidad.persona.nombre, etConcepto.texto, tvFecha.texto))
                 false
             }
             else -> true
