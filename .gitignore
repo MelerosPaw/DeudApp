@@ -7,5 +7,4 @@ gradle.properties
 gradlew
 gradlew.bat
 projectFilesBackup/
-settings.gradle
 gradle/
