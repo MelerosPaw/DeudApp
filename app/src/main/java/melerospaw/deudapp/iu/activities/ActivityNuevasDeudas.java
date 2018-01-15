@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -18,6 +19,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -113,16 +118,16 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
 
     private void inicializarAdaptadorPersonas() {
         if (!isForResult) {
-            int estadoPermiso = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+            int estadoPermiso = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
             if (estadoPermiso == PackageManager.PERMISSION_GRANTED) {
                 cargarAdaptador(true);
             } else {
-                solicitarPermiso();
+                solicitarPermisoContactos();
             }
         }
     }
 
-    private void solicitarPermiso() {
+    private void solicitarPermisoContactos() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, PERMISO_CONTACTOS);
     }
 
@@ -307,10 +312,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
             } else if (adaptadorNuevasDeudas.hayEntidadesRepetidas()) {
                 Snackbar.make(rvNuevasEntidades, "Hay deudas repetidas", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (hayEntidadesRepetidas()) {
-                sePuedeGuardar = false;
             } else {
-                sePuedeGuardar = true;
+                sePuedeGuardar = !hayEntidadesRepetidas();
             }
         } else {
             if (!adaptadorNuevasPersonas.hayAlguien()) {
@@ -427,7 +430,49 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISO_CONTACTOS) {
-            cargarAdaptador(permissions.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED);
+            if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+                cargarAdaptador(false);
+            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                mostrarDialogoPermisoContactos();
+            } else {
+                cargarAdaptador(true);
+            }
         }
+    }
+
+    private void mostrarDialogoPermisoContactos() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Permiso rechazado")
+                .setMessage(getMensajeDialogoContactos())
+                .setPositiveButton("Estoy seguro", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        cargarAdaptador(false);
+                    }
+                })
+                .setNegativeButton("Cambiar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        solicitarPermisoContactos();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        dialog.show();
+        ((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private SpannableString getMensajeDialogoContactos(){
+        String sourceString = getString(R.string.mensaje_dialog_permisos);
+        String spannedSubstring = "Política de privacidad";
+        int spanStart = sourceString.indexOf(spannedSubstring);
+        int spanEnd = sourceString.indexOf(spannedSubstring) + spannedSubstring.length();
+        int spanFlag = Spanned.SPAN_INCLUSIVE_EXCLUSIVE;
+
+        SpannableString spannableString = new SpannableString(sourceString);
+        spannableString.setSpan(new URLSpan(getString(R.string.url_politica_privacidad)),
+                spanStart, spanEnd, spanFlag);
+
+        return spannableString;
     }
 }
