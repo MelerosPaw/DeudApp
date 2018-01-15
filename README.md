@@ -1,4 +1,4 @@
-![Logo de DeudApp](https://github.com/MelerosPaw/DeudApp/blob/master/policy/deudapp-logo.svg)
+<img src="https://github.com/MelerosPaw/DeudApp/blob/master/DeudApp.png" width="200">
 
 # Política de privacidad
 
