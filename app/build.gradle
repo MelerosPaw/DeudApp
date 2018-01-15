@@ -26,7 +26,7 @@ android {
         release {
             keyAlias 'llavesita'
             keyPassword 'javier*1237'
-            storeFile file('C:/Users/meler_000/AndroidStudioProjects/store.jks')
+            storeFile file('C:/Users/meler_000/Android Studio Projects/store.jks')
             storePassword 'javier*1237'
         }
     }
