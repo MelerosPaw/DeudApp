@@ -1,6 +1,7 @@
 package melerospaw.deudapp.iu.adapters;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -189,10 +190,12 @@ public class AdaptadorNuevasDeudas
         }
 
         private void setTextColor() {
-            @ColorRes int color = entidad.getTipoEntidad() == Entidad.DEUDA ?
+            @ColorRes int colorid = entidad.getTipoEntidad() == Entidad.DEUDA ?
                     R.color.red : R.color.green;
-            etCantidad.setTextColor(ContextCompat.getColor(mContext, color));
-            tvEuro.setTextColor(ContextCompat.getColor(mContext, color));
+            @ColorInt int colorResource = ContextCompat.getColor(mContext, colorid);
+            etCantidad.setTextColor(colorResource);
+            tvEuro.setTextColor(colorResource);
+            etConcepto.setTextColor(colorResource);
         }
 
         @OnFocusChange({R.id.et_cantidad, R.id.et_concepto})

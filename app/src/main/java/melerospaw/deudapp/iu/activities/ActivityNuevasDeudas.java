@@ -48,6 +48,7 @@ import melerospaw.deudapp.utils.EntidadesUtil;
 import melerospaw.deudapp.utils.SharedPreferencesManager;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
+import melerospaw.deudapp.modelo.Persona.TipoPersona;
 
 public class ActivityNuevasDeudas extends AppCompatActivity {
 
@@ -71,7 +72,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManagerEntidades;
     private Persona persona;
     private boolean isForResult;
-    private @Persona.TipoPersona int tipoPersona;
+    private @TipoPersona int tipoPersona;
 
     public static void start(Context context) {
         Intent starter = new Intent(context, ActivityNuevasDeudas.class);
