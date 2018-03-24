@@ -28,6 +28,7 @@
     <string name="aumentar_deuda">Aumentar deuda</string>
     <string name="descontar_deuda">Descontar de la deuda</string>
     <string name="cantidad" formatted="false">%1$s €</string>
+    <string name="cantidad_infinity" formatted="false">%1$f €</string>
     <string name="cancelada">CANCELADA</string>
     <string name="personas">Personas</string>
     <string name="nuevo_concepto">Nuevo concepto</string>
@@ -100,5 +101,7 @@
     <string name="primera_deuda_contraida">Primera deuda contraída el </string>
     <string name="mensaje_dialog_permisos">DeudApp puede utilizar sus contactos para mostrar sugerencias de autocompletado al crear una nueva persona. Sin este permiso, esta opción no estará habilitada. ¿Seguro que prefiere denegar este permiso?\n\nLea nuestra sencilla Política de privacidad.</string>
     <string name="url_politica_privacidad" formatted="false">https://github.com/MelerosPaw/DeudApp/blob/master/README.md</string>
+    <string name="dialog__infinite_amount_title">Cantidad infinita</string>
+    <string name="dialog__infinite_amount_message">La cantidad que has introducido no puede representarse, por lo que se considera infinita y, sinceramente, no creemos que quieras anotar una cantidad infinita. Le sumes lo que le sumes, le restes lo que le restes, seguirá siendo infinita, y nadie tiene infinito dinero. Y si lo tienes, por favor, llámanos.\n\n¿Estás seguro de que quieres tener una deuda infinita?</string>
 
 </resources>

@@ -60,10 +60,6 @@ public class AdaptadorNuevasDeudas
         return mDatos.size();
     }
 
-    public EntidadVO getEntidadByPosition(int position) {
-        return mDatos.get(position);
-    }
-
     public void alterItemInPosition(int position, EntidadVO entidad) {
         mDatos.set(position, entidad);
         notifyItemChanged(position);
@@ -190,9 +186,9 @@ public class AdaptadorNuevasDeudas
         }
 
         private void setTextColor() {
-            @ColorRes int colorid = entidad.getTipoEntidad() == Entidad.DEUDA ?
+            @ColorRes int colorId = entidad.getTipoEntidad() == Entidad.DEUDA ?
                     R.color.red : R.color.green;
-            @ColorInt int colorResource = ContextCompat.getColor(mContext, colorid);
+            @ColorInt int colorResource = ContextCompat.getColor(mContext, colorId);
             etCantidad.setTextColor(colorResource);
             tvEuro.setTextColor(colorResource);
             etConcepto.setTextColor(colorResource);
@@ -236,6 +232,10 @@ public class AdaptadorNuevasDeudas
         private void clear() {
             etCantidad.setText("");
             etConcepto.setText("");
+        }
+
+        private EntidadVO getEntidadByPosition(int position) {
+            return mDatos.get(position);
         }
     }
 }

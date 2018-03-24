@@ -44,11 +44,11 @@ import melerospaw.deudapp.iu.vo.EntidadVO;
 import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
-import melerospaw.deudapp.utils.EntidadesUtil;
-import melerospaw.deudapp.utils.SharedPreferencesManager;
-import melerospaw.deudapp.utils.StringUtils;
-import melerospaw.deudapp.utils.TecladoUtils;
 import melerospaw.deudapp.modelo.Persona.TipoPersona;
+import melerospaw.deudapp.utils.EntidadesUtil;
+import melerospaw.deudapp.utils.ExtensionFunctionsKt;
+import melerospaw.deudapp.utils.SharedPreferencesManager;
+import melerospaw.deudapp.utils.TecladoUtils;
 
 public class ActivityNuevasDeudas extends AppCompatActivity {
 
@@ -112,7 +112,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     private void inicializarToolbar() {
         setSupportActionBar(toolbar);
 
-        if (!isForResult) {
+        if (!isForResult && getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -252,6 +252,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
                 iniciarProcesoGuardado();
                 TecladoUtils.ocultarTeclado(this);
                 break;
+            default:
+                // NO-OP No more cases
         }
     }
 
@@ -416,7 +418,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
         if (guardados) {
             NavUtils.navigateUpFromSameTask(this);
         } else {
-            StringUtils.toastCorto(this, "No se han podido guardar todas las personas nuevas y sus deudas.");
+            ExtensionFunctionsKt.shortToast(this, "No se han podido guardar todas las personas nuevas y sus deudas.");
         }
     }
 

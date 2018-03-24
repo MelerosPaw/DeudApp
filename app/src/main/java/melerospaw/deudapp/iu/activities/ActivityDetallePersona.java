@@ -2,6 +2,7 @@ package melerospaw.deudapp.iu.activities;
 
 import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -59,6 +60,7 @@ import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
+import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class ActivityDetallePersona extends AppCompatActivity {
@@ -138,8 +140,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void setTextIfImagePresent() {
         if (persona.tieneImagen()) {
-            tvSubtitulo.setText(getString(R.string.primera_deuda_contraida) + persona.getOldest());
-            tvToolbarSubtitulo.setText(getString(R.string.primera_deuda_contraida) + persona.getOldest());
+            String subtitulo = getString(R.string.primera_deuda_contraida) + persona.getOldest();
+            tvSubtitulo.setText(subtitulo);
+            tvToolbarSubtitulo.setText(subtitulo);
             tvToolbarSubtitulo.setVisibility(View.VISIBLE);
             tvToolbarTitulo.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 //            Palette palette = Palette.from(MemoryUtil.loadBitmap(persona.getImagen()).getResult()).generate();
@@ -257,14 +260,12 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
             @Override
             public void onTransitionEnd(@NonNull Transition transition) {
-                layoutManager.setScrollEnabled(true);
-                isAnimationOnGoing = false;
+                enableAnimation();
             }
 
             @Override
             public void onTransitionCancel(@NonNull Transition transition) {
-                layoutManager.setScrollEnabled(true);
-                isAnimationOnGoing = false;
+                enableAnimation();
             }
 
             @Override
@@ -281,6 +282,11 @@ public class ActivityDetallePersona extends AppCompatActivity {
         return true;
     }
 
+    private void enableAnimation() {
+        layoutManager.setScrollEnabled(true);
+        isAnimationOnGoing = false;
+    }
+
     private void cambiarColorTotal(@Nullable Entidad deudaOmitida) {
         ColorManager.pintarColorDeuda(llBarraTotal, deudaOmitida == null ?
                 persona.getCantidadTotal() : persona.getCantidadTotal() - deudaOmitida.getCantidad());
@@ -289,7 +295,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private void mostrarTotal(@Nullable Entidad entidadOmitida) {
         float cantidadTotal = entidadOmitida == null ? persona.getCantidadTotal() : persona.getCantidadTotal() - entidadOmitida.getCantidad();
         boolean mostrarConcepto;
-        CharSequence concepto, cantidad;
+        CharSequence concepto;
+        CharSequence cantidad;
 
         if (cantidadTotal == 0f) {
             mostrarConcepto = false;
@@ -313,12 +320,14 @@ public class ActivityDetallePersona extends AppCompatActivity {
                         concepto = getString(R.string.puedes_cancelar_deuda);
                     }
                     break;
+                case Persona.INACTIVO:
                 default:
                     concepto = "";
                     mostrarConcepto = false;
             }
-            cantidad = String.format(getString(R.string.cantidad), DecimalFormatUtils.decimalToStringIfZero(cantidadTotal,
-                    2, ".", ","));
+
+            cantidad = String.format(getString(R.string.cantidad),
+                    DecimalFormatUtils.decimalToStringIfZero(cantidadTotal, 2, ".", ","));
         }
 
         tvConcepto.setText(concepto);
@@ -381,12 +390,13 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void navigateBack() {
         Intent intent = NavUtils.getParentActivityIntent(this);
-        if (NavUtils.shouldUpRecreateTask(this, intent) && Build.VERSION.SDK_INT > 15) {
+        if (intent != null && NavUtils.shouldUpRecreateTask(this, intent) &&
+                Build.VERSION.SDK_INT > 15) {
             TaskStackBuilder.create(this).addNextIntent(intent).startActivities();
         } else {
             onBackPressed();
-//                    NavUtils.navigateUpFromSameTask(this);
-//                    NavUtils.navigateUpTo(this, intent);
+//            NavUtils.navigateUpFromSameTask(this);
+//            NavUtils.navigateUpTo(this, intent);
         }
     }
 
@@ -440,7 +450,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     public void actualizarTotal() {
         boolean actualizada = gestor.actualizarPersona(persona, persona.getTipo());
         if (!actualizada) {
-            StringUtils.toastCorto(this, getString(R.string.cannot_update_person));
+            ExtensionFunctionsKt.shortToast(this, getString(R.string.cannot_update_person));
         }
         mostrarTotal(null);
         cambiarColorTotal(null);
@@ -510,21 +520,30 @@ public class ActivityDetallePersona extends AppCompatActivity {
      *
      * @param position Position of the debt in the adaptador's data set.
      */
-    private void aumentarDeuda(int position, String aumento) {
+    private void aumentarDeuda(final int position, String aumento) {
 
-        Entidad entidad = gestor.getEntidad(adaptador.getEntidadByPosition(position).getId());
+        final Entidad entidad = gestor.getEntidad(adaptador.getEntidadByPosition(position).getId());
+        final float cantidadAumento = Float.parseFloat(StringUtils.prepararDecimal(aumento));
 
-        if (entidad == null) {
-            StringUtils.toastCorto(this, "No se han podido obtener la entidad por su id.");
+        if (!InfinityManagerKt.isInfiniteFloat(cantidadAumento) &&
+                InfinityManagerKt.isInfiniteFloat(cantidadAumento + entidad.getCantidad())) {
+            InfinityManagerKt.mostrarInfinityDialog(this, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    entidad.aumentar(cantidadAumento);
+                    actualizarEntidadYAdapter(position, entidad);
+                }
+            }, null);
         } else {
-            entidad.aumentar(Float.parseFloat(StringUtils.prepararDecimal(aumento)));
+            entidad.aumentar(cantidadAumento);
             actualizarEntidadYAdapter(position, entidad);
         }
     }
 
-    private void disminuirDeuda(int position, String cantidadDesiminuida) {
+    private void disminuirDeuda(int position, String cantidadDisminucion) {
         Entidad entidad = adaptador.getEntidadByPosition(position);
-        float descuento = Float.parseFloat(StringUtils.prepararDecimal(cantidadDesiminuida));
+
+        float descuento = Float.parseFloat(StringUtils.prepararDecimal(cantidadDisminucion));
 
         boolean descuentoEsMayorQueDerechoCobro = entidad.getTipoEntidad() == Entidad.DERECHO_COBRO
                 && descuento > entidad.getCantidad();
@@ -612,7 +631,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .into(ivFoto);
-            float altura = getResources().getDisplayMetrics().heightPixels / 2;
+            float altura = getResources().getDisplayMetrics().heightPixels / 2F;
             params.height = (int) altura;
         } else {
             params.height = (int) getResources().getDisplayMetrics().density * 56;
