@@ -1,6 +1,7 @@
 package melerospaw.deudapp.iu.adapters;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -57,10 +58,6 @@ public class AdaptadorNuevasDeudas
     @Override
     public int getItemCount() {
         return mDatos.size();
-    }
-
-    public EntidadVO getEntidadByPosition(int position) {
-        return mDatos.get(position);
     }
 
     public void alterItemInPosition(int position, EntidadVO entidad) {
@@ -189,10 +186,12 @@ public class AdaptadorNuevasDeudas
         }
 
         private void setTextColor() {
-            @ColorRes int color = entidad.getTipoEntidad() == Entidad.DEUDA ?
+            @ColorRes int colorId = entidad.getTipoEntidad() == Entidad.DEUDA ?
                     R.color.red : R.color.green;
-            etCantidad.setTextColor(ContextCompat.getColor(mContext, color));
-            tvEuro.setTextColor(ContextCompat.getColor(mContext, color));
+            @ColorInt int colorResource = ContextCompat.getColor(mContext, colorId);
+            etCantidad.setTextColor(colorResource);
+            tvEuro.setTextColor(colorResource);
+            etConcepto.setTextColor(colorResource);
         }
 
         @OnFocusChange({R.id.et_cantidad, R.id.et_concepto})
@@ -233,6 +232,10 @@ public class AdaptadorNuevasDeudas
         private void clear() {
             etCantidad.setText("");
             etConcepto.setText("");
+        }
+
+        private EntidadVO getEntidadByPosition(int position) {
+            return mDatos.get(position);
         }
     }
 }

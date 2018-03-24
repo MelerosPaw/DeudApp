@@ -44,7 +44,6 @@ import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
-import melerospaw.deudapp.utils.StringUtils;
 
 public class FragmentViewPagerPersonas extends Fragment {
 
@@ -429,10 +428,10 @@ public class FragmentViewPagerPersonas extends Fragment {
                 mostrarTotal();
             }
             inicializarMensajeVacio();
-        } else {
-            StringUtils.toastCorto(getActivity(),
-                    String.format(getString(R.string.imposible_eliminar_deudas),
-                            persona.getNombre()));
+        } else if (getActivity() != null) {
+                ExtensionFunctionsKt.shortToast(getActivity(),
+                        String.format(getString(R.string.imposible_eliminar_deudas),
+                                persona.getNombre()));
         }
     }
 

@@ -1,5 +1,6 @@
 package melerospaw.deudapp.iu.dialogs;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
+import melerospaw.deudapp.modelo.Entidad.TipoEntidad;
+import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class DialogoModificarCantidad extends DialogFragment {
@@ -44,7 +47,7 @@ public class DialogoModificarCantidad extends DialogFragment {
 
 
     public static DialogoModificarCantidad getInstance(String modo, Integer position,
-                                                       @Nullable @Entidad.TipoEntidad int tipo) {
+                                                       @TipoEntidad int tipo) {
         DialogoModificarCantidad df = new DialogoModificarCantidad();
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_MODO, modo);
@@ -58,22 +61,27 @@ public class DialogoModificarCantidad extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.modo = getArguments().getString(BUNDLE_MODO);
-        this.position = getArguments().getInt(BUNDLE_POSICION);
-        this.tipoEntidad = getArguments().getInt(BUNDLE_TIPO_ENTIDAD);
+        if (getArguments() != null) {
+            this.modo = getArguments().getString(BUNDLE_MODO);
+            this.position = getArguments().getInt(BUNDLE_POSICION);
+            this.tipoEntidad = getArguments().getInt(BUNDLE_TIPO_ENTIDAD);
+        }
     }
-
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.dialog_modificar_deuda_layout, container, false);
-        unbinder = ButterKnife.bind(this, v);
+    public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (inflater != null) {
+            View v = inflater.inflate(R.layout.dialog_modificar_deuda_layout, container, false);
+            unbinder = ButterKnife.bind(this, v);
 
-        loadView();
-        return v;
+            loadView();
+            return v;
+        } else {
+            return null;
+        }
     }
-
 
     public void loadView(){
         tvTitulo.setText(modo);
@@ -90,9 +98,10 @@ public class DialogoModificarCantidad extends DialogFragment {
             case TIPO_CANCELAR_TODAS:
                 loadViewCancelarTodas();
                 break;
+            default:
+                // NO-OP No more types
         }
     }
-
 
     private void loadViewAumentar() {
         tvMensaje.setText(tipoEntidad == Entidad.DEUDA ?
@@ -113,7 +122,6 @@ public class DialogoModificarCantidad extends DialogFragment {
         });
     }
 
-
     private void loadViewDisminuir() {
         tvMensaje.setText(tipoEntidad == Entidad.DEUDA ?
                 R.string.pregunta_descontar_deuda : R.string.pregunta_descontar_derecho_cobro);
@@ -132,7 +140,6 @@ public class DialogoModificarCantidad extends DialogFragment {
             }
         });
     }
-
 
     private void loadViewCancelar() {
         tvMensaje.setText(tipoEntidad == Entidad.DEUDA ?
@@ -177,41 +184,87 @@ public class DialogoModificarCantidad extends DialogFragment {
         });
     }
 
-
     private void aumentar() {
-        String aumento = etCantidad.getText().toString();
-        if (StringUtils.isCadenaVacia(aumento)) {
-            dismiss();
-        } else if (StringUtils.convertible(aumento).equals("string"))
-            Snackbar.make(btnAceptar, R.string.mensaje_cantidad_no_valida, Snackbar.LENGTH_SHORT).show();
-        else {
-            positiveCallback.deudaAumentada(position, etCantidad.getText().toString());
-            dismiss();
+        if (esCantidadCorrecta()) {
+            proceder();
         }
     }
 
-
-    private void disminuir(){
-        String descuentoString = etCantidad.getText().toString();
-        if (descuentoString.isEmpty()) {
-            dismiss();
-        } else if (StringUtils.convertible(descuentoString).equals("string")) {
-            Snackbar.make(btnAceptar, R.string.mensaje_cantidad_no_valida, Snackbar.LENGTH_SHORT).show();
-        } else {
-            positiveCallback.deudarDisminuida(position, descuentoString);
-            dismiss();
+    private void disminuir() {
+        if (esCantidadCorrecta()) {
+            proceder();
         }
     }
-
 
     private void cancelar() {
-        positiveCallback.deudaCancelada(position);
-        dismiss();
+        proceder();
     }
 
-
     private void cancelarTodas(){
-        positiveCallback.deudasCanceladas();
+        proceder();
+    }
+
+    private boolean esCantidadCorrecta() {
+
+        boolean esCantidadCorrecta;
+
+        String cantidad = etCantidad.getText().toString();
+        if (cantidad.isEmpty()) {
+            dismiss();
+            esCantidadCorrecta = false;
+        } else if (StringUtils.convertible(cantidad).equals("string")) {
+            Snackbar.make(btnAceptar, R.string.mensaje_cantidad_no_valida, Snackbar.LENGTH_SHORT).show();
+            esCantidadCorrecta = false;
+        } else {
+            esCantidadCorrecta = !esCantidadInfinita();
+        }
+
+        return esCantidadCorrecta;
+    }
+
+    private boolean esCantidadInfinita() {
+
+        boolean isInfinite;
+        Float preparedDecimal = Float.parseFloat(StringUtils.prepararDecimal(etCantidad.getText().toString()));
+        if (InfinityManagerKt.isInfiniteFloat(preparedDecimal)) {
+            mostrarDialogoInfinitud();
+            isInfinite = true;
+        } else {
+            isInfinite = false;
+        }
+
+        return isInfinite;
+    }
+
+    private void mostrarDialogoInfinitud() {
+        if (getContext() != null) {
+            InfinityManagerKt.mostrarInfinityDialog(getContext(), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    proceder();
+                }
+            }, null);
+        }
+    }
+
+    private void proceder() {
+        switch (modo) {
+            case TIPO_AUMENTAR:
+                positiveCallback.deudaAumentada(position, etCantidad.getText().toString());
+                break;
+            case TIPO_DISMINUIR:
+                positiveCallback.deudarDisminuida(position, etCantidad.getText().toString());
+                break;
+            case TIPO_CANCELAR:
+                positiveCallback.deudaCancelada(position);
+                break;
+            case TIPO_CANCELAR_TODAS:
+                positiveCallback.deudasCanceladas();
+                break;
+            default:
+                // NO-OP No more types
+        }
+
         dismiss();
     }
 
@@ -221,7 +274,7 @@ public class DialogoModificarCantidad extends DialogFragment {
         unbinder.unbind();
     }
 
-    public void setPositiveCallback(PositiveCallback positiveCallback){
+    public void setPositiveCallback(PositiveCallback positiveCallback) {
         this.positiveCallback = positiveCallback;
     }
 

@@ -1,37 +1,13 @@
 package melerospaw.deudapp.utils;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import java.util.List;
 
 public class StringUtils {
 
-    //Devuelve true si "busqueda" se encuentra en "cadena"
-    public static boolean containsIgnoreCase(String cadena, String busqueda) {
-
-        //Pone las palabras en minúscula
-        String cadenaMinuscula = cadena.toLowerCase();
-        String busquedaMinuscula = busqueda.toLowerCase();
-
-        //Elimina los acentos
-        cadenaMinuscula.replaceAll("á", "a");
-        cadenaMinuscula.replaceAll("é", "e");
-        cadenaMinuscula.replaceAll("í", "i");
-        cadenaMinuscula.replaceAll("ó", "o");
-        cadenaMinuscula.replaceAll("ú", "u");
-
-        busquedaMinuscula.replaceAll("á", "a");
-        busquedaMinuscula.replaceAll("é", "e");
-        busquedaMinuscula.replaceAll("í", "i");
-        busquedaMinuscula.replaceAll("ó", "o");
-        busquedaMinuscula.replaceAll("ú", "u");
-
-        return cadenaMinuscula.contains(busquedaMinuscula);
-    }
+    private StringUtils(){}
 
     //Devuelve true si "busqueda" se encuentra en "elementos"
-    public static boolean equalsIgnoreCase(List<String> elementos, String busqueda) {
+    public static boolean containsIgnoreCase(List<String> elementos, String busqueda) {
         for (int i = 0; i < elementos.size(); i++)
             if (elementos.get(i).equalsIgnoreCase(busqueda))
                 return true;
@@ -59,43 +35,6 @@ public class StringUtils {
             }
         else
             return (int) Float.parseFloat(valor);
-    }
-
-
-    /**
-     * Muestra un <i>Toast</i> corto con el <i>String</i> que le pasemos.
-     *
-     * @param context A context.
-     * @param mensaje String que queremos mostrar
-     */
-    public static void toastCorto(Context context, String mensaje) {
-        Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
-    }
-
-
-    /**
-     * Muestra un Toast de un recurso string almacenado en strings.xml
-     *
-     * @param context A context.
-     * @param recursoString Recusor String, como R.string.texto
-     */
-    public static void toastCorto(Context context, int recursoString) {
-        Toast.makeText(context, context.getString(recursoString), Toast.LENGTH_SHORT).show();
-    }
-
-
-    public static void toastLargo(Context context, String mensaje) {
-        Toast.makeText(context, mensaje, Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * Muestra un Toast de un recurso string almacenado en strings.xml
-     *
-     * @param context Un contexto.
-     * @param recursoString Recuso String, como R.string.texto
-     */
-    public static void toastLargo(Context context, int recursoString) {
-        Toast.makeText(context, context.getString(recursoString), Toast.LENGTH_LONG).show();
     }
 
     /**

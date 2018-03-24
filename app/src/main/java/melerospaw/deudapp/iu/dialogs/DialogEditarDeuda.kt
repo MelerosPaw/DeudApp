@@ -1,6 +1,7 @@
 package melerospaw.deudapp.iu.dialogs
 
 import android.animation.LayoutTransition
+import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
@@ -45,7 +46,7 @@ class DialogEditarDeuda : DialogFragment() {
         super.onCreate(savedInstanceState)
         gestor = GestorDatos.getGestor(context)
         posicion = if (arguments != null) arguments!!.getInt(BUNDLE_POSICION, posicion) else posicion
-        var idEntidad = if (arguments != null) arguments!!.getInt(BUNDLE_ENTIDAD) else 0
+        val idEntidad = if (arguments != null) arguments!!.getInt(BUNDLE_ENTIDAD) else 0
         entidad = gestor.getEntidad(idEntidad)
     }
 
@@ -57,7 +58,7 @@ class DialogEditarDeuda : DialogFragment() {
         with(entidad) {
             tvFecha.text = readableDate
             etConcepto.setText(concepto)
-            etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(Math.abs(cantidad), 2, ".", ","))
+            etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(cantidad , 2, ".", ","))
             etCantidad.setTextColor(ContextCompat.getColor(context!!,
                     if (entidad.tipoEntidad == Entidad.DEUDA) R.color.red else R.color.green))
             btnGuardar.setOnClickListener {
@@ -83,48 +84,65 @@ class DialogEditarDeuda : DialogFragment() {
     private fun guardar() {
         if (verificarDatos()) {
             with(entidad) {
+
                 fecha = Entidad.formatearFecha(tvFecha.texto)
                 concepto = etConcepto.texto
-                cantidad = StringUtils.prepararDecimal(etCantidad.texto).toFloat()
+
+                val auxCantidad = etCantidad.texto
+                if (auxCantidad.isInfinityCharacter() ||
+                        StringUtils.prepararDecimal(auxCantidad).isInfiniteFloat()) {
+                    if (!cantidad.isInfiniteFloat()) {
+                        mostrarDialogCantidadInfinita()
+                    } else {
+                        cantidad = getInfiniteFloatByDebtType(entidad)
+                        closeAndSave()
+                    }
+                } else {
+                    cantidad = StringUtils.prepararDecimal(auxCantidad).toFloat()
+                    closeAndSave()
+                }
             }
-            positiveCallback?.guardar(posicion, entidad)
-            dismiss()
         }
     }
 
-    private fun verificarDatos() =
+    private fun verificarDatos() : Boolean {
+        val concepto = etConcepto.texto
+        val cantidad = etCantidad.texto
+        val fecha = tvFecha.texto
+
         when {
-            etConcepto.texto.isBlank() -> {
+            concepto.isBlank() -> {
                 shortToast(getString(R.string.concepto_vacio))
-                false
+                return false
             }
-            etCantidad.texto.isBlank() -> {
+            cantidad.isBlank() -> {
                 shortToast(getString(R.string.cantidad_vacia))
-                false
+                return false
             }
-            StringUtils.convertible(StringUtils.prepararDecimal(etCantidad.texto)) == "string" -> {
+            StringUtils.convertible(StringUtils.prepararDecimal(cantidad)) == "string" &&
+                    !cantidad.isInfinityCharacter() -> {
                 shortToast(getString(R.string.cantidad_no_numerica))
-                false
+                return false
             }
-            estaRepetida() -> {
+            estaRepetida(concepto, Entidad.formatearFecha(fecha)) -> {
                 longToast(String.format(getString(R.string.nombre_repetido),
-                        entidad.persona.nombre, etConcepto.texto, tvFecha.texto))
-                false
+                        entidad.persona.nombre, concepto, fecha))
+                return false
             }
-            else -> true
+            else -> return true
         }
-
-    private fun estaRepetida() : Boolean =
-        when {
-            // Si no ha cambiado nada importante, no se considera repetida
-            entidad.concepto == etConcepto.texto && entidad.fecha == Entidad.formatearFecha(tvFecha.texto) ->
-                false
-            else -> {
-                val fakeDebt = Entidad(0F, etConcepto.texto, Entidad.DEUDA)
-                fakeDebt.fecha = Entidad.formatearFecha(tvFecha.text.toString())
-                EntidadesUtil.estaContenida(fakeDebt, entidad.persona.entidades)
-            }
     }
+
+    private fun estaRepetida(concepto: String, fecha: Date): Boolean =
+            when {
+                // Si no ha cambiado nada importante, no se considera repetida
+                entidad.concepto == concepto && entidad.fecha == fecha -> false
+                else -> {
+                    val fakeDebt = Entidad(0F, concepto, Entidad.DEUDA)
+                    fakeDebt.fecha = fecha
+                    EntidadesUtil.estaContenida(fakeDebt, entidad.persona.entidades)
+                }
+            }
 
     private fun mostrarDialogFecha() {
         if (activity != null) {
@@ -138,6 +156,28 @@ class DialogEditarDeuda : DialogFragment() {
             }
             dialog.show(ft, DialogoModificarCantidad.TAG)
         }
+    }
+
+    private fun getInfiniteFloatByDebtType(entidad: Entidad) =
+            if (entidad.tipoEntidad == Entidad.DEUDA) {
+                getNegativeInfiniteFloat()
+            } else {
+                getInifiniteFloat()
+            }
+
+    private fun mostrarDialogCantidadInfinita() {
+        if (context != null) {
+            mostrarInfinityDialog(context!!, DialogInterface.OnClickListener {
+                dialog, which ->
+                    entidad.cantidad = getInfiniteFloatByDebtType(entidad)
+                    closeAndSave()
+            }, DialogInterface.OnClickListener { dialog, which -> dismiss() })
+        }
+    }
+
+    private fun closeAndSave() {
+        positiveCallback?.guardar(posicion, entidad)
+        dismiss()
     }
 
     interface PositiveCallback {
