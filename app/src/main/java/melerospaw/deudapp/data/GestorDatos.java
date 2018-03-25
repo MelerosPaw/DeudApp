@@ -20,7 +20,6 @@ import java.util.concurrent.Callable;
 import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
-import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.memoryutil.MemoryUtil;
 import melerospaw.memoryutil.Path;
 import melerospaw.memoryutil.Result;
@@ -262,7 +261,7 @@ public class GestorDatos {
         }
 
         boolean entidadesCreadas = nuevasEntidades(entidades);
-        persona.actualizarTotal();
+        persona.calcularTotal();
         return entidadesCreadas;
     }
 
@@ -275,7 +274,7 @@ public class GestorDatos {
      */
     public boolean actualizarPersona(Persona persona, int tipo) {
 
-        persona.actualizarTotal();
+        persona.calcularTotal();
 
         if (persona.getTipo() != tipo) {
             persona.setTipo(Persona.AMBOS);

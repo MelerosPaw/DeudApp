@@ -178,8 +178,10 @@ public class Entidad implements Comparable<Entidad>, Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object otraEntidad) {
+        return otraEntidad instanceof Entidad &&
+                ((Entidad) otraEntidad).concepto.equals(concepto) &&
+                esMismoDia((Entidad) otraEntidad);
     }
 
     @Override

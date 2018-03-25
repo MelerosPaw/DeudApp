@@ -25,6 +25,7 @@ import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
+import melerospaw.deudapp.task.EventoPersonaEliminada;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.TextDrawableManager;
 
@@ -248,16 +249,6 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         BusProvider.getBus().unregister(this);
     }
 
-    @Subscribe
-    public void onEventoDeudaModificada(EventoDeudaModificada evento) {
-        if (evento.getPersona() != null) {
-            Persona persona = evento.getPersona();
-            gestor.recargarPersona(persona);
-            modificarItemPersona(persona);
-            onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
-        }
-    }
-
     private void modificarItemPersona(Persona persona) {
         if (persona.getTipo() == tipoPersonas) {
             if (personaIsInAdapter(persona)) {
@@ -268,6 +259,24 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         } else {
             eliminarPersona(persona);
         }
+    }
+
+    @Subscribe
+    public void onEventoDeudaModificada(EventoDeudaModificada evento) {
+        if (evento.getPersona() != null) {
+            Persona persona = evento.getPersona();
+            gestor.recargarPersona(persona);
+            modificarItemPersona(persona);
+            onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
+        }
+    }
+
+    @Subscribe
+    public void onPersonaEliminada(EventoPersonaEliminada evento) {
+        Persona personaEliminada = evento.getPersona();
+        mDatos.remove(personaEliminada);
+        notifyItemRemoved(getPosition(personaEliminada));
+        onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
     }
 
     public interface ContextualMenuInterface {

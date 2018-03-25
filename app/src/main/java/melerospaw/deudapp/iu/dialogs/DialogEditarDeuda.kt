@@ -162,7 +162,7 @@ class DialogEditarDeuda : DialogFragment() {
             if (entidad.tipoEntidad == Entidad.DEUDA) {
                 getNegativeInfiniteFloat()
             } else {
-                getInifiniteFloat()
+                getInfiniteFloat()
             }
 
     private fun mostrarDialogCantidadInfinita() {

@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import melerospaw.deudapp.utils.InfinityManagerKt;
+
 @DatabaseTable (tableName = Persona.TABLE_NAME)
 public class Persona implements Serializable{
 
@@ -87,7 +89,12 @@ public class Persona implements Serializable{
     }
 
     public float getCantidadTotal() {
-        actualizarTotal();
+        calcularTotal();
+        return cantidadTotal;
+    }
+
+    public float getCantidadTotal(Entidad entidadOmitida) {
+        calcularTotal(entidadOmitida);
         return cantidadTotal;
     }
 
@@ -193,30 +200,57 @@ public class Persona implements Serializable{
 
     public void addEntidad(Entidad entidad) {
         entidades.add(entidad);
-        actualizarTotal();
+        calcularTotal();
     }
 
     /**Updates the total debt amount.*/
-    public void actualizarTotal(){
+    public void calcularTotal() {
+        calcularTotal(null);
+    }
+
+    /**Updates the total debt amount.*/
+    private void calcularTotal(@Nullable Entidad entidadOmitida) {
 
         float total = 0;
 
         if (tipo == ACREEDOR || tipo == DEUDOR) {
             for (Entidad entidad : entidades) {
-                total += entidad.getCantidad();
+                if (entidadOmitida == null || !entidad.equals(entidadOmitida)) {
+                    total += entidad.getCantidad();
+                    if (InfinityManagerKt.isInfiniteFloat(total)) {
+                        break;
+                    }
+                }
             }
         } else if (tipo == AMBOS){
             float totalDeudas = 0;
             float totalDerechosCobro = 0;
             for (Entidad entidad : entidades) {
-                if (entidad.getTipoEntidad() == Entidad.DEUDA) {
-                    totalDeudas += entidad.getCantidad();
-                } else if (entidad.getTipoEntidad() == Entidad.DERECHO_COBRO) {
-                    totalDerechosCobro += entidad.getCantidad();
+                if (entidadOmitida == null || !entidad.equals(entidadOmitida)) {
+                    if (entidad.getTipoEntidad() == Entidad.DEUDA &&
+                            !InfinityManagerKt.isInfiniteFloat(totalDeudas)) {
+                        totalDeudas += entidad.getCantidad();
+                    } else if (entidad.getTipoEntidad() == Entidad.DERECHO_COBRO &&
+                            !InfinityManagerKt.isInfiniteFloat(totalDerechosCobro)) {
+                        totalDerechosCobro += entidad.getCantidad();
+                    }
+
+                    if (InfinityManagerKt.isInfiniteFloat(totalDeudas) &&
+                            InfinityManagerKt.isInfiniteFloat(totalDerechosCobro)) {
+                        break;
+                    }
                 }
             }
 
-            total = totalDeudas + totalDerechosCobro;
+            if ((InfinityManagerKt.isInfiniteFloat(totalDeudas) &&
+                    InfinityManagerKt.isInfiniteFloat(totalDerechosCobro)) ||
+                    InfinityManagerKt.isInfiniteFloat(totalDerechosCobro)) {
+                total = InfinityManagerKt.getInfiniteFloat();
+            } else if (InfinityManagerKt.isInfiniteFloat(totalDeudas)) {
+                total = InfinityManagerKt.getNegativeInfiniteFloat();
+            } else {
+                total = totalDeudas + totalDerechosCobro;
+            }
         }
 
         cantidadTotal = total;
@@ -237,12 +271,12 @@ public class Persona implements Serializable{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String cantidadDeudas = getDeudas() == null ? "VACÍO" : Integer.toString(getDeudas().size());
         String cantidadDerechosCobro = getDerechosCobro() == null ? "VACÍO" : Integer.toString(getDerechosCobro().size());
 
         return getNombre() + "\n" +
-                "TIPO: " + getTipoPersonaString() + "\n" +
+                "TIPO: " + getTipoPersonaDisplay() + "\n" +
                 "DEUDAS: " + cantidadDeudas + "\n" +
                 "DERECHOS COBRO: " + cantidadDerechosCobro + "\n" +
                 "TOTAL DEBIDO: " + getCantidadTotal();
@@ -265,7 +299,7 @@ public class Persona implements Serializable{
         return super.hashCode();
     }
 
-    public String getTipoPersonaString(){
+    public String getTipoPersonaDisplay(){
         switch (tipo) {
             case ACREEDOR: return "Acreedor";
             case DEUDOR: return "Deudor";

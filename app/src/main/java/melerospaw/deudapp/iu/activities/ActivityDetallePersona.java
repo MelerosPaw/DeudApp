@@ -57,6 +57,7 @@ import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
+import melerospaw.deudapp.task.EventoPersonaEliminada;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
@@ -87,7 +88,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private AdaptadorDeudas adaptador;
     private Persona persona;
     private Menu menu;
-    private boolean isAnimationOnGoing;
+    private boolean isAnimationGoingOn;
     private boolean isDeshacerShowing;
     private Snackbar snackbar;
     private BaseTransientBottomBar.BaseCallback<Snackbar> snackbarCallback =
@@ -241,16 +242,21 @@ public class ActivityDetallePersona extends AppCompatActivity {
             gestor.eliminarEntidades(Collections.singletonList(adaptador.getItemProvisional()));
             actualizarTotal();
             toggleDeleteAllMenuOption();
-            bus.post(new EventoDeudaModificada(persona));
             adaptador.eliminarProvisionales();
+            if (adaptador.getItemCount() == 0){
+                bus.post(new EventoPersonaEliminada(persona));
+                finish();
+            } else {
+                bus.post(new EventoDeudaModificada(persona));
+            }
         }
     }
 
     private boolean prepararAnimacion() {
-        if (isAnimationOnGoing) {
+        if (isAnimationGoingOn) {
             return false;
         }
-        isAnimationOnGoing = true;
+        isAnimationGoingOn = true;
         CustomTransitionSet transitionSet = new CustomTransitionSet();
         transitionSet.addListener(new Transition.TransitionListener() {
             @Override
@@ -284,19 +290,18 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void enableAnimation() {
         layoutManager.setScrollEnabled(true);
-        isAnimationOnGoing = false;
+        isAnimationGoingOn = false;
     }
 
     private void cambiarColorTotal(@Nullable Entidad deudaOmitida) {
-        ColorManager.pintarColorDeuda(llBarraTotal, deudaOmitida == null ?
-                persona.getCantidadTotal() : persona.getCantidadTotal() - deudaOmitida.getCantidad());
+        ColorManager.pintarColorDeuda(llBarraTotal, persona.getCantidadTotal(deudaOmitida));
     }
 
     private void mostrarTotal(@Nullable Entidad entidadOmitida) {
-        float cantidadTotal = entidadOmitida == null ? persona.getCantidadTotal() : persona.getCantidadTotal() - entidadOmitida.getCantidad();
         boolean mostrarConcepto;
         CharSequence concepto;
         CharSequence cantidad;
+        float cantidadTotal = persona.getCantidadTotal(entidadOmitida);
 
         if (cantidadTotal == 0f) {
             mostrarConcepto = false;
@@ -504,6 +509,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     adaptador.alterItemInPosition(posicion, entidad);
                     adaptador.ordenar(posicion, entidad);
                     mostrarTotal(null);
+                    cambiarColorTotal(null);
                     BusProvider.getBus().post(new EventoDeudaModificada(persona));
                     ExtensionFunctionsKt.shortToast(ActivityDetallePersona.this, getString(R.string.deuda_modificada));
                 } else {

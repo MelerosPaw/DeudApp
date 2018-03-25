@@ -15,7 +15,7 @@ fun String.isPositiveInfinityCharacter() = this == INFINITY_CHAR
 
 fun String.isNegativeInfinityCharacter() = this == NEGATIVE_INFINITY_CHAR
 
-fun getInifiniteFloat() = Float.POSITIVE_INFINITY
+fun getInfiniteFloat() = Float.POSITIVE_INFINITY
 
 fun getNegativeInfiniteFloat() = Float.NEGATIVE_INFINITY
 
