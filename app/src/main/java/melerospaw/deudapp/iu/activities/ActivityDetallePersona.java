@@ -57,7 +57,6 @@ import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
-import melerospaw.deudapp.task.EventoPersonaEliminada;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
@@ -141,7 +140,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void setTextIfImagePresent() {
         if (persona.tieneImagen()) {
-            String subtitulo = getString(R.string.primera_deuda_contraida) + persona.getOldest();
+            String subtitulo = persona.getEntidades().isEmpty() ?
+                    persona.getOldest() : getString(R.string.primera_deuda_contraida) + persona.getOldest();
             tvSubtitulo.setText(subtitulo);
             tvToolbarSubtitulo.setText(subtitulo);
             tvToolbarSubtitulo.setVisibility(View.VISIBLE);
@@ -243,12 +243,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             actualizarTotal();
             toggleDeleteAllMenuOption();
             adaptador.eliminarProvisionales();
-            if (adaptador.getItemCount() == 0){
-                bus.post(new EventoPersonaEliminada(persona));
-                finish();
-            } else {
-                bus.post(new EventoDeudaModificada(persona));
-            }
+            bus.post(new EventoDeudaModificada(persona));
         }
     }
 

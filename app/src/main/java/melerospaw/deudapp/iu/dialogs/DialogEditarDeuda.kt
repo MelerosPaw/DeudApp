@@ -168,10 +168,10 @@ class DialogEditarDeuda : DialogFragment() {
     private fun mostrarDialogCantidadInfinita() {
         if (context != null) {
             mostrarInfinityDialog(context!!, DialogInterface.OnClickListener {
-                dialog, which ->
+                _, _->
                     entidad.cantidad = getInfiniteFloatByDebtType(entidad)
                     closeAndSave()
-            }, DialogInterface.OnClickListener { dialog, which -> dismiss() })
+            }, DialogInterface.OnClickListener { _,_ -> dismiss() })
         }
     }
 

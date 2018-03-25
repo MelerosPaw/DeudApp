@@ -170,15 +170,18 @@ public class Persona implements Serializable{
 
         List<Entidad> lista = new LinkedList<>(entidades);
 
-        if (lista.size() > 1){
+        if (lista.isEmpty()) {
+            return "Sin deudas";
+        } else if (lista.size() > 1){
             Entidad oldest = lista.get(0);
             for (Entidad entidad : lista){
                 if (entidad.compareTo(oldest) > 0)
                     oldest = entidad;
             }
             return oldest.getReadableDate();
-        } else
+        } else {
             return lista.get(0).getReadableDate();
+        }
     }
 
     /**Returns newest Entidad human readable date. If there is ony one debt, returns the date.
@@ -187,15 +190,18 @@ public class Persona implements Serializable{
 
         List<Entidad> lista = new LinkedList<>(entidades);
 
-        if (lista.size() > 1){
+        if (lista.isEmpty()) {
+            return "Sin deudas";
+        } else if (lista.size() > 1){
             Entidad newest = lista.get(0);
             for (Entidad entidad : lista){
                 if (entidad.compareTo(newest) < 0)
                     newest = entidad;
             }
             return newest.getReadableDate();
-        } else
+        } else {
             return lista.get(0).getReadableDate();
+        }
     }
 
     public void addEntidad(Entidad entidad) {

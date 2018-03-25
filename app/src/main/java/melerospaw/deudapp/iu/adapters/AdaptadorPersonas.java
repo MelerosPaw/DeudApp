@@ -25,7 +25,6 @@ import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
-import melerospaw.deudapp.task.EventoPersonaEliminada;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.TextDrawableManager;
 
@@ -271,13 +270,13 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         }
     }
 
-    @Subscribe
-    public void onPersonaEliminada(EventoPersonaEliminada evento) {
-        Persona personaEliminada = evento.getPersona();
-        mDatos.remove(personaEliminada);
-        notifyItemRemoved(getPosition(personaEliminada));
-        onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
-    }
+//    @Subscribe
+//    public void onPersonaEliminada(EventoPersonaEliminada evento) {
+//        Persona personaEliminada = evento.getPersona();
+//        mDatos.remove(personaEliminada);
+//        notifyItemRemoved(getPosition(personaEliminada));
+//        onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
+//    }
 
     public interface ContextualMenuInterface {
         void mostrarMenuContextual(Persona persona, int posicionEnAdapter);
