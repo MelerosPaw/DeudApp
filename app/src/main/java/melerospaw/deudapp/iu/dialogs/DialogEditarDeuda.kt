@@ -140,7 +140,7 @@ class DialogEditarDeuda : DialogFragment() {
                 else -> {
                     val fakeDebt = Entidad(0F, concepto, Entidad.DEUDA)
                     fakeDebt.fecha = fecha
-                    EntidadesUtil.estaContenida(fakeDebt, entidad.persona.entidades)
+                    estaContenida(fakeDebt, entidad.persona.entidades)
                 }
             }
 

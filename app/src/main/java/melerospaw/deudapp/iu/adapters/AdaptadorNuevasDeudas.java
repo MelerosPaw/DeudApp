@@ -26,7 +26,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.vo.EntidadVO;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
-import melerospaw.deudapp.utils.EntidadesUtil;
+import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
@@ -82,35 +82,35 @@ public class AdaptadorNuevasDeudas
     }
 
     public List<Entidad> getEntidades() {
-        return EntidadesUtil.getEntidades(mDatos);
+        return EntidadesUtilKt.getEntidades(mDatos);
     }
 
     public List<EntidadVO> getEntidadesVO() {
-        return EntidadesUtil.getEntidadesVO(mDatos);
+        return EntidadesUtilKt.getEntidadesVO(mDatos);
     }
 
     public boolean hayEntidadesIncompletas() {
-        return EntidadesUtil.hayEntidadesIncompletas(mDatos);
+        return EntidadesUtilKt.hayEntidadesIncompletas(mDatos);
     }
 
     public boolean hayEntidadesRepetidas() {
-        return EntidadesUtil.hayEntidadesRepetidas(mDatos);
+        return EntidadesUtilKt.hayEntidadesRepetidas(mDatos);
     }
 
-    public boolean hayAlgo() {
-        return !mDatos.isEmpty();
+    public boolean estaVacio() {
+        return mDatos.isEmpty();
     }
 
     public boolean hayDeudas() {
-        return EntidadesUtil.hayDelTipo(mDatos, Entidad.DEUDA);
+        return EntidadesUtilKt.hayDelTipo(mDatos, Entidad.DEUDA);
     }
 
     public boolean hayDerechosCobro() {
-        return EntidadesUtil.hayDelTipo(mDatos, Entidad.DERECHO_COBRO);
+        return EntidadesUtilKt.hayDelTipo(mDatos, Entidad.DERECHO_COBRO);
     }
 
     public boolean hayEntidadesGrupales() {
-        return EntidadesUtil.hayEntidadesGrupales(mDatos);
+        return EntidadesUtilKt.hayEntidadesGrupales(mDatos);
     }
 
     public void eliminarItem(RecyclerView.ViewHolder holder) {
@@ -121,7 +121,7 @@ public class AdaptadorNuevasDeudas
     }
 
     private List<EntidadVO> toEntidadVOList(List<Entidad> entidades) {
-        return EntidadesUtil.toEntidadVOList(entidades);
+        return EntidadesUtilKt.toEntidadVOList(entidades);
     }
 
     public void setMostrarDialogoExplicativoListener(OnMostrarDialogoExplicativoListener mostrarDialogoExplicativoListener) {
