@@ -172,17 +172,17 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
             @Override
             public void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad.getTipoEntidad());
+                mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad);
             }
 
             @Override
             public void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad.getTipoEntidad());
+                mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad);
             }
 
             @Override
             public void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_CANCELAR, adapterPosition, entidad.getTipoEntidad());
+                mostrarDialog(DialogoModificarCantidad.TIPO_CANCELAR, adapterPosition, entidad);
             }
 
             @Override
@@ -459,16 +459,16 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private void modificarEntidad(String tipo, int position) {
 
         if (adaptador.isPositionInAdapter(position)) {
-            mostrarDialog(tipo, position, adaptador.getEntidadByPosition(position).getTipoEntidad());
+            mostrarDialog(tipo, position, adaptador.getEntidadByPosition(position));
         } else if (position == -1) {
-            mostrarDialog(tipo, position, Entidad.DEUDA);
+            mostrarDialog(tipo, position, Entidad.getVoidEntidad());
         }
     }
 
-    public void mostrarDialog(String tipo, int position, @Entidad.TipoEntidad int tipoEntidad) {
+    public void mostrarDialog(String modo, int position, Entidad entidad) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction().addToBackStack(DialogoModificarCantidad.TAG);
-        DialogoModificarCantidad dialog = DialogoModificarCantidad.getInstance(tipo, position, tipoEntidad);
+        DialogoModificarCantidad dialog = DialogoModificarCantidad.getInstance(modo, entidad, position);
         dialog.setPositiveCallback(new DialogoModificarCantidad.PositiveCallback() {
             @Override
             public void deudaAumentada(int position, String cantidadAumentada) {
@@ -527,8 +527,10 @@ public class ActivityDetallePersona extends AppCompatActivity {
         final float cantidadAumento = Float.parseFloat(StringUtils.prepararDecimal(aumento));
 
         if (!InfinityManagerKt.isInfiniteFloat(cantidadAumento) &&
-                InfinityManagerKt.isInfiniteFloat(cantidadAumento + entidad.getCantidad())) {
-            InfinityManagerKt.mostrarInfinityDialog(this, new DialogInterface.OnClickListener() {
+                InfinityManagerKt.isInfiniteFloat(cantidadAumento + entidad.getCantidad()) &&
+                !InfinityManagerKt.isInfiniteFloat(entidad.getCantidad())) {
+            InfinityManagerKt.mostrarInfinityDialog(this, R.string.dialog__adding_result_is_infinite_message,
+                    new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     entidad.aumentar(cantidadAumento);

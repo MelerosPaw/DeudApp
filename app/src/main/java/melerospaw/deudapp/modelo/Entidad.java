@@ -17,6 +17,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
+import melerospaw.deudapp.utils.SecureOperationKt;
+
 @DatabaseTable(tableName = "Entidades")
 public class Entidad implements Comparable<Entidad>, Serializable {
 
@@ -35,6 +37,12 @@ public class Entidad implements Comparable<Entidad>, Serializable {
     @DatabaseField(columnName = "fecha")                                                private Date fecha;
     @DatabaseField(columnName = "tipoEntidad")                                          private int tipoEntidad;
     @DatabaseField(columnName = "persona", foreign = true, foreignAutoRefresh = true)   private Persona persona;
+
+    public static Entidad getVoidEntidad() {
+        Entidad entidad = new Entidad();
+        entidad.setTipoEntidad(Entidad.DEUDA);
+        return entidad;
+    }
 
     public Entidad() {
         this.cantidad = 0.00f;
@@ -129,9 +137,9 @@ public class Entidad implements Comparable<Entidad>, Serializable {
 
     public void aumentar(float cantidad) {
         if (tipoEntidad == DERECHO_COBRO) {
-            this.cantidad = getCantidad() + cantidad;
+            this.cantidad = SecureOperationKt.secureAdd(getCantidad(), cantidad);
         } else if (tipoEntidad == DEUDA){
-            this.cantidad = getCantidad() - cantidad;
+            this.cantidad = SecureOperationKt.secureSubtract(getCantidad(), cantidad);
         } else {
             throw new IllegalStateException("La entidad es del tipo INDEFINIDO. ¿Cómo es posible?");
         }
@@ -139,9 +147,9 @@ public class Entidad implements Comparable<Entidad>, Serializable {
 
     public void disminuir(float cantidad) {
         if (tipoEntidad == DERECHO_COBRO) {
-            this.cantidad = getCantidad() - cantidad;
+            this.cantidad = SecureOperationKt.secureSubtract(getCantidad(), cantidad);
         } else if (tipoEntidad == DEUDA){
-            this.cantidad = getCantidad() + cantidad;
+            this.cantidad = SecureOperationKt.secureAdd(getCantidad(), cantidad);
         } else {
             throw new IllegalStateException("La entidad es del tipo INDEFINIDO. ¿Cómo es posible?");
         }

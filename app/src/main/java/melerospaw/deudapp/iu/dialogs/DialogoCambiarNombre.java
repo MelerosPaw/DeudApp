@@ -22,7 +22,7 @@ public class DialogoCambiarNombre extends DialogFragment {
 
     public static final String TAG = DialogoCambiarNombre.class.getSimpleName();
     public static final String BUNDLE_PERSONA = "BUNDLE_PERSONA";
-    public static final String BUNDLE_POSICION = "BUNDLE_POSICION";
+    public static final String BUNDLE_POSICION = "EXTRA_POSICION";
 
     @BindView(R.id.fl_loading_view) FrameLayout flLoadingView;
     @BindView(R.id.tv_mensaje)      TextView tvMensaje;

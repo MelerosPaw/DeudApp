@@ -119,7 +119,7 @@ class DialogEditarDeuda : DialogFragment() {
                 shortToast(getString(R.string.cantidad_vacia))
                 return false
             }
-            StringUtils.convertible(StringUtils.prepararDecimal(cantidad)) == "string" &&
+            StringUtils.esConvertible(StringUtils.prepararDecimal(cantidad)) == "string" &&
                     !cantidad.isInfinityCharacter() -> {
                 shortToast(getString(R.string.cantidad_no_numerica))
                 return false
@@ -167,11 +167,11 @@ class DialogEditarDeuda : DialogFragment() {
 
     private fun mostrarDialogCantidadInfinita() {
         if (context != null) {
-            mostrarInfinityDialog(context!!, DialogInterface.OnClickListener {
+            mostrarInfinityDialog(context!!, positiveCallback = DialogInterface.OnClickListener {
                 _, _->
                     entidad.cantidad = getInfiniteFloatByDebtType(entidad)
                     closeAndSave()
-            }, DialogInterface.OnClickListener { _,_ -> dismiss() })
+            }, negativeCallback = DialogInterface.OnClickListener { _,_ -> dismiss() })
         }
     }
 

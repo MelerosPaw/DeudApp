@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import melerospaw.deudapp.utils.InfinityManagerKt;
+import melerospaw.deudapp.utils.SecureOperationKt;
 
 @DatabaseTable (tableName = Persona.TABLE_NAME)
 public class Persona implements Serializable{
@@ -222,7 +223,7 @@ public class Persona implements Serializable{
         if (tipo == ACREEDOR || tipo == DEUDOR) {
             for (Entidad entidad : entidades) {
                 if (entidadOmitida == null || !entidad.equals(entidadOmitida)) {
-                    total += entidad.getCantidad();
+                    total = SecureOperationKt.secureAdd(total, entidad.getCantidad());
                     if (InfinityManagerKt.isInfiniteFloat(total)) {
                         break;
                     }
@@ -235,10 +236,10 @@ public class Persona implements Serializable{
                 if (entidadOmitida == null || !entidad.equals(entidadOmitida)) {
                     if (entidad.getTipoEntidad() == Entidad.DEUDA &&
                             !InfinityManagerKt.isInfiniteFloat(totalDeudas)) {
-                        totalDeudas += entidad.getCantidad();
+                        totalDeudas = SecureOperationKt.secureAdd(total, entidad.getCantidad());
                     } else if (entidad.getTipoEntidad() == Entidad.DERECHO_COBRO &&
                             !InfinityManagerKt.isInfiniteFloat(totalDerechosCobro)) {
-                        totalDerechosCobro += entidad.getCantidad();
+                        totalDerechosCobro = SecureOperationKt.secureAdd(total, entidad.getCantidad());
                     }
 
                     if (InfinityManagerKt.isInfiniteFloat(totalDeudas) &&

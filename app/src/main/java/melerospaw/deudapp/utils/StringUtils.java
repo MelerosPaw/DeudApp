@@ -42,10 +42,10 @@ public class StringUtils {
      * decimales. En caso contrario, indicará que es un <i>string</i>.
      *
      * @param cadena Cadena que queremos comprobar.
-     * @return Devuelve una cadena que valdrá "integer" si es convertible en <i>int</i>; <i>float</i>
-     * si es convertible en <i>float</i> o <i>string</i> si no es convertible en ninguno de los dos.
+     * @return Devuelve una cadena que valdrá "integer" si es esConvertible en <i>int</i>; <i>float</i>
+     * si es esConvertible en <i>float</i> o <i>string</i> si no es esConvertible en ninguno de los dos.
      */
-    public static String convertible(String cadena) {
+    public static String esConvertible(String cadena) {
         String resultado;
         try {
             Integer.parseInt(cadena);

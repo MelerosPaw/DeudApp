@@ -26,6 +26,7 @@ import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.SecureOperationKt;
 import melerospaw.deudapp.utils.TextDrawableManager;
 
 public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.PersonViewHolder> {
@@ -203,7 +204,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     public float obtenerTotal() {
         float total = 0;
         for (Persona persona : mDatos) {
-            total += persona.getCantidadTotal();
+            total = SecureOperationKt.secureAdd(total, persona.getCantidadTotal());
         }
 
         return total;
