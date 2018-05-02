@@ -46,6 +46,11 @@ public class StringUtils {
      * si es esConvertible en <i>float</i> o <i>string</i> si no es esConvertible en ninguno de los dos.
      */
     public static String esConvertible(String cadena) {
+
+        if (cadena.isEmpty()) {
+            return "string";
+        }
+
         String resultado;
         try {
             Integer.parseInt(cadena);

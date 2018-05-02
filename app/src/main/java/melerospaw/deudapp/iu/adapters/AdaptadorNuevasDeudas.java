@@ -206,9 +206,10 @@ public class AdaptadorNuevasDeudas
                 } else if (v.getId() == R.id.et_cantidad) {
                     cerrarCantidad();
                 }
-            } else if (v.getId() == R.id.et_cantidad && entidad.getTipoEntidad() == Entidad.DEUDA &&
-                    entidad.getCantidad() != 0F) {
-                abrirCantidad();
+            } else if (v.getId() == R.id.et_cantidad) {
+                if (entidad.getTipoEntidad() == Entidad.DEUDA && entidad.getCantidad() != 0F) {
+                    abrirCantidad();
+                }
             }
         }
 
@@ -223,8 +224,10 @@ public class AdaptadorNuevasDeudas
 
         private void cerrarCantidad() {
             String cantidadDecimal = StringUtils.prepararDecimal(etCantidad.getText().toString());
-            if (!cantidadDecimal.isEmpty() && !StringUtils.esConvertible(cantidadDecimal).equals("string")) {
+
+            if (!StringUtils.esConvertible(cantidadDecimal).equals("string")) {
                 final float cantidad = Float.parseFloat(cantidadDecimal);
+
                 if (InfinityManagerKt.isInfiniteFloat(cantidad)) {
                     InfinityManagerKt.mostrarInfinityDialog(mContext, null,
                             new DialogInterface.OnClickListener() {
@@ -238,9 +241,11 @@ public class AdaptadorNuevasDeudas
                             modificarCantidad(-0F);
                         }
                     });
+
                 } else if (cantidad != 0F) {
                     modificarCantidad(cantidad);
                 }
+
             } else {
                 setCantidad(-0F);
             }
@@ -250,7 +255,6 @@ public class AdaptadorNuevasDeudas
             setCantidad(cantidad);
             displayCantidad();
         }
-
 
         private void setCantidad(float cantidad) {
             entidad.setCantidad(cantidad);
