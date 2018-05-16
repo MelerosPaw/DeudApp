@@ -92,13 +92,13 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private Snackbar snackbar;
     private BaseTransientBottomBar.BaseCallback<Snackbar> snackbarCallback =
             new BaseTransientBottomBar.BaseCallback<Snackbar>() {
-        @Override
-        public void onDismissed(Snackbar transientBottomBar, int event) {
-            super.onDismissed(transientBottomBar, event);
-            eliminarProvisionalDefinitivo();
-            isDeshacerShowing = false;
-        }
-    };
+                @Override
+                public void onDismissed(Snackbar transientBottomBar, int event) {
+                    super.onDismissed(transientBottomBar, event);
+                    eliminarProvisionalDefinitivo();
+                    isDeshacerShowing = false;
+                }
+            };
 
     public static void start(Context context, String nombre) {
         Intent starter = new Intent(context, ActivityDetallePersona.class);
@@ -120,7 +120,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         loadView();
     }
 
-    public void loadView(){
+    public void loadView() {
         setToolbar();
         inicializarAdapter();
         cambiarColorTotal(null);
@@ -444,7 +444,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent,
-                getString(R.string.selecciona_una_imagen)),RC_FOTO);
+                getString(R.string.selecciona_una_imagen)), RC_FOTO);
     }
 
     public void actualizarTotal() {
@@ -514,48 +514,43 @@ public class ActivityDetallePersona extends AppCompatActivity {
         dialog.show(ft, DialogoModificarCantidad.TAG);
     }
 
-    /**
-     * Builds a {@code Dialog} to ask for an amount and adds it to the debt indicated by its
-     * position on the adaptador data set.
-     *
-     * @param position Position of the debt in the adaptador's data set.
-     */
     private void aumentarDeuda(final int position, String aumento) {
 
         final Entidad entidad = gestor.getEntidad(adaptador.getEntidadByPosition(position).getId());
-        final float cantidadAumento = Float.parseFloat(StringUtils.prepararDecimal(aumento));
+        final float deudaActual = entidad.getCantidad();
+        final float aumentoFloat = Float.parseFloat(StringUtils.prepararDecimal(aumento));
 
-        if (!InfinityManagerKt.isInfiniteFloat(cantidadAumento) &&
-                InfinityManagerKt.isInfiniteFloat(cantidadAumento + entidad.getCantidad())) {
-            InfinityManagerKt.mostrarInfinityDialog(this, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    entidad.aumentar(cantidadAumento);
-                    actualizarEntidadYAdapter(position, entidad);
-                }
-            }, null);
+        if (operationResultIsAlwaysInfinite(deudaActual, aumentoFloat,true)) {
+            showUselessOperationDialog();
+        } else if (additionWouldBeInfinite(deudaActual, aumentoFloat)) {
+            showInfiniteResultDialogAndAdd(position, entidad, aumentoFloat);
         } else {
-            entidad.aumentar(cantidadAumento);
-            actualizarEntidadYAdapter(position, entidad);
+            aumentar(entidad, aumentoFloat, position);
         }
     }
 
-    private void disminuirDeuda(int position, String cantidadDisminucion) {
-        Entidad entidad = adaptador.getEntidadByPosition(position);
+    private void disminuirDeuda(int position, String descuento) {
 
-        float descuento = Float.parseFloat(StringUtils.prepararDecimal(cantidadDisminucion));
+        Entidad entidad = adaptador.getEntidadByPosition(position);
+        float cantidadActual = entidad.getCantidad();
+        float cantidadDescuento = Float.parseFloat(StringUtils.prepararDecimal(descuento));
 
         boolean descuentoEsMayorQueDerechoCobro = entidad.getTipoEntidad() == Entidad.DERECHO_COBRO
-                && descuento > entidad.getCantidad();
+                && cantidadDescuento > cantidadActual;
         boolean descuentoEsMayorQueDeuda = entidad.getTipoEntidad() == Entidad.DEUDA
-                && descuento > -entidad.getCantidad();
+                && cantidadDescuento > -cantidadActual;
 
-        // No puede descontar más que la cantidad debida
         if (descuentoEsMayorQueDerechoCobro || descuentoEsMayorQueDeuda) {
             Snackbar.make(rvDeudas, R.string.mensaje_disminucion_excesiva, Snackbar.LENGTH_LONG).show();
-        } else {
-            entidad.disminuir(descuento);
+        } else if (operationResultIsAlwaysInfinite(cantidadActual, cantidadDescuento, false)) {
+            showUselessOperationDialog();
+        } else if (operandsAreInfinite(cantidadActual, cantidadDescuento)) {
+            entidad.setCantidad(0F);
             actualizarEntidadYAdapter(position, entidad);
+        } else if (subtractionWouldBeInfinite(cantidadActual, cantidadDescuento)) {
+            showInfiniteResultDialogAndSubtract(position, entidad, cantidadDescuento);
+        } else {
+            disminuir(entidad, cantidadDescuento, position);
         }
     }
 
@@ -563,6 +558,60 @@ public class ActivityDetallePersona extends AppCompatActivity {
         Entidad entidad = adaptador.getEntidadByPosition(position);
         entidad.setCantidad(0);
 
+        actualizarEntidadYAdapter(position, entidad);
+    }
+
+    private boolean operationResultIsAlwaysInfinite(float cantidadBase, float cantidadAdicional,
+                                                    boolean isAddition) {
+        return InfinityManagerKt.isInfiniteFloat(cantidadBase) &&
+                (isAddition || !InfinityManagerKt.isInfiniteFloat(cantidadAdicional));
+    }
+
+    private boolean additionWouldBeInfinite(float cantidadBase, float cantidadAumento) {
+        return !InfinityManagerKt.isInfiniteFloat(cantidadAumento) &&
+                InfinityManagerKt.additionResultIsInfinite(cantidadBase, cantidadAumento);
+    }
+
+    private boolean subtractionWouldBeInfinite(float cantidadBase, float cantidadDescuento) {
+        return !InfinityManagerKt.isInfiniteFloat(cantidadDescuento) &&
+                InfinityManagerKt.substractionResultIsInfinite(cantidadBase, cantidadDescuento);
+    }
+
+    private void showUselessOperationDialog() {
+        InfinityManagerKt.showUselessOperationDialog(this);
+    }
+
+    private boolean operandsAreInfinite(float... operands) {
+        return InfinityManagerKt.operandsAreInfinite(operands);
+    }
+
+    private void showInfiniteResultDialogAndAdd(final int position, final Entidad entidad,
+                                                final float aumentoFloat) {
+        InfinityManagerKt.mostrarInfinityDialog(this, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                aumentar(entidad, aumentoFloat, position);
+            }
+        }, null);
+    }
+
+    private void showInfiniteResultDialogAndSubtract(final int position, final Entidad entidad,
+                                                     final float descuentoFloat) {
+        InfinityManagerKt.mostrarInfinityDialog(this, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                disminuir(entidad, descuentoFloat, position);
+            }
+        }, null);
+    }
+
+    private void aumentar(Entidad entidad, float aumentoFloat, int position) {
+        entidad.aumentar(aumentoFloat);
+        actualizarEntidadYAdapter(position, entidad);
+    }
+
+    private void disminuir(Entidad entidad, float descuento, int position) {
+        entidad.disminuir(descuento);
         actualizarEntidadYAdapter(position, entidad);
     }
 
