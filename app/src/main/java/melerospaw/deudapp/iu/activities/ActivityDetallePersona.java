@@ -588,7 +588,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void showInfiniteResultDialogAndAdd(final int position, final Entidad entidad,
                                                 final float aumentoFloat) {
-        InfinityManagerKt.mostrarInfinityDialog(this, new DialogInterface.OnClickListener() {
+        InfinityManagerKt.mostrarInfinityDialog(this, null, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 aumentar(entidad, aumentoFloat, position);
@@ -598,7 +598,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void showInfiniteResultDialogAndSubtract(final int position, final Entidad entidad,
                                                      final float descuentoFloat) {
-        InfinityManagerKt.mostrarInfinityDialog(this, new DialogInterface.OnClickListener() {
+        InfinityManagerKt.mostrarInfinityDialog(this, null, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 disminuir(entidad, descuentoFloat, position);
