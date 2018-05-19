@@ -17,7 +17,7 @@ infix fun Float.secureSubtract(operand2: Float) : Float {
             this.isInfinite()) {
         this
     } else if (operand2.isInfinite()) {
-        operand2
+        -operand2
     } else {
         this - operand2
     }
