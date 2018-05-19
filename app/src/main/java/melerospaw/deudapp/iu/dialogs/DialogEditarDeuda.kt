@@ -119,7 +119,7 @@ class DialogEditarDeuda : DialogFragment() {
                 shortToast(getString(R.string.cantidad_vacia))
                 return false
             }
-            StringUtils.convertible(StringUtils.prepararDecimal(cantidad)) == "string" &&
+            StringUtils.esConvertible(StringUtils.prepararDecimal(cantidad)) == "string" &&
                     !cantidad.isInfinityCharacter() -> {
                 shortToast(getString(R.string.cantidad_no_numerica))
                 return false
@@ -140,7 +140,7 @@ class DialogEditarDeuda : DialogFragment() {
                 else -> {
                     val fakeDebt = Entidad(0F, concepto, Entidad.DEUDA)
                     fakeDebt.fecha = fecha
-                    EntidadesUtil.estaContenida(fakeDebt, entidad.persona.entidades)
+                    estaContenida(fakeDebt, entidad.persona.entidades)
                 }
             }
 
@@ -162,16 +162,16 @@ class DialogEditarDeuda : DialogFragment() {
             if (entidad.tipoEntidad == Entidad.DEUDA) {
                 getNegativeInfiniteFloat()
             } else {
-                getInifiniteFloat()
+                getInfiniteFloat()
             }
 
     private fun mostrarDialogCantidadInfinita() {
         if (context != null) {
-            mostrarInfinityDialog(context!!, DialogInterface.OnClickListener {
-                dialog, which ->
+            mostrarInfinityDialog(context!!, positiveCallback = DialogInterface.OnClickListener {
+                _, _->
                     entidad.cantidad = getInfiniteFloatByDebtType(entidad)
                     closeAndSave()
-            }, DialogInterface.OnClickListener { dialog, which -> dismiss() })
+            }, negativeCallback = DialogInterface.OnClickListener { _,_ -> dismiss() })
         }
     }
 

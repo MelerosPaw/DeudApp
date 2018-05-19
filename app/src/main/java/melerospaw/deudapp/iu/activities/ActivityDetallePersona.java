@@ -87,7 +87,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private AdaptadorDeudas adaptador;
     private Persona persona;
     private Menu menu;
-    private boolean isAnimationOnGoing;
+    private boolean isAnimationGoingOn;
     private boolean isDeshacerShowing;
     private Snackbar snackbar;
     private BaseTransientBottomBar.BaseCallback<Snackbar> snackbarCallback =
@@ -140,7 +140,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void setTextIfImagePresent() {
         if (persona.tieneImagen()) {
-            String subtitulo = getString(R.string.primera_deuda_contraida) + persona.getOldest();
+            String subtitulo = persona.getEntidades().isEmpty() ?
+                    persona.getOldest() : getString(R.string.primera_deuda_contraida) + persona.getOldest();
             tvSubtitulo.setText(subtitulo);
             tvToolbarSubtitulo.setText(subtitulo);
             tvToolbarSubtitulo.setVisibility(View.VISIBLE);
@@ -171,17 +172,17 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
             @Override
             public void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad.getTipoEntidad());
+                mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad);
             }
 
             @Override
             public void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad.getTipoEntidad());
+                mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad);
             }
 
             @Override
             public void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_CANCELAR, adapterPosition, entidad.getTipoEntidad());
+                mostrarDialog(DialogoModificarCantidad.TIPO_CANCELAR, adapterPosition, entidad);
             }
 
             @Override
@@ -241,16 +242,16 @@ public class ActivityDetallePersona extends AppCompatActivity {
             gestor.eliminarEntidades(Collections.singletonList(adaptador.getItemProvisional()));
             actualizarTotal();
             toggleDeleteAllMenuOption();
-            bus.post(new EventoDeudaModificada(persona));
             adaptador.eliminarProvisionales();
+            bus.post(new EventoDeudaModificada(persona));
         }
     }
 
     private boolean prepararAnimacion() {
-        if (isAnimationOnGoing) {
+        if (isAnimationGoingOn) {
             return false;
         }
-        isAnimationOnGoing = true;
+        isAnimationGoingOn = true;
         CustomTransitionSet transitionSet = new CustomTransitionSet();
         transitionSet.addListener(new Transition.TransitionListener() {
             @Override
@@ -284,19 +285,18 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void enableAnimation() {
         layoutManager.setScrollEnabled(true);
-        isAnimationOnGoing = false;
+        isAnimationGoingOn = false;
     }
 
     private void cambiarColorTotal(@Nullable Entidad deudaOmitida) {
-        ColorManager.pintarColorDeuda(llBarraTotal, deudaOmitida == null ?
-                persona.getCantidadTotal() : persona.getCantidadTotal() - deudaOmitida.getCantidad());
+        ColorManager.pintarColorDeuda(llBarraTotal, persona.getCantidadTotal(deudaOmitida));
     }
 
     private void mostrarTotal(@Nullable Entidad entidadOmitida) {
-        float cantidadTotal = entidadOmitida == null ? persona.getCantidadTotal() : persona.getCantidadTotal() - entidadOmitida.getCantidad();
         boolean mostrarConcepto;
         CharSequence concepto;
         CharSequence cantidad;
+        float cantidadTotal = persona.getCantidadTotal(entidadOmitida);
 
         if (cantidadTotal == 0f) {
             mostrarConcepto = false;
@@ -459,16 +459,16 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private void modificarEntidad(String tipo, int position) {
 
         if (adaptador.isPositionInAdapter(position)) {
-            mostrarDialog(tipo, position, adaptador.getEntidadByPosition(position).getTipoEntidad());
+            mostrarDialog(tipo, position, adaptador.getEntidadByPosition(position));
         } else if (position == -1) {
-            mostrarDialog(tipo, position, Entidad.DEUDA);
+            mostrarDialog(tipo, position, Entidad.getVoidEntidad());
         }
     }
 
-    public void mostrarDialog(String tipo, int position, @Entidad.TipoEntidad int tipoEntidad) {
+    public void mostrarDialog(String modo, int position, Entidad entidad) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction().addToBackStack(DialogoModificarCantidad.TAG);
-        DialogoModificarCantidad dialog = DialogoModificarCantidad.getInstance(tipo, position, tipoEntidad);
+        DialogoModificarCantidad dialog = DialogoModificarCantidad.getInstance(modo, entidad, position);
         dialog.setPositiveCallback(new DialogoModificarCantidad.PositiveCallback() {
             @Override
             public void deudaAumentada(int position, String cantidadAumentada) {
@@ -504,6 +504,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     adaptador.alterItemInPosition(posicion, entidad);
                     adaptador.ordenar(posicion, entidad);
                     mostrarTotal(null);
+                    cambiarColorTotal(null);
                     BusProvider.getBus().post(new EventoDeudaModificada(persona));
                     ExtensionFunctionsKt.shortToast(ActivityDetallePersona.this, getString(R.string.deuda_modificada));
                 } else {

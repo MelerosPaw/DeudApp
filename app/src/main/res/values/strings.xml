@@ -103,6 +103,8 @@
     <string name="url_politica_privacidad" formatted="false">https://github.com/MelerosPaw/DeudApp/blob/master/README.md</string>
     <string name="dialog__infinite_amount_title">Cantidad infinita</string>
     <string name="dialog__infinite_amount_message">La cantidad que has introducido no puede representarse, por lo que se considera infinita y, sinceramente, no creemos que quieras anotar una cantidad infinita. Le sumes lo que le sumes, le restes lo que le restes, seguirá siendo infinita, y nadie tiene infinito dinero. Y si lo tienes, por favor, llámanos.\n\n¿Estás seguro de que quieres tener una deuda infinita?</string>
+    <string name="dialog__typed_infinite_amount_message">La cantidad que quieres %1$s no puede representarse, por lo que se considera infinita y, sinceramente, no creemos que quieras anotar una cantidad infinita. Le sumes lo que le sumes, le restes lo que le restes, seguirá siendo infinita, y nadie tiene infinito dinero. Y si lo tienes, por favor, llámanos.\n\n¿Estás seguro de que quieres tener una deuda infinita?</string>
+    <string name="dialog__adding_result_is_infinite_message">La cantidad que resulta de aumentar la deuda no puede representarse, por lo que se considera infinita y, sinceramente, no creemos que quieras anotar una cantidad infinita. Le sumes lo que le sumes, le restes lo que le restes, seguirá siendo infinita, y nadie tiene infinito dinero. Y si lo tienes, por favor, llámanos.\n\n¿Estás seguro de que quieres tener una deuda infinita?</string>
     <string name="useless_operation_title">Operación inutil</string>
     <string name="useless_operation_message">Esta operación es inútil ya que el resultado seguirá siendo infinito.</string>
     <string name="i_know">Lo sé</string>

@@ -210,7 +210,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     for (Persona persona : personas) {
                         getEntidadDao().delete(persona.getEntidades());
 //                        persona.setEntidades(Collections.<Entidad>emptyList());
-//                        persona.actualizarTotal();
+//                        persona.calcularTotal();
 //                        persona.setTipo(Persona.INACTIVO);
 //                        persona.setImagen(null);
                         helper.getPersonaDao().delete(persona);

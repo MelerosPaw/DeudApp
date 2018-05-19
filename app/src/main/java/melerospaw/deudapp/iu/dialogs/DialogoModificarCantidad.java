@@ -16,7 +16,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
-import melerospaw.deudapp.modelo.Entidad.TipoEntidad;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
 
@@ -28,9 +27,9 @@ public class DialogoModificarCantidad extends DialogFragment {
     public static final String TIPO_CANCELAR = "Cancelar";
     public static final String TIPO_CANCELAR_TODAS = "Cancelar todo";
 
-    public static final String BUNDLE_MODO= "MODO";
-    public static final String BUNDLE_POSICION = "POSICION";
-    public static final String BUNDLE_TIPO_ENTIDAD = "TIPO_ENTIDAD";
+    public static final String EXTRA_MODO = "MODO";
+    public static final String EXTRA_POSICION = "POSICION";
+    public static final String EXTRA_ENTIDAD = "EXTRA_ENTIDAD";
 
     @BindView(R.id.tv_titulo)       TextView tvTitulo;
     @BindView(R.id.tv_mensaje)      TextView tvMensaje;
@@ -41,18 +40,18 @@ public class DialogoModificarCantidad extends DialogFragment {
 
     private String modo;
     private int position;
-    private int tipoEntidad;
+    private Entidad entidad;
     private Unbinder unbinder;
     private PositiveCallback positiveCallback;
 
 
-    public static DialogoModificarCantidad getInstance(String modo, Integer position,
-                                                       @TipoEntidad int tipo) {
+    public static DialogoModificarCantidad getInstance(String modo, Entidad entidad,
+                                                       Integer position) {
         DialogoModificarCantidad df = new DialogoModificarCantidad();
         Bundle bundle = new Bundle();
-        bundle.putString(BUNDLE_MODO, modo);
-        bundle.putInt(BUNDLE_POSICION, position);
-        bundle.putInt(BUNDLE_TIPO_ENTIDAD, tipo);
+        bundle.putString(EXTRA_MODO, modo);
+        bundle.putInt(EXTRA_POSICION, position);
+        bundle.putSerializable(EXTRA_ENTIDAD, entidad);
         df.setArguments(bundle);
         return df;
     }
@@ -62,9 +61,9 @@ public class DialogoModificarCantidad extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            this.modo = getArguments().getString(BUNDLE_MODO);
-            this.position = getArguments().getInt(BUNDLE_POSICION);
-            this.tipoEntidad = getArguments().getInt(BUNDLE_TIPO_ENTIDAD);
+            this.modo = getArguments().getString(EXTRA_MODO);
+            this.position = getArguments().getInt(EXTRA_POSICION);
+            this.entidad = (Entidad) getArguments().getSerializable(EXTRA_ENTIDAD);
         }
         setCancelable(false);
     }
@@ -105,7 +104,7 @@ public class DialogoModificarCantidad extends DialogFragment {
     }
 
     private void loadViewAumentar() {
-        tvMensaje.setText(tipoEntidad == Entidad.DEUDA ?
+        tvMensaje.setText(entidad.getTipoEntidad() == Entidad.DEUDA ?
                 R.string.pregunta_aumentar_deuda : R.string.pregunta_aumentar_derecho_cobro);
         btnAceptar.setText(R.string.aumentar);
         btnCancelar.setText(R.string.cancelar);
@@ -124,7 +123,7 @@ public class DialogoModificarCantidad extends DialogFragment {
     }
 
     private void loadViewDisminuir() {
-        tvMensaje.setText(tipoEntidad == Entidad.DEUDA ?
+        tvMensaje.setText(entidad.getTipoEntidad() == Entidad.DEUDA ?
                 R.string.pregunta_descontar_deuda : R.string.pregunta_descontar_derecho_cobro);
         btnAceptar.setText(R.string.disminuir);
         btnCancelar.setText(R.string.cancelar);
@@ -143,7 +142,7 @@ public class DialogoModificarCantidad extends DialogFragment {
     }
 
     private void loadViewCancelar() {
-        tvMensaje.setText(tipoEntidad == Entidad.DEUDA ?
+        tvMensaje.setText(entidad.getTipoEntidad() == Entidad.DEUDA ?
                 R.string.pregunta_cancelar_deuda : R.string.pregunta_cancelar_derecho_cobro);
         btnAceptar.setText(R.string.si);
         btnCancelar.setText(R.string.no);
@@ -212,7 +211,7 @@ public class DialogoModificarCantidad extends DialogFragment {
         if (cantidad.isEmpty()) {
             dismiss();
             esCantidadCorrecta = false;
-        } else if (StringUtils.convertible(cantidad).equals("string")) {
+        } else if (StringUtils.esConvertible(cantidad).equals("string")) {
             Snackbar.make(btnAceptar, R.string.mensaje_cantidad_no_valida, Snackbar.LENGTH_SHORT).show();
             esCantidadCorrecta = false;
         } else {
@@ -225,8 +224,9 @@ public class DialogoModificarCantidad extends DialogFragment {
     private boolean esCantidadInfinita() {
 
         boolean isInfinite;
-        Float preparedDecimal = Float.parseFloat(StringUtils.prepararDecimal(etCantidad.getText().toString()));
-        if (InfinityManagerKt.isInfiniteFloat(preparedDecimal)) {
+        float preparedDecimal = Float.parseFloat(StringUtils.prepararDecimal(etCantidad.getText().toString()));
+        if (InfinityManagerKt.isInfiniteFloat(preparedDecimal) &&
+                !InfinityManagerKt.isInfiniteFloat(entidad.getCantidad())) {
             mostrarDialogoInfinitud();
             isInfinite = true;
         } else {
@@ -238,12 +238,25 @@ public class DialogoModificarCantidad extends DialogFragment {
 
     private void mostrarDialogoInfinitud() {
         if (getContext() != null) {
-            InfinityManagerKt.mostrarInfinityDialog(getContext(), new DialogInterface.OnClickListener() {
+            InfinityManagerKt.mostrarInfinityDialog(getContext(),
+                    String.format(getString(R.string.dialog__typed_infinite_amount_message),
+                    getModoDisplay()), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     proceder();
                 }
             }, null);
+        }
+    }
+
+    private String getModoDisplay() {
+        if (modo.equals(TIPO_AUMENTAR)) {
+            return "aumentar";
+        } else if (modo.equals(TIPO_DISMINUIR)) {
+            return "descontar";
+        } else {
+            // En los otros casos no se introduce cantidad
+            return "";
         }
     }
 
