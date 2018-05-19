@@ -66,6 +66,7 @@ public class DialogoModificarCantidad extends DialogFragment {
             this.position = getArguments().getInt(BUNDLE_POSICION);
             this.tipoEntidad = getArguments().getInt(BUNDLE_TIPO_ENTIDAD);
         }
+        setCancelable(false);
     }
 
     @Nullable
@@ -161,7 +162,6 @@ public class DialogoModificarCantidad extends DialogFragment {
             }
         });
     }
-
 
     private void loadViewCancelarTodas() {
         tvTitulo.setText(modo);
