@@ -164,66 +164,63 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void inicializarAdapter() {
         List<Entidad> entidades = persona.getEntidades();
-        if (entidades.isEmpty()) {
-            mostrarVacio(true);
-        } else {
-            mostrarVacio(false);
-            Collections.sort(entidades, Entidad.COMPARATOR);
-            adaptador = new AdaptadorDeudas(this, entidades);
-            adaptador.setCallback(new AdaptadorDeudas.AdaptadorEntidadesCallback() {
-                @Override
-                public boolean sizeAboutToChange() {
-                    return prepararAnimacion();
-                }
+        mostrarVacio(entidades.isEmpty());
+        Collections.sort(entidades, Entidad.COMPARATOR);
+        adaptador = new AdaptadorDeudas(this, entidades);
+        adaptador.setCallback(new AdaptadorDeudas.AdaptadorEntidadesCallback() {
+            @Override
+            public boolean sizeAboutToChange() {
+                return prepararAnimacion();
+            }
 
-                @Override
-                public void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                    mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad.getTipoEntidad());
-                }
+            @Override
+            public void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
+                mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad.getTipoEntidad());
+            }
 
-                @Override
-                public void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                    mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad.getTipoEntidad());
-                }
+            @Override
+            public void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
+                mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad.getTipoEntidad());
+            }
 
-                @Override
-                public void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                    mostrarDialog(DialogoModificarCantidad.TIPO_CANCELAR, adapterPosition, entidad.getTipoEntidad());
-                }
+            @Override
+            public void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
+                mostrarDialog(DialogoModificarCantidad.TIPO_CANCELAR, adapterPosition, entidad.getTipoEntidad());
+            }
 
-                @Override
-                public void onLongClick(Entidad entidad, int posicion) {
-                    mostrarDialogoEdicionDeuda(entidad, posicion);
-                }
-            });
-            rvDeudas.setLayoutManager(layoutManager);
-            rvDeudas.setAdapter(adaptador);
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                    new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
-                            | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
-                        @Override
-                        public boolean onMove(RecyclerView recyclerView,
-                                              RecyclerView.ViewHolder viewHolder,
-                                              RecyclerView.ViewHolder target) {
-                            return true;
-                        }
+            @Override
+            public void onLongClick(Entidad entidad, int posicion) {
+                mostrarDialogoEdicionDeuda(entidad, posicion);
+            }
+        });
+        rvDeudas.setLayoutManager(layoutManager);
+        rvDeudas.setAdapter(adaptador);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
+                        | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return true;
+                    }
 
-                        @Override
-                        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                            if (isDeshacerShowing) {
-                                eliminarProvisionalDefinitivo();
-                                if (snackbar != null) {
-                                    snackbar.removeCallback(snackbarCallback);
-                                }
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                        if (isDeshacerShowing) {
+                            eliminarProvisionalDefinitivo();
+                            if (snackbar != null) {
+                                snackbar.removeCallback(snackbarCallback);
                             }
-                            adaptador.eliminarItem(viewHolder);
-                            mostrarDeshacer();
-                            mostrarTotal(adaptador.getItemProvisional());
-                            cambiarColorTotal(adaptador.getItemProvisional());
                         }
-                    });
-            itemTouchHelper.attachToRecyclerView(rvDeudas);
-        }
+                        adaptador.eliminarItem(viewHolder);
+                        mostrarVacio(adaptador.getItemCount() == 0);
+                        mostrarDeshacer();
+                        mostrarTotal(adaptador.getItemProvisional());
+                        cambiarColorTotal(adaptador.getItemProvisional());
+                    }
+                });
+        itemTouchHelper.attachToRecyclerView(rvDeudas);
     }
 
     private void mostrarVacio(boolean mostrar) {
@@ -237,6 +234,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 adaptador.deshacerEliminar();
+                mostrarVacio(false);
                 mostrarTotal(null);
                 cambiarColorTotal(null);
                 isDeshacerShowing = false;
@@ -305,7 +303,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void mostrarTotal(@Nullable Entidad entidadOmitida) {
-        float cantidadTotal = entidadOmitida == null ? persona.getCantidadTotal() : persona.getCantidadTotal() - entidadOmitida.getCantidad();
+        float cantidadTotal = entidadOmitida == null ?
+                persona.getCantidadTotal() : persona.getCantidadTotal() - entidadOmitida.getCantidad();
         boolean mostrarConcepto;
         CharSequence concepto;
         CharSequence cantidad;
@@ -594,7 +593,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     public void actualizarLista(List<Entidad> entidades) {
         adaptador.nuevasEntidades(entidades);
-        mostrarVacio(adaptador.getItemCount() + entidades.size() > 0);
+        mostrarVacio(adaptador.getItemCount() + entidades.size() == 0);
         layoutManager.scrollToPosition(0);
         mostrarTotal(null);
         cambiarColorTotal(null);
@@ -630,8 +629,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     private void procesarResultNuevasDeudas(Intent data) {
         List<Integer> idsEntidades = data.getIntegerArrayListExtra(ActivityNuevasDeudas.RESULT_ENTITIES_ADDED);
-        List<Entidad> entidades = gestor.getEntidades(idsEntidades);
-        actualizarLista(entidades);
+        actualizarLista(gestor.getEntidades(idsEntidades));
         BusProvider.getBus().post(new EventoDeudaModificada(persona));
     }
 
@@ -680,6 +678,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             persona.setTipo(Persona.INACTIVO);
             bus.post(new EventoDeudaModificada(persona));
             finish();
+            ExtensionFunctionsKt.shortToast(this, getString(R.string.person_deleted));
         } else {
             ExtensionFunctionsKt.shortToast(this,
                     String.format(getString(R.string.imposible_eliminar_persona),

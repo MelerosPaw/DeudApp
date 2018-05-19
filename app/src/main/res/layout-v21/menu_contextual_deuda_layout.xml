@@ -21,7 +21,7 @@
         android:id="@+id/tv_aumentar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ripple_basic"
+        android:background="@drawable/ripple_orange"
         android:padding="16dp"
         android:text="@string/aumentar_deuda"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -30,7 +30,7 @@
         android:id="@+id/tv_descontar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ripple_basic"
+        android:background="@drawable/ripple_orange"
         android:padding="16dp"
         android:text="@string/descontar_deuda"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -39,7 +39,7 @@
         android:id="@+id/tv_cancelar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ripple_basic"
+        android:background="@drawable/ripple_orange"
         android:padding="16dp"
         android:text="@string/cancelar_deuda"
         android:textAppearance="?android:attr/textAppearanceMedium" />

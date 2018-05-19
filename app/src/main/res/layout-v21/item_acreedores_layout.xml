@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="10dp"
     android:gravity="center_vertical"
-    android:background="@drawable/ripple_basic">
+    android:background="@drawable/ripple_orange">
 
     <ImageView
         android:id="@+id/iv_letra"

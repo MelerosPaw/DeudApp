@@ -39,57 +39,71 @@
         </android.support.design.widget.AppBarLayout>
 
         <melerospaw.deudapp.iu.widgets.ContextRecyclerView
-                android:id="@+id/rv_deudas"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:listitem="@layout/item_deuda_layout" />
+            android:id="@+id/rv_deudas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/item_deuda_layout" />
 
         <LinearLayout
             android:id="@+id/ll_empty_debts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:alpha="0.65"
+            android:gravity="center"
             android:orientation="vertical"
-            android:gravity="center">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Esta persona no tiene deudas."
-                android:layout_marginBottom="16dp"/>
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/person_without_debts" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:padding="10dp">
 
-                <TextView
-                    android:id="@+id/delete_person"
-                    android:drawableLeft="@drawable/ic_eliminar_persona"
-                    android:drawableStart="@drawable/ic_eliminar_persona"
-                    android:layout_width="wrap_content"
+                <FrameLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="16dp"
-                    android:text="@string/delete_person"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:padding="10dp"/>
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/delete_person"
+                        style="@style/BorderlessButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:drawableTop="@drawable/ic_eliminar_persona"
+                        android:text="@string/delete_person" />
+
+                </FrameLayout>
 
                 <android.support.v4.widget.Space
                     android:layout_width="16dp"
                     android:layout_height="0dp" />
 
-                <TextView
-                    android:id="@+id/add_debt"
-                    android:drawableLeft="@drawable/ic_derecho_cobro"
-                    android:drawableStart="@drawable/ic_derecho_cobro"
-                    android:layout_width="wrap_content"
+                <FrameLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="16dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:text="@string/add_debt"
-                    android:padding="10dp"/>
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/add_debt"
+                        style="@style/BorderlessButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:drawableTop="@drawable/ic_nueva_deuda"
+                        android:text="@string/add_debt" />
+
+                </FrameLayout>
 
             </LinearLayout>
 
@@ -99,9 +113,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            app:behaviour_expandedSubtitleColor="@color/colorPrimary"
             app:behaviour_expandedSubtitleTopMargin="-8dp"
             app:behaviour_expandedTitleColor="@color/colorPrimary"
-            app:behaviour_expandedSubtitleColor="@color/colorPrimary"
             app:layout_behavior="com.melerospaw.coordinatorbehaviour.HeaderBehaviour">
 
             <TextView
@@ -119,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                tools:text="Fecha primera entidad: 24/02/1988"/>
+                tools:text="Fecha primera entidad: 24/02/1988" />
 
         </LinearLayout>
 

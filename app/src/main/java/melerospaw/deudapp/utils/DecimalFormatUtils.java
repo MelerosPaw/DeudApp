@@ -21,7 +21,8 @@ public class DecimalFormatUtils{
      * @return String con la cantidad con los decimales indicados usando el ceracterDecimalDeseado
      * como separador
      */
-    public static String decimalToString(Object cantidad, int decimalesDeseados, String caracterDecimal, String caracterDecimalDeseado) {
+    public static String decimalToString(Object cantidad, int decimalesDeseados,
+                                         String caracterDecimal, String caracterDecimalDeseado) {
         //Convierte a String la cantidad que recibe
         String valor = String.valueOf(cantidad);
 
