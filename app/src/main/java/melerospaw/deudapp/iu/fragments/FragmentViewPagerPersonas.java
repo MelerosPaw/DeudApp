@@ -44,6 +44,7 @@ import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
+import melerospaw.deudapp.utils.SecureOperationKt;
 
 public class FragmentViewPagerPersonas extends Fragment {
 
@@ -294,16 +295,16 @@ public class FragmentViewPagerPersonas extends Fragment {
 
         tvTotal.setText(texto);
         ColorManager.pintarColorDeuda(flBarraTotal, total);
-        flBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
+        flBarraTotal.setVisibility(total == 0F ? View.GONE: View.VISIBLE);
         llSubtotal.getLayoutParams().width = 0;
 
-        float totalAcreedores = mTipo.equals(ConstantesGenerales.DEBO)?
+        float totalAcreedores = mTipo.equals(ConstantesGenerales.DEBO) ?
                 adaptadorPersonas.obtenerTotal() : gestor.getTotalAcreedores();
         float totalDeudores= mTipo.equals(ConstantesGenerales.ME_DEBEN) ?
                 adaptadorPersonas.obtenerTotal() : gestor.getTotalDeudores();
         float totalAmbos = mTipo.equals(ConstantesGenerales.AMBOS) ?
                 adaptadorPersonas.obtenerTotal() : gestor.getTotalAmbos();
-        float totalTotal = totalAcreedores + totalDeudores + totalAmbos;
+        float totalTotal = SecureOperationKt.secureAdd(SecureOperationKt.secureAdd(totalAcreedores, totalDeudores), totalAmbos);
 
         tvTotalDebido.setText(String.format(getString(R.string.cantidad),
                 DecimalFormatUtils.decimalToStringIfZero(totalAcreedores, 2, ".", ",")));

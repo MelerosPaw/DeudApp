@@ -1,10 +1,12 @@
 package melerospaw.deudapp.iu.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +26,8 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.vo.EntidadVO;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
-import melerospaw.deudapp.utils.EntidadesUtil;
+import melerospaw.deudapp.utils.EntidadesUtilKt;
+import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
 
@@ -79,35 +82,35 @@ public class AdaptadorNuevasDeudas
     }
 
     public List<Entidad> getEntidades() {
-        return EntidadesUtil.getEntidades(mDatos);
+        return EntidadesUtilKt.getEntidades(mDatos);
     }
 
     public List<EntidadVO> getEntidadesVO() {
-        return EntidadesUtil.getEntidadesVO(mDatos);
+        return EntidadesUtilKt.getEntidadesVO(mDatos);
     }
 
     public boolean hayEntidadesIncompletas() {
-        return EntidadesUtil.hayEntidadesIncompletas(mDatos);
+        return EntidadesUtilKt.hayEntidadesIncompletas(mDatos);
     }
 
     public boolean hayEntidadesRepetidas() {
-        return EntidadesUtil.hayEntidadesRepetidas(mDatos);
+        return EntidadesUtilKt.hayEntidadesRepetidas(mDatos);
     }
 
-    public boolean hayAlgo() {
-        return !mDatos.isEmpty();
+    public boolean estaVacio() {
+        return mDatos.isEmpty();
     }
 
     public boolean hayDeudas() {
-        return EntidadesUtil.hayDelTipo(mDatos, Entidad.DEUDA);
+        return EntidadesUtilKt.hayDelTipo(mDatos, Entidad.DEUDA);
     }
 
     public boolean hayDerechosCobro() {
-        return EntidadesUtil.hayDelTipo(mDatos, Entidad.DERECHO_COBRO);
+        return EntidadesUtilKt.hayDelTipo(mDatos, Entidad.DERECHO_COBRO);
     }
 
     public boolean hayEntidadesGrupales() {
-        return EntidadesUtil.hayEntidadesGrupales(mDatos);
+        return EntidadesUtilKt.hayEntidadesGrupales(mDatos);
     }
 
     public void eliminarItem(RecyclerView.ViewHolder holder) {
@@ -118,7 +121,7 @@ public class AdaptadorNuevasDeudas
     }
 
     private List<EntidadVO> toEntidadVOList(List<Entidad> entidades) {
-        return EntidadesUtil.toEntidadVOList(entidades);
+        return EntidadesUtilKt.toEntidadVOList(entidades);
     }
 
     public void setMostrarDialogoExplicativoListener(OnMostrarDialogoExplicativoListener mostrarDialogoExplicativoListener) {
@@ -199,34 +202,78 @@ public class AdaptadorNuevasDeudas
 
             if (!hasFocus) {
                 if (v.getId() == R.id.et_concepto) {
-                    String concepto = etConcepto.getText().toString();
-                    if (!StringUtils.isCadenaVacia(concepto)) {
-                        entidad.setConcepto(concepto);
-                    } else {
-                        entidad.setConcepto(null);
-                    }
+                    cerrarConcepto();
                 } else if (v.getId() == R.id.et_cantidad) {
-                    String cantidad = etCantidad.getText().toString().replaceAll(",", ".");
-                    if (!cantidad.isEmpty() && !StringUtils.convertible(cantidad).equals("string")) {
-                        if (Float.parseFloat(cantidad) != 0) {
-                            entidad.setCantidad(Float.parseFloat(cantidad));
-                            etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad(), 2, ".", ","));
-                        } else {
-                            entidad.setCantidad(-0f);
-                        }
-                    }
+                    cerrarCantidad();
                 }
-            } else if (v.getId() == R.id.et_cantidad && entidad.getTipoEntidad() == Entidad.DEUDA && entidad.getCantidad() != 0f) {
-                etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad() * -1, 2, ".", ","));
+            } else if (v.getId() == R.id.et_cantidad) {
+                if (entidad.getTipoEntidad() == Entidad.DEUDA && entidad.getCantidad() != 0F) {
+                    abrirCantidad();
+                }
             }
         }
 
+        private void cerrarConcepto() {
+            String concepto = etConcepto.getText().toString();
+            if (!TextUtils.isEmpty(concepto)) {
+                entidad.setConcepto(concepto);
+            } else {
+                entidad.setConcepto(null);
+            }
+        }
+
+        private void cerrarCantidad() {
+            String cantidadDecimal = StringUtils.prepararDecimal(etCantidad.getText().toString());
+
+            if (!StringUtils.esConvertible(cantidadDecimal).equals("string")) {
+                final float cantidad = Float.parseFloat(cantidadDecimal);
+
+                if (InfinityManagerKt.isInfiniteFloat(cantidad)) {
+                    InfinityManagerKt.mostrarInfinityDialog(mContext, null,
+                            new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            modificarCantidad(cantidad);
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            modificarCantidad(-0F);
+                        }
+                    });
+
+                } else if (cantidad != 0F) {
+                    modificarCantidad(cantidad);
+                }
+
+            } else {
+                setCantidad(-0F);
+            }
+        }
+
+        private void modificarCantidad(float cantidad) {
+            setCantidad(cantidad);
+            displayCantidad();
+        }
+
+        private void setCantidad(float cantidad) {
+            entidad.setCantidad(cantidad);
+        }
+
+        private void displayCantidad() {
+            etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad(), 2, ".", ","));
+        }
+
+        private void abrirCantidad() {
+            etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad() * -1, 2, ".", ","));
+        }
+
         @OnCheckedChanged(R.id.chk_deuda_grupal)
-        public void onCheckedChanged(boolean isCheked) {
-            if (isCheked) {
+        public void onCheckedChanged(boolean isChecked) {
+            if (isChecked) {
                 mostrarDialogoExplicativoListener.onMostrarCuadroIndicativo();
             }
-            getEntidadByPosition(getAdapterPosition()).setEsGrupal(isCheked);
+            getEntidadByPosition(getAdapterPosition()).setEsGrupal(isChecked);
         }
 
         private void clear() {
