@@ -28,6 +28,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.adapters.AdaptadorDeudas;
@@ -73,6 +75,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     @BindView(R.id.tv_titulo)                   TextView tvTitulo;
     @BindView(R.id.tv_toolbar_subtitulo)        TextView tvToolbarSubtitulo;
     @BindView(R.id.tv_subtitulo)                TextView tvSubtitulo;
+    @BindView(R.id.ll_empty_debts)              ViewGroup llVacio;
     @BindView(R.id.rv_deudas)                   ContextRecyclerView rvDeudas;
     @BindView(R.id.tv_concepto)                 TextView tvConcepto;
     @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
@@ -161,61 +164,70 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private void inicializarAdapter() {
         List<Entidad> entidades = persona.getEntidades();
-        Collections.sort(entidades, Entidad.COMPARATOR);
-        adaptador = new AdaptadorDeudas(this, entidades);
-        adaptador.setCallback(new AdaptadorDeudas.AdaptadorEntidadesCallback() {
-            @Override
-            public boolean sizeAboutToChange() {
-                return prepararAnimacion();
-            }
+        if (entidades.isEmpty()) {
+            mostrarVacio(true);
+        } else {
+            mostrarVacio(false);
+            Collections.sort(entidades, Entidad.COMPARATOR);
+            adaptador = new AdaptadorDeudas(this, entidades);
+            adaptador.setCallback(new AdaptadorDeudas.AdaptadorEntidadesCallback() {
+                @Override
+                public boolean sizeAboutToChange() {
+                    return prepararAnimacion();
+                }
 
-            @Override
-            public void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad.getTipoEntidad());
-            }
+                @Override
+                public void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
+                    mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad.getTipoEntidad());
+                }
 
-            @Override
-            public void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad.getTipoEntidad());
-            }
+                @Override
+                public void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
+                    mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad.getTipoEntidad());
+                }
 
-            @Override
-            public void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_CANCELAR, adapterPosition, entidad.getTipoEntidad());
-            }
+                @Override
+                public void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
+                    mostrarDialog(DialogoModificarCantidad.TIPO_CANCELAR, adapterPosition, entidad.getTipoEntidad());
+                }
 
-            @Override
-            public void onLongClick(Entidad entidad, int posicion) {
-                mostrarDialogoEdicionDeuda(entidad, posicion);
-            }
-        });
-        rvDeudas.setLayoutManager(layoutManager);
-        rvDeudas.setAdapter(adaptador);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
-                        | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
-                    @Override
-                    public boolean onMove(RecyclerView recyclerView,
-                                          RecyclerView.ViewHolder viewHolder,
-                                          RecyclerView.ViewHolder target) {
-                        return true;
-                    }
-
-                    @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                        if (isDeshacerShowing) {
-                            eliminarProvisionalDefinitivo();
-                            if (snackbar != null) {
-                                snackbar.removeCallback(snackbarCallback);
-                            }
+                @Override
+                public void onLongClick(Entidad entidad, int posicion) {
+                    mostrarDialogoEdicionDeuda(entidad, posicion);
+                }
+            });
+            rvDeudas.setLayoutManager(layoutManager);
+            rvDeudas.setAdapter(adaptador);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+                    new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
+                            | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
+                        @Override
+                        public boolean onMove(RecyclerView recyclerView,
+                                              RecyclerView.ViewHolder viewHolder,
+                                              RecyclerView.ViewHolder target) {
+                            return true;
                         }
-                        adaptador.eliminarItem(viewHolder);
-                        mostrarDeshacer();
-                        mostrarTotal(adaptador.getItemProvisional());
-                        cambiarColorTotal(adaptador.getItemProvisional());
-                    }
-                });
-        itemTouchHelper.attachToRecyclerView(rvDeudas);
+
+                        @Override
+                        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                            if (isDeshacerShowing) {
+                                eliminarProvisionalDefinitivo();
+                                if (snackbar != null) {
+                                    snackbar.removeCallback(snackbarCallback);
+                                }
+                            }
+                            adaptador.eliminarItem(viewHolder);
+                            mostrarDeshacer();
+                            mostrarTotal(adaptador.getItemProvisional());
+                            cambiarColorTotal(adaptador.getItemProvisional());
+                        }
+                    });
+            itemTouchHelper.attachToRecyclerView(rvDeudas);
+        }
+    }
+
+    private void mostrarVacio(boolean mostrar) {
+        llVacio.setVisibility(mostrar? View.VISIBLE : View.GONE);
     }
 
     private void mostrarDeshacer() {
@@ -582,6 +594,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     public void actualizarLista(List<Entidad> entidades) {
         adaptador.nuevasEntidades(entidades);
+        mostrarVacio(adaptador.getItemCount() + entidades.size() > 0);
         layoutManager.scrollToPosition(0);
         mostrarTotal(null);
         cambiarColorTotal(null);
@@ -656,6 +669,33 @@ public class ActivityDetallePersona extends AppCompatActivity {
         } else {
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
+        }
+    }
+
+    private void eliminarPersona() {
+
+        boolean personaEliminada = gestor.eliminarPersona(Collections.singletonList(persona));
+
+        if (personaEliminada) {
+            persona.setTipo(Persona.INACTIVO);
+            bus.post(new EventoDeudaModificada(persona));
+            finish();
+        } else {
+            ExtensionFunctionsKt.shortToast(this,
+                    String.format(getString(R.string.imposible_eliminar_persona),
+                            persona.getNombre()));
+        }
+    }
+
+    @OnClick({R.id.add_debt, R.id.delete_person})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.add_debt:
+                ActivityNuevasDeudas.startForResult(this, persona);
+                break;
+            case R.id.delete_person:
+                eliminarPersona();
+                break;
         }
     }
 }

@@ -39,12 +39,61 @@
         </android.support.design.widget.AppBarLayout>
 
         <melerospaw.deudapp.iu.widgets.ContextRecyclerView
-            android:id="@+id/rv_deudas"
+                android:id="@+id/rv_deudas"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:listitem="@layout/item_deuda_layout" />
+
+        <LinearLayout
+            android:id="@+id/ll_empty_debts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/item_deuda_layout" />
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Esta persona no tiene deudas."
+                android:layout_marginBottom="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/delete_person"
+                    android:drawableLeft="@drawable/ic_eliminar_persona"
+                    android:drawableStart="@drawable/ic_eliminar_persona"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="16dp"
+                    android:text="@string/delete_person"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:padding="10dp"/>
+
+                <android.support.v4.widget.Space
+                    android:layout_width="16dp"
+                    android:layout_height="0dp" />
+
+                <TextView
+                    android:id="@+id/add_debt"
+                    android:drawableLeft="@drawable/ic_derecho_cobro"
+                    android:drawableStart="@drawable/ic_derecho_cobro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="16dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:text="@string/add_debt"
+                    android:padding="10dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

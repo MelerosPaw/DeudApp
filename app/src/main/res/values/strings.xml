@@ -47,6 +47,7 @@
     <string name="anadir_derecho_cobro">Añadir derecho de cobro</string>
     <string name="anadir">Añadir</string>
     <string name="imposible_eliminar_deudas">No se ha podido eliminar las deudas de %1$s. Prueba más tarde.</string>
+    <string name="imposible_eliminar_persona">No se ha podido eliminar a %1$s. Prueba más tarde.</string>
     <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior.</string>
     <string name="deudas_canceladas">DEUDAS CANCELADAS</string>
     <string name="debes_un_total_de">Debes un total de</string>
@@ -103,5 +104,7 @@
     <string name="url_politica_privacidad" formatted="false">https://github.com/MelerosPaw/DeudApp/blob/master/README.md</string>
     <string name="dialog__infinite_amount_title">Cantidad infinita</string>
     <string name="dialog__infinite_amount_message">La cantidad que has introducido no puede representarse, por lo que se considera infinita y, sinceramente, no creemos que quieras anotar una cantidad infinita. Le sumes lo que le sumes, le restes lo que le restes, seguirá siendo infinita, y nadie tiene infinito dinero. Y si lo tienes, por favor, llámanos.\n\n¿Estás seguro de que quieres tener una deuda infinita?</string>
+    <string name="delete_person">Eliminar persona</string>
+    <string name="add_debt">Añadir deuda</string>
 
 </resources>
