@@ -3,11 +3,12 @@ package melerospaw.deudapp.utils
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import butterknife.OnClick
+import android.support.annotation.StringRes
 import melerospaw.deudapp.R
 
 const val INFINITY_CHAR = "\u221e"
 const val NEGATIVE_INFINITY_CHAR = "-\u221e"
+@StringRes const val DEFAULT_INFINITY_DIALOG_MESSAGE: Int = R.string.dialog__infinite_amount_message
 
 fun String.isInfinityCharacter() = isPositiveInfinityCharacter() || isNegativeInfinityCharacter()
 
@@ -15,7 +16,7 @@ fun String.isPositiveInfinityCharacter() = this == INFINITY_CHAR
 
 fun String.isNegativeInfinityCharacter() = this == NEGATIVE_INFINITY_CHAR
 
-fun getInifiniteFloat() = Float.POSITIVE_INFINITY
+fun getInfiniteFloat() = Float.POSITIVE_INFINITY
 
 fun getNegativeInfiniteFloat() = Float.NEGATIVE_INFINITY
 
@@ -42,19 +43,46 @@ fun Any.isInfiniteFloat() =
             else -> false
         }
 
-fun mostrarInfinityDialog(context: Context,
+fun mostrarInfinityDialog(context: Context, mensaje: String?,
                           positiveCallback: DialogInterface.OnClickListener? = null,
                           negativeCallback: DialogInterface.OnClickListener? = null) {
     AlertDialog.Builder(context)
             .setTitle(R.string.dialog__infinite_amount_title)
-            .setMessage(R.string.dialog__infinite_amount_message)
+            .setMessage(mensaje ?: context.getString(DEFAULT_INFINITY_DIALOG_MESSAGE))
             .setPositiveButton(R.string.si) { dialog, which ->
                     positiveCallback?.onClick(dialog, which)
-                    dialog?.dismiss()
+                    dialog.dismiss()
             }
             .setNegativeButton(R.string.no) { dialog, which ->
                 negativeCallback?.onClick(dialog, which)
-                dialog?.dismiss()
+                dialog.dismiss()
             }
             .show()
+}
+
+fun additionResultIsInfinite(operand1: Float, operand2: Float): Boolean {
+    return (operand1 + operand2).isInfiniteFloat()
+}
+
+fun substractionResultIsInfinite(operand1: Float, operand2: Float): Boolean {
+    return (operand1 - operand2).isInfiniteFloat()
+}
+
+fun showUselessOperationDialog(context: Context) {
+    AlertDialog.Builder(context)
+            .setTitle(R.string.useless_operation_title)
+            .setMessage(R.string.useless_operation_message)
+            .setPositiveButton(R.string.i_know) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+}
+
+fun operandsAreInfinite(vararg operands : Float) = listOf(operands).all { it.isInfiniteFloat() }
+
+fun mostrarInfinityDialog(context: Context,
+                          @StringRes mensaje: Int = DEFAULT_INFINITY_DIALOG_MESSAGE,
+                          positiveCallback: DialogInterface.OnClickListener? = null,
+                          negativeCallback: DialogInterface.OnClickListener? = null) {
+    mostrarInfinityDialog(context, context.getString(mensaje), positiveCallback, negativeCallback)
 }

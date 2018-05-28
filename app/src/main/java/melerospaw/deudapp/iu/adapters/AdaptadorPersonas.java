@@ -25,6 +25,7 @@ import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.SecureOperationKt;
 import melerospaw.deudapp.utils.TextDrawableManager;
 
 public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.PersonViewHolder> {
@@ -202,7 +203,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     public float obtenerTotal() {
         float total = 0;
         for (Persona persona : mDatos) {
-            total += persona.getCantidadTotal();
+            total = SecureOperationKt.secureAdd(total, persona.getCantidadTotal());
         }
 
         return total;
@@ -247,16 +248,6 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         BusProvider.getBus().unregister(this);
     }
 
-    @Subscribe
-    public void onEventoDeudaModificada(EventoDeudaModificada evento) {
-        if (evento.getPersona() != null) {
-            Persona persona = evento.getPersona();
-            gestor.recargarPersona(persona);
-            modificarItemPersona(persona);
-            onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
-        }
-    }
-
     private void modificarItemPersona(Persona persona) {
         if (persona.getTipo() == tipoPersonas) {
             if (personaIsInAdapter(persona)) {
@@ -268,6 +259,24 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
             eliminarPersona(persona);
         }
     }
+
+    @Subscribe
+    public void onEventoDeudaModificada(EventoDeudaModificada evento) {
+        if (evento.getPersona() != null) {
+            Persona persona = evento.getPersona();
+            gestor.recargarPersona(persona);
+            modificarItemPersona(persona);
+            onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
+        }
+    }
+
+//    @Subscribe
+//    public void onPersonaEliminada(EventoPersonaEliminada evento) {
+//        Persona personaEliminada = evento.getPersona();
+//        mDatos.remove(personaEliminada);
+//        notifyItemRemoved(getPosition(personaEliminada));
+//        onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
+//    }
 
     public interface ContextualMenuInterface {
         void mostrarMenuContextual(Persona persona, int posicionEnAdapter);

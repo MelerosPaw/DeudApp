@@ -45,7 +45,7 @@ import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.modelo.Persona.TipoPersona;
-import melerospaw.deudapp.utils.EntidadesUtil;
+import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.SharedPreferencesManager;
 import melerospaw.deudapp.utils.TecladoUtils;
@@ -306,7 +306,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
         boolean sePuedeGuardar;
 
         if (isForResult) {
-            if (!adaptadorNuevasDeudas.hayAlgo()){
+            if (adaptadorNuevasDeudas.estaVacio()){
                 Snackbar.make(rvNuevasEntidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else if (adaptadorNuevasDeudas.hayEntidadesIncompletas()) {
@@ -325,7 +325,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
             } else if (adaptadorNuevasPersonas.hayNombresRepetidos()) {
                 Snackbar.make(rvNuevasEntidades, "Has añadido más de una vez la misma persona", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (!adaptadorNuevasDeudas.hayAlgo()) {
+            } else if (adaptadorNuevasDeudas.estaVacio()) {
                 Snackbar.make(rvNuevasEntidades, "No has añadido ninguna deuda", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else if (adaptadorNuevasDeudas.hayEntidadesIncompletas()) {
@@ -355,9 +355,9 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     private boolean hayEntidadesRepetidas() {
         List<Entidad> entidades = new LinkedList<>(persona.getEntidades());
         entidades.addAll(adaptadorNuevasDeudas.getEntidades());
-        boolean hayRepetidas = EntidadesUtil.hayEntidadesRepetidas(adaptadorNuevasDeudas.getEntidadesVO());
+        boolean hayRepetidas = EntidadesUtilKt.hayEntidadesRepetidas(adaptadorNuevasDeudas.getEntidadesVO());
         if (hayRepetidas) {
-            informarRepetidos(EntidadesUtil.getRepetidos(entidades));
+            informarRepetidos(EntidadesUtilKt.getRepetidos(entidades));
         }
         return hayRepetidas;
     }
@@ -411,7 +411,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     private void resolverEntidadesGrupales(List<EntidadVO> entidades, int cantidadDeudores) {
-        EntidadesUtil.repartirEntidadesGrupales(entidades, cantidadDeudores);
+        EntidadesUtilKt.repartirEntidadesGrupales(entidades, cantidadDeudores);
     }
 
     private void navigateBack(boolean guardados) {
@@ -424,7 +424,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
 
     private void sendCorrectResult(List<Entidad> entidades) {
         Intent intent = new Intent();
-        intent.putIntegerArrayListExtra(RESULT_ENTITIES_ADDED, EntidadesUtil.getIds(entidades));
+        intent.putIntegerArrayListExtra(RESULT_ENTITIES_ADDED, EntidadesUtilKt.getIds(entidades));
         setResult(RESULT_OK, intent);
         finish();
     }

@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
 import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
-import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.SecureOperationKt;
 import melerospaw.memoryutil.MemoryUtil;
 import melerospaw.memoryutil.Path;
 import melerospaw.memoryutil.Result;
@@ -262,7 +262,7 @@ public class GestorDatos {
         }
 
         boolean entidadesCreadas = nuevasEntidades(entidades);
-        persona.actualizarTotal();
+        persona.calcularTotal();
         return entidadesCreadas;
     }
 
@@ -275,7 +275,7 @@ public class GestorDatos {
      */
     public boolean actualizarPersona(Persona persona, int tipo) {
 
-        persona.actualizarTotal();
+        persona.calcularTotal();
 
         if (persona.getTipo() != tipo) {
             persona.setTipo(Persona.AMBOS);
@@ -412,7 +412,7 @@ public class GestorDatos {
         float total = 0F;
         List<Persona> acreedores = getAcreedores();
         for (Persona acreedor : acreedores) {
-            total += acreedor.getCantidadTotal();
+            total = SecureOperationKt.secureAdd(total, acreedor.getCantidadTotal());
         }
         return total;
     }
@@ -421,7 +421,7 @@ public class GestorDatos {
         float total = 0F;
         List<Persona> deudores = getDeudores();
         for (Persona deudor : deudores) {
-            total += deudor.getCantidadTotal();
+            total = SecureOperationKt.secureAdd(total, deudor.getCantidadTotal());
         }
         return total;
     }
@@ -430,7 +430,7 @@ public class GestorDatos {
         float total = 0F;
         List<Persona> ambos = getAmbos();
         for (Persona ambo : ambos) {
-            total += ambo.getCantidadTotal();
+            total = SecureOperationKt.secureAdd(total, ambo.getCantidadTotal());
         }
         return total;
     }
