@@ -176,12 +176,20 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
             @Override
             public void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad);
+                if (InfinityManagerKt.isInfiniteFloat(entidad.getCantidad())) {
+                    showUselessOperationDialog();
+                } else {
+                    mostrarDialog(DialogoModificarCantidad.TIPO_AUMENTAR, adapterPosition, entidad);
+                }
             }
 
             @Override
             public void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition) {
-                mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad);
+                if (InfinityManagerKt.isInfiniteFloat(entidad.getCantidad())) {
+                    showUselessOperationDialog();
+                } else {
+                    mostrarDialog(DialogoModificarCantidad.TIPO_DISMINUIR, adapterPosition, entidad);
+                }
             }
 
             @Override
