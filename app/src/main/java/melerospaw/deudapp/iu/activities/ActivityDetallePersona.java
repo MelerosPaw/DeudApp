@@ -416,30 +416,6 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        ContextRecyclerView.RecyclerContextMenuInfo info =
-                (ContextRecyclerView.RecyclerContextMenuInfo) item.getMenuInfo();
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.menu_opcion_aumentar:
-                modificarEntidad(DialogoModificarCantidad.TIPO_AUMENTAR, info.position);
-                break;
-            case R.id.menu_opcion_descontar:
-                modificarEntidad(DialogoModificarCantidad.TIPO_DISMINUIR, info.position);
-                break;
-            case R.id.menu_opcion_cancelar:
-                modificarEntidad(DialogoModificarCantidad.TIPO_CANCELAR, info.position);
-                break;
-            default:
-                return super.onContextItemSelected(item);
-        }
-
-        return true;
-
-    }
-
     private void buscarImagen() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
