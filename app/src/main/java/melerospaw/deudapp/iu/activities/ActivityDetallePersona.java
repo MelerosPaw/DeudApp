@@ -514,6 +514,10 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
+    private void ofrecerCambiarNombre(Entidad entidad) {
+        Toast.makeText(this, "Ya ha una deuda así", Toast.LENGTH_SHORT).show();
+    }
+
     private void duplicar(Entidad entidad) {
         gestor.addDeuda(persona, entidad);
         gestor.actualizarPersona(persona, persona.getTipo());
