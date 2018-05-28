@@ -113,5 +113,7 @@
     <string name="add_debt">Añadir deuda</string>
     <string name="person_without_debts">Esta persona no tiene deudas.</string>
     <string name="person_deleted">Persona eliminada</string>
+    <string name="edit">Editar</string>
+    <string name="duplicate_debt">Duplicar deuda</string>
 
 </resources>

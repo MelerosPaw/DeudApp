@@ -179,7 +179,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         void onAumentarDeudaSeleccionado(Entidad entidad, int adapterPosition);
         void onDescontarDeudaSeleccionado(Entidad entidad, int adapterPosition);
         void onCancelarDeudaSeleccionado(Entidad entidad, int adapterPosition);
-        void onLongClick(Entidad entidad, int adapterPosition);
+        void onLongClick(View view, Entidad entidad, int adapterPosition);
     }
 
 
@@ -258,7 +258,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
 
         @OnLongClick(R.id.cv_item)
         public boolean onLongClick() {
-            callback.onLongClick(getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
+            callback.onLongClick(cvItem, getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
             return true;
         }
 

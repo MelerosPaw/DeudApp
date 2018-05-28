@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.SecureOperationKt;
 
@@ -314,5 +315,9 @@ public class Persona implements Serializable{
             case INACTIVO: return "Inactivo";
             default: return "Sin definir";
         }
+    }
+
+    public boolean hasDeuda(Entidad entidad) {
+        return EntidadesUtilKt.estaContenida(entidad, getEntidades());
     }
 }

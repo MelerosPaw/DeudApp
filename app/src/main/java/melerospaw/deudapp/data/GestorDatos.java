@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.Normalizer;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -264,6 +265,12 @@ public class GestorDatos {
         boolean entidadesCreadas = nuevasEntidades(entidades);
         persona.calcularTotal();
         return entidadesCreadas;
+    }
+
+    public boolean addDeuda(Persona persona, Entidad entidad) {
+        persona.addEntidad(entidad);
+        entidad.setPersona(persona);
+        return databaseHelper.nuevasEntidades(Collections.singletonList(entidad));
     }
 
     public boolean actualizarEntidad(Entidad entidad) {

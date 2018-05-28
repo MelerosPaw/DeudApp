@@ -20,11 +20,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.TypedValue;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +41,7 @@ import com.squareup.otto.Bus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -190,8 +191,25 @@ public class ActivityDetallePersona extends AppCompatActivity {
             }
 
             @Override
-            public void onLongClick(Entidad entidad, int posicion) {
-                mostrarDialogoEdicionDeuda(entidad, posicion);
+            public void onLongClick(View clickedView, final Entidad entidad, final int posicion) {
+                PopupMenu contextualMenu = new PopupMenu(ActivityDetallePersona.this, clickedView);
+                contextualMenu.inflate(R.menu.menu_contextual_deuda);
+                contextualMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.menu__duplicar) {
+                            duplicarEntidad(entidad);
+                        } else if (menuItem.getItemId() == R.id.menu__editar) {
+                            mostrarDialogoEdicionDeuda(entidad, posicion);
+                        } else {
+                            return false;
+                        }
+
+                        return true;
+                    }
+                });
+                contextualMenu.show();
+
             }
         });
         rvDeudas.setLayoutManager(layoutManager);
@@ -410,22 +428,6 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        ContextRecyclerView.RecyclerContextMenuInfo info =
-                (ContextRecyclerView.RecyclerContextMenuInfo) menuInfo;
-        Entidad entidadSeleccionada = adaptador.getEntidadByPosition(info.position);
-        getMenuInflater().inflate(R.menu.menu_contextual_deuda, menu);
-        toggleContextMenuOptions(menu, entidadSeleccionada);
-    }
-
-    private void toggleContextMenuOptions(Menu menu, Entidad entidadSeleccionada) {
-        if (entidadSeleccionada.estaCancelada()) {
-            menu.findItem(R.id.menu_opcion_descontar).setVisible(false).setEnabled(false);
-            menu.findItem(R.id.menu_opcion_cancelar).setVisible(false).setEnabled(false);
-        }
-    }
-
     private void buscarImagen() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -499,6 +501,25 @@ public class ActivityDetallePersona extends AppCompatActivity {
             }
         });
         dialog.show(ft, DialogoModificarCantidad.TAG);
+    }
+
+    private void duplicarEntidad(Entidad entidad) {
+        entidad.setFecha(Calendar.getInstance().getTime());
+        if (persona.hasDeuda(entidad)) {
+            // TODO: 28/05/2018 Comprobar si no existe ya una deuda con el mismo nombre y mostrar, en
+            // TODO: 28/05/2018 su caso, un dialog para renombrar la deuda
+            ofrecerCambiarNombre(entidad);
+        } else {
+            duplicar(entidad);
+        }
+    }
+
+    private void duplicar(Entidad entidad) {
+        gestor.addDeuda(persona, entidad);
+        gestor.actualizarPersona(persona, persona.getTipo());
+        adaptador.nuevasEntidades(Collections.singletonList(entidad));
+        actualizarTotal();
+        bus.post(new EventoDeudaModificada(persona));
     }
 
     private void aumentarDeuda(final int position, String aumento) {
