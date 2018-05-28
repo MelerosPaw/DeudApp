@@ -258,14 +258,6 @@ public class FragmentViewPagerPersonas extends Fragment {
     private void inicializarMensajeVacio() {
         rvPersonas.setVisibility(adaptadorPersonas.getItemCount() > 0 ? View.VISIBLE : View.INVISIBLE);
         llVacio.setVisibility(adaptadorPersonas.getItemCount() > 0 ? View.INVISIBLE : View.VISIBLE);
-        if (adaptadorPersonas.getItemCount() == 0) {
-            SpannableString mensaje = new SpannableString(getString(R.string.mensaje_vacio));
-            Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_nueva_persona_contorno);
-            d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-            ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BOTTOM);
-            mensaje.setSpan(span, 54, 55, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-            tvVacio.setText(mensaje);
-        }
     }
 
     private void activarModoEliminacion() {

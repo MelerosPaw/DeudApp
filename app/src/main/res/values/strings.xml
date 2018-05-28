@@ -48,7 +48,7 @@
     <string name="anadir">Añadir</string>
     <string name="imposible_eliminar_deudas">No se ha podido eliminar las deudas de %1$s. Prueba más tarde.</string>
     <string name="imposible_eliminar_persona">No se ha podido eliminar a %1$s. Prueba más tarde.</string>
-    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior o aquí abajo.</string>
+    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando \"Añadir deuda\" aquí abajo o en la barra superior.</string>
     <string name="deudas_canceladas">DEUDAS CANCELADAS</string>
     <string name="debes_un_total_de">Debes un total de</string>
     <string name="te_deben_un_total_de">Te deben un total de</string>
