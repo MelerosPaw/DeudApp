@@ -47,12 +47,75 @@
             tools:listitem="@layout/item_deuda_layout" />
 
         <LinearLayout
+            android:id="@+id/ll_empty_debts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.65"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/person_without_debts" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/delete_person"
+                        style="@style/BorderlessButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:drawableTop="@drawable/ic_eliminar_persona"
+                        android:text="@string/delete_person" />
+
+                </FrameLayout>
+
+                <android.support.v4.widget.Space
+                    android:layout_width="16dp"
+                    android:layout_height="0dp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/add_debt"
+                        style="@style/BorderlessButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:drawableTop="@drawable/ic_nueva_deuda"
+                        android:text="@string/add_debt" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            app:behaviour_expandedSubtitleColor="@color/colorPrimary"
             app:behaviour_expandedSubtitleTopMargin="-8dp"
             app:behaviour_expandedTitleColor="@color/colorPrimary"
-            app:behaviour_expandedSubtitleColor="@color/colorPrimary"
             app:layout_behavior="com.melerospaw.coordinatorbehaviour.HeaderBehaviour">
 
             <TextView
@@ -70,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                tools:text="Fecha primera entidad: 24/02/1988"/>
+                tools:text="Fecha primera entidad: 24/02/1988" />
 
         </LinearLayout>
 

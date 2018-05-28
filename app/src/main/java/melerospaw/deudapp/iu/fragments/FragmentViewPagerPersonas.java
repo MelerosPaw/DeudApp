@@ -31,6 +31,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
@@ -51,6 +52,7 @@ public class FragmentViewPagerPersonas extends Fragment {
     public static final String BUNDLE_TIPO = "TIPO";
 
     @BindView(R.id.rv_personas)             RecyclerView rvPersonas;
+    @BindView(R.id.ll_vacio)                ViewGroup llVacio;
     @BindView(R.id.tv_vacio)                TextView tvVacio;
     @BindView(R.id.fl_barra_total)          FrameLayout flBarraTotal;
     @BindView(R.id.fl_total)                FrameLayout flTotal;
@@ -64,7 +66,6 @@ public class FragmentViewPagerPersonas extends Fragment {
     @BindView(R.id.tv_total_adeudado)       TextView tvTotalAdeudado;
     @BindView(R.id.tv_total_ambos)          TextView tvTotalAmbos;
     @BindView(R.id.tv_total_total)          TextView tvTotalTotal;
-
 
     private GestorDatos gestor;
     private AdaptadorPersonas adaptadorPersonas;
@@ -256,15 +257,7 @@ public class FragmentViewPagerPersonas extends Fragment {
 
     private void inicializarMensajeVacio() {
         rvPersonas.setVisibility(adaptadorPersonas.getItemCount() > 0 ? View.VISIBLE : View.INVISIBLE);
-        tvVacio.setVisibility(adaptadorPersonas.getItemCount() > 0 ? View.INVISIBLE : View.VISIBLE);
-        if (adaptadorPersonas.getItemCount() == 0) {
-            SpannableString mensaje = new SpannableString(getString(R.string.mensaje_vacio));
-            Drawable d = ContextCompat.getDrawable(getContext(), R.drawable.ic_nueva_persona_contorno);
-            d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-            ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BOTTOM);
-            mensaje.setSpan(span, 54, 55, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-            tvVacio.setText(mensaje);
-        }
+        llVacio.setVisibility(adaptadorPersonas.getItemCount() > 0 ? View.INVISIBLE : View.VISIBLE);
     }
 
     private void activarModoEliminacion() {
@@ -440,5 +433,10 @@ public class FragmentViewPagerPersonas extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.new_person)
+    public void onClick() {
+        ActivityNuevasDeudas.start(getActivity());
     }
 }

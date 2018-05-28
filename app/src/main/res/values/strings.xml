@@ -47,7 +47,8 @@
     <string name="anadir_derecho_cobro">Añadir derecho de cobro</string>
     <string name="anadir">Añadir</string>
     <string name="imposible_eliminar_deudas">No se ha podido eliminar las deudas de %1$s. Prueba más tarde.</string>
-    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando el botón m en la barra superior.</string>
+    <string name="imposible_eliminar_persona">No se ha podido eliminar a %1$s. Prueba más tarde.</string>
+    <string name="mensaje_vacio">Aún no hay ninguna deuda. Añade una pulsando \"Añadir deuda\" aquí abajo o en la barra superior.</string>
     <string name="deudas_canceladas">DEUDAS CANCELADAS</string>
     <string name="debes_un_total_de">Debes un total de</string>
     <string name="te_deben_un_total_de">Te deben un total de</string>
@@ -108,5 +109,9 @@
     <string name="useless_operation_title">Operación inutil</string>
     <string name="useless_operation_message">Esta operación es inútil ya que el resultado seguirá siendo infinito.</string>
     <string name="i_know">Lo sé</string>
+    <string name="delete_person">Eliminar persona</string>
+    <string name="add_debt">Añadir deuda</string>
+    <string name="person_without_debts">Esta persona no tiene deudas.</string>
+    <string name="person_deleted">Persona eliminada</string>
 
 </resources>
