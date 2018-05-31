@@ -22,7 +22,7 @@ fun estaContenida(entidad: Entidad, entidades: List<Entidad>) =
         entidades.any { esRepetida(entidad, it) }
 
 fun esRepetida(entidad: Entidad, otraEntidad: Entidad) =
-        entidad.concepto == otraEntidad.concepto && entidad.esMismoDia(otraEntidad)
+        entidad.concepto == otraEntidad.concepto && entidad.esMismoDia(otraEntidad.fecha)
 
 fun getEntidadesVO(entidades: List<EntidadVO>) =
         entidades.filter { it.entidad.estaCompleta() }
@@ -67,6 +67,10 @@ fun repartirEntidadesGrupales(entidades: List<EntidadVO>, cantidadDeudores: Int)
             it.entidad.cantidad /= cantidadDeudores
         }
     }
+}
+
+fun contieneMismoConcepto(concepto: String, entidades: List<Entidad>) = entidades.any {
+    it.concepto == concepto
 }
 
 fun descuentoEsSuperior(entidad: Entidad, descuento: Float) =

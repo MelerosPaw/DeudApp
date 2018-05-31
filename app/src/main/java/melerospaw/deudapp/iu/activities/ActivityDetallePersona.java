@@ -52,6 +52,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.adapters.AdaptadorDeudas;
 import melerospaw.deudapp.iu.dialogs.DialogEditarDeuda;
+import melerospaw.deudapp.iu.dialogs.DialogoCambiarNombre;
 import melerospaw.deudapp.iu.dialogs.DialogoModificarCantidad;
 import melerospaw.deudapp.iu.widgets.ContextRecyclerView;
 import melerospaw.deudapp.iu.widgets.CustomLinearLayoutManager;
@@ -208,13 +209,13 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.menu__duplicar) {
                             duplicarEntidad(entidad);
+                            return true;
                         } else if (menuItem.getItemId() == R.id.menu__editar) {
                             mostrarDialogoEdicionDeuda(entidad, posicion);
+                            return true;
                         } else {
                             return false;
                         }
-
-                        return true;
                     }
                 });
                 contextualMenu.show();
@@ -513,24 +514,34 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void duplicarEntidad(Entidad entidad) {
-        entidad.setFecha(Calendar.getInstance().getTime());
-        if (persona.hasDeuda(entidad)) {
-            // TODO: 28/05/2018 Comprobar si no existe ya una deuda con el mismo nombre y mostrar, en
-            // TODO: 28/05/2018 su caso, un dialog para renombrar la deuda
-            ofrecerCambiarNombre(entidad);
+        Entidad entidadDuplicada = entidad.duplicate();
+        if (persona.hasDeuda(entidadDuplicada)) {
+            ofrecerCambiarNombre(entidadDuplicada);
         } else {
-            duplicar(entidad);
+            duplicar(entidadDuplicada);
         }
     }
 
-    private void ofrecerCambiarNombre(Entidad entidad) {
-        Toast.makeText(this, "Ya ha una deuda así", Toast.LENGTH_SHORT).show();
+    private void ofrecerCambiarNombre(final Entidad entidad) {
+        FragmentTransaction ft = getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(DialogoCambiarNombre.TAG);
+
+        DialogoCambiarNombre dialog = DialogoCambiarNombre.getInstance(entidad, persona);
+        dialog.setCallback(new DialogoCambiarNombre.Callback() {
+            @Override
+            public void onNameChanged(String nuevoNombre, int posicion) {
+                entidad.setConcepto(nuevoNombre);
+                duplicar(entidad);
+            }
+        });
+        dialog.show(ft, DialogoCambiarNombre.TAG);
     }
 
     private void duplicar(Entidad entidad) {
         gestor.addDeuda(persona, entidad);
-        gestor.actualizarPersona(persona, persona.getTipo());
-        adaptador.nuevasEntidades(Collections.singletonList(entidad));
+        gestor.recargarPersona(persona);
+        insertarNuevasEntidades(Collections.singletonList(entidad));
         actualizarTotal();
         bus.post(new EventoDeudaModificada(persona));
     }
@@ -618,7 +629,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
-    public void actualizarLista(List<Entidad> entidades) {
+    public void insertarNuevasEntidades(List<Entidad> entidades) {
         adaptador.nuevasEntidades(entidades);
         mostrarVacio(adaptador.getItemCount() + entidades.size() == 0);
         layoutManager.scrollToPosition(0);
@@ -656,7 +667,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     private void procesarResultNuevasDeudas(Intent data) {
         List<Integer> idsEntidades = data.getIntegerArrayListExtra(ActivityNuevasDeudas.RESULT_ENTITIES_ADDED);
-        actualizarLista(gestor.getEntidades(idsEntidades));
+        insertarNuevasEntidades(gestor.getEntidades(idsEntidades));
         BusProvider.getBus().post(new EventoDeudaModificada(persona));
     }
 

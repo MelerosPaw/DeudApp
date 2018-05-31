@@ -72,17 +72,17 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         if (mData.size() > 1) {
             Collections.sort(mData, Entidad.COMPARATOR);
             int posicionNueva = mData.indexOf(entidad);
+
             reasignarAbiertos(posicionOriginal, posicionNueva);
             notifyItemMoved(posicionOriginal, posicionNueva);
+
             if (posicionOriginal == 0) {
                 notifyItemChanged(0);
-            } else if (posicionOriginal < mData.size() - 1) {
-                notifyItemChanged(posicionOriginal + 1);
+            } else {
+                actualizarPosterior(posicionOriginal);
             }
 
-            if (posicionNueva < mData.size() - 1) {
-                notifyItemChanged(posicionNueva + 1);
-            }
+            actualizarPosterior(posicionNueva);
         }
     }
 
@@ -141,6 +141,13 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             int posicionInsertada = mData.indexOf(entidad);
             reasignarAbiertos(posicionInsertada);
             notifyItemInserted(posicionInsertada);
+            actualizarPosterior(posicionInsertada);
+        }
+    }
+
+    private void actualizarPosterior(int posicionInsertada) {
+        if (mData.size() >= posicionInsertada + 1) {
+           notifyItemChanged(posicionInsertada + 1);
         }
     }
 
@@ -203,7 +210,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         }
 
         void bindView(final Entidad entidad, final Entidad anterior) {
-            if ((anterior != null && anterior.esMismoDia(entidad)))
+            if ((anterior != null && anterior.esMismoDia(entidad.getFecha())))
                 tvFecha.setVisibility(View.GONE);
             else {
                 tvFecha.setVisibility(View.VISIBLE);

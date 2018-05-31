@@ -250,13 +250,12 @@ public class GestorDatos {
             databaseHelper.actualizarPersona(persona);
         }
 
-        // Si se le mete la nueva Entidad a la colección de la persona, parece que después,
-        // cuando se guarda la Entidad, el objeto Persona se actualiza y contiene la que
-        // hemos metido y la que hemos guardado en la base de datos. Por eso, cuando luego
-        // guardamos la persona, aparecen las Entidades duplicadas.
+        // Si se le mete la nueva entidad a la colección de la persona, después, cuando se guarda
+        // la Entidad, el objeto Persona se actualiza y contiene la que hemos metido y la que hemos
+        // guardado en la base de datos. Por eso, cuando luego guardamos la persona, aparecen las
+        // Entidades duplicadas.
         // Si se guarda la persona con el objeto nuevo, no se guarda la Entidad en la base de
         // datos.
-        // Parece que hay que guardar la entidad que se crea sin relacionarla con el objeto.
 
         for (Entidad entidad : entidades) {
             entidad.setPersona(persona);
@@ -268,7 +267,6 @@ public class GestorDatos {
     }
 
     public boolean addDeuda(Persona persona, Entidad entidad) {
-        persona.addEntidad(entidad);
         entidad.setPersona(persona);
         return databaseHelper.nuevasEntidades(Collections.singletonList(entidad));
     }

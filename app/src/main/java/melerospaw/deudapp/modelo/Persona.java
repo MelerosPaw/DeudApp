@@ -320,4 +320,8 @@ public class Persona implements Serializable{
     public boolean hasDeuda(Entidad entidad) {
         return EntidadesUtilKt.estaContenida(entidad, getEntidades());
     }
+
+    public boolean hasConceptoRepetido(String concepto) {
+        return EntidadesUtilKt.contieneMismoConcepto(concepto, getEntidades());
+    }
 }
