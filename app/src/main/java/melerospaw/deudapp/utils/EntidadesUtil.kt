@@ -68,3 +68,10 @@ fun repartirEntidadesGrupales(entidades: List<EntidadVO>, cantidadDeudores: Int)
         }
     }
 }
+
+fun descuentoEsSuperior(entidad: Entidad, descuento: Float) =
+        when {
+            entidad.tipoEntidad == Entidad.DERECHO_COBRO -> descuento > entidad.cantidad
+            entidad.tipoEntidad == Entidad.DEUDA -> descuento > -entidad.cantidad
+            else -> true
+        }

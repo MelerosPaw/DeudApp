@@ -62,6 +62,7 @@ import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
@@ -540,9 +541,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         final float deudaActual = entidad.getCantidad();
         final float aumentoFloat = Float.parseFloat(StringUtils.prepararDecimal(aumento));
 
-        if (operationResultIsAlwaysInfinite(deudaActual, aumentoFloat,true)) {
-            showUselessOperationDialog();
-        } else if (additionWouldBeInfinite(deudaActual, aumentoFloat)) {
+        if (InfinityManagerKt.additionResultIsInfinite(deudaActual, aumentoFloat)) {
             showInfiniteResultDialogAndAdd(position, entidad, aumentoFloat);
         } else {
             aumentar(entidad, aumentoFloat, position);
@@ -555,19 +554,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
         float cantidadActual = entidad.getCantidad();
         float cantidadDescuento = Float.parseFloat(StringUtils.prepararDecimal(descuento));
 
-        boolean descuentoEsMayorQueDerechoCobro = entidad.getTipoEntidad() == Entidad.DERECHO_COBRO
-                && cantidadDescuento > cantidadActual;
-        boolean descuentoEsMayorQueDeuda = entidad.getTipoEntidad() == Entidad.DEUDA
-                && cantidadDescuento > -cantidadActual;
-
-        if (descuentoEsMayorQueDerechoCobro || descuentoEsMayorQueDeuda) {
+        if (EntidadesUtilKt.descuentoEsSuperior(entidad, cantidadDescuento)) {
             Snackbar.make(rvDeudas, R.string.mensaje_disminucion_excesiva, Snackbar.LENGTH_LONG).show();
-        } else if (operationResultIsAlwaysInfinite(cantidadActual, cantidadDescuento, false)) {
-            showUselessOperationDialog();
-        } else if (operandsAreInfinite(cantidadActual, cantidadDescuento)) {
-            entidad.setCantidad(0F);
-            actualizarEntidadYAdapter(position, entidad);
-        } else if (subtractionWouldBeInfinite(cantidadActual, cantidadDescuento)) {
+        } else if (InfinityManagerKt.substractionResultIsInfinite(cantidadActual, cantidadDescuento)) {
             showInfiniteResultDialogAndSubtract(position, entidad, cantidadDescuento);
         } else {
             disminuir(entidad, cantidadDescuento, position);
@@ -581,28 +570,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
         actualizarEntidadYAdapter(position, entidad);
     }
 
-    private boolean operationResultIsAlwaysInfinite(float cantidadBase, float cantidadAdicional,
-                                                    boolean isAddition) {
-        return InfinityManagerKt.isInfiniteFloat(cantidadBase) &&
-                (isAddition || !InfinityManagerKt.isInfiniteFloat(cantidadAdicional));
-    }
-
-    private boolean additionWouldBeInfinite(float cantidadBase, float cantidadAumento) {
-        return !InfinityManagerKt.isInfiniteFloat(cantidadAumento) &&
-                InfinityManagerKt.additionResultIsInfinite(cantidadBase, cantidadAumento);
-    }
-
-    private boolean subtractionWouldBeInfinite(float cantidadBase, float cantidadDescuento) {
-        return !InfinityManagerKt.isInfiniteFloat(cantidadDescuento) &&
-                InfinityManagerKt.substractionResultIsInfinite(cantidadBase, cantidadDescuento);
-    }
-
     private void showUselessOperationDialog() {
         InfinityManagerKt.showUselessOperationDialog(this);
-    }
-
-    private boolean operandsAreInfinite(float... operands) {
-        return InfinityManagerKt.operandsAreInfinite(operands);
     }
 
     private void showInfiniteResultDialogAndAdd(final int position, final Entidad entidad,
