@@ -165,12 +165,12 @@ public class Entidad implements Comparable<Entidad>, Serializable {
 
     @Override
     public int compareTo(@NonNull Entidad otraEntidad) {
-        return esMismoDia(otraEntidad) ? 0 : -1;
+        return esMismoDia(otraEntidad.getFecha()) ? 0 : -1;
     }
 
-    public boolean esMismoDia(Entidad otraEntidad) {
+    public boolean esMismoDia(Date fecha) {
         Calendar calOtraEntidad = Calendar.getInstance();
-        calOtraEntidad.setTime(otraEntidad.getFecha());
+        calOtraEntidad.setTime(fecha);
         Calendar calEstaEntidad = Calendar.getInstance();
         calEstaEntidad.setTime(getFecha());
 
@@ -189,7 +189,7 @@ public class Entidad implements Comparable<Entidad>, Serializable {
     public boolean equals(Object otraEntidad) {
         return otraEntidad instanceof Entidad &&
                 ((Entidad) otraEntidad).concepto.equals(concepto) &&
-                esMismoDia((Entidad) otraEntidad);
+                esMismoDia(((Entidad) otraEntidad).getFecha());
     }
 
     @Override
@@ -206,9 +206,9 @@ public class Entidad implements Comparable<Entidad>, Serializable {
         @Override
         public int compare(Entidad entidad, Entidad t1) {
             if (entidad.getFecha().after(t1.getFecha())) {
-                return 1;
-            } else if (entidad.getFecha().before(t1.getFecha())) {
                 return -1;
+            } else if (entidad.getFecha().before(t1.getFecha())) {
+                return 1;
             } else {
                 String normalizedConcept1 = Normalizer.normalize(entidad.getConcepto(), Normalizer.Form.NFD);
                 String normalizedConcept2 = Normalizer.normalize(t1.getConcepto(), Normalizer.Form.NFD);
@@ -232,5 +232,16 @@ public class Entidad implements Comparable<Entidad>, Serializable {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
+    }
+
+    public Entidad duplicate() {
+        Entidad entidad = new Entidad();
+        entidad.setId(null);
+        entidad.setTipoEntidad(tipoEntidad);
+        entidad.setPersona(persona);
+        entidad.setConcepto(concepto);
+        entidad.setCantidad(cantidad);
+        entidad.setFecha(Calendar.getInstance().getTime());
+        return entidad;
     }
 }

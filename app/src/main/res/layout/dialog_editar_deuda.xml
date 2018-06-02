@@ -64,14 +64,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageButton
-                            android:id="@+id/ibCambiarFecha"
+                        <TextView
+                            android:id="@+id/tvCambiarFecha"
                             style="@style/Widget.AppCompat.Button.Borderless"
-                            android:minWidth="0dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            app:srcCompat="@drawable/ic_fecha_gris" />
+                            android:layout_gravity="center_vertical"
+                            android:drawableLeft="@drawable/ic_fecha_gris"
+                            android:drawablePadding="10dp"
+                            android:drawableStart="@drawable/ic_fecha_gris"
+                            android:gravity="center_vertical"
+                            android:padding="10dp"
+                            android:text="@string/cambiar_fecha"
+                            android:textColor="@color/colorPrimary" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"

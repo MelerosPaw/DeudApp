@@ -60,6 +60,7 @@
     <string name="cambiar_nombre">Cambiar nombre</string>
     <string name="cambiar">Cambiar</string>
     <string name="mensaje_dialogo_cambiar_nombre">Introduce un nuevo nombre para %1$s:</string>
+    <string name="mensaje_dialogo_cambiar_concepto">Ya ha una deuda para el día de hoy con el concepto \"%1$s\". Debes especificar un nobre nuevo para copiar la deuda:</string>
     <string name="total_debido">Total debido</string>
     <string name="total_adeudado">Total adeudado</string>
     <string name="deseleccionar_todo">Deseleccionar todo</string>
@@ -113,5 +114,12 @@
     <string name="add_debt">Añadir deuda</string>
     <string name="person_without_debts">Esta persona no tiene deudas.</string>
     <string name="person_deleted">Persona eliminada</string>
+    <string name="edit">Editar</string>
+    <string name="duplicate_debt">Duplicar deuda</string>
+    <string name="escribe_un_concepto">Escribe un concepto</string>
+    <string name="concepto_repetido">%1$s ya tiene una deuda con el concepto %2$s</string>
+    <string name="nombre_sin_modificar">No has modificado el %1$s</string>
+    <string name="sin_cambios">No has cambiado nada</string>
+    <string name="cambiar_fecha">Cambiar fecha</string>
 
 </resources>

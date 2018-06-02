@@ -60,13 +60,14 @@ fun mostrarInfinityDialog(context: Context, mensaje: String?,
             .show()
 }
 
-fun additionResultIsInfinite(operand1: Float, operand2: Float): Boolean {
-    return (operand1 + operand2).isInfiniteFloat()
-}
+fun additionResultIsInfinite(operand1: Float, operand2: Float) =
+    noOperandsAreInfinite(operand1, operand2) && (operand1 + operand2).isInfiniteFloat()
 
-fun substractionResultIsInfinite(operand1: Float, operand2: Float): Boolean {
-    return (operand1 - operand2).isInfiniteFloat()
-}
+fun substractionResultIsInfinite(operand1: Float, operand2: Float) =
+    noOperandsAreInfinite(operand1, operand2) && (operand1 - operand2).isInfiniteFloat()
+
+
+fun noOperandsAreInfinite(vararg operands: Float) = operands.none {it.isInfiniteFloat()}
 
 fun showUselessOperationDialog(context: Context) {
     AlertDialog.Builder(context)

@@ -3,15 +3,11 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/menu_opcion_aumentar"
-        android:title="@string/aumentar_deuda"/>
+        android:id="@+id/menu__editar"
+        android:title="@string/edit"/>
 
     <item
-        android:id="@+id/menu_opcion_descontar"
-        android:title="@string/descontar_deuda" />
-
-    <item
-        android:id="@+id/menu_opcion_cancelar"
-        android:title="@string/cancelar_deuda" />
+        android:id="@+id/menu__duplicar"
+        android:title="@string/duplicate_debt" />
 
 </menu>

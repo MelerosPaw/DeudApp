@@ -20,11 +20,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.TypedValue;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +51,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.adapters.AdaptadorDeudas;
 import melerospaw.deudapp.iu.dialogs.DialogEditarDeuda;
+import melerospaw.deudapp.iu.dialogs.DialogoCambiarNombre;
 import melerospaw.deudapp.iu.dialogs.DialogoModificarCantidad;
 import melerospaw.deudapp.iu.widgets.ContextRecyclerView;
 import melerospaw.deudapp.iu.widgets.CustomLinearLayoutManager;
@@ -61,6 +62,7 @@ import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
@@ -198,8 +200,25 @@ public class ActivityDetallePersona extends AppCompatActivity {
             }
 
             @Override
-            public void onLongClick(Entidad entidad, int posicion) {
-                mostrarDialogoEdicionDeuda(entidad, posicion);
+            public void onLongClick(View clickedView, final Entidad entidad, final int posicion) {
+                PopupMenu contextualMenu = new PopupMenu(ActivityDetallePersona.this, clickedView);
+                contextualMenu.inflate(R.menu.menu_contextual_deuda);
+                contextualMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.menu__duplicar) {
+                            duplicarEntidad(entidad);
+                            return true;
+                        } else if (menuItem.getItemId() == R.id.menu__editar) {
+                            mostrarDialogoEdicionDeuda(entidad, posicion);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+                contextualMenu.show();
+
             }
         });
         rvDeudas.setLayoutManager(layoutManager);
@@ -418,22 +437,6 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        ContextRecyclerView.RecyclerContextMenuInfo info =
-                (ContextRecyclerView.RecyclerContextMenuInfo) menuInfo;
-        Entidad entidadSeleccionada = adaptador.getEntidadByPosition(info.position);
-        getMenuInflater().inflate(R.menu.menu_contextual_deuda, menu);
-        toggleContextMenuOptions(menu, entidadSeleccionada);
-    }
-
-    private void toggleContextMenuOptions(Menu menu, Entidad entidadSeleccionada) {
-        if (entidadSeleccionada.estaCancelada()) {
-            menu.findItem(R.id.menu_opcion_descontar).setVisible(false).setEnabled(false);
-            menu.findItem(R.id.menu_opcion_cancelar).setVisible(false).setEnabled(false);
-        }
-    }
-
     private void buscarImagen() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -509,15 +512,46 @@ public class ActivityDetallePersona extends AppCompatActivity {
         dialog.show(ft, DialogoModificarCantidad.TAG);
     }
 
+    private void duplicarEntidad(Entidad entidad) {
+        Entidad entidadDuplicada = entidad.duplicate();
+        if (persona.hasDeuda(entidadDuplicada)) {
+            ofrecerCambiarNombre(entidadDuplicada);
+        } else {
+            duplicar(entidadDuplicada);
+        }
+    }
+
+    private void ofrecerCambiarNombre(final Entidad entidad) {
+        FragmentTransaction ft = getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(DialogoCambiarNombre.TAG);
+
+        DialogoCambiarNombre dialog = DialogoCambiarNombre.getInstance(entidad, persona);
+        dialog.setCallback(new DialogoCambiarNombre.Callback() {
+            @Override
+            public void onNameChanged(String nuevoNombre, int posicion) {
+                entidad.setConcepto(nuevoNombre);
+                duplicar(entidad);
+            }
+        });
+        dialog.show(ft, DialogoCambiarNombre.TAG);
+    }
+
+    private void duplicar(Entidad entidad) {
+        gestor.addDeuda(persona, entidad);
+        gestor.recargarPersona(persona);
+        insertarNuevasEntidades(Collections.singletonList(entidad));
+        actualizarTotal();
+        bus.post(new EventoDeudaModificada(persona));
+    }
+
     private void aumentarDeuda(final int position, String aumento) {
 
         final Entidad entidad = gestor.getEntidad(adaptador.getEntidadByPosition(position).getId());
         final float deudaActual = entidad.getCantidad();
         final float aumentoFloat = Float.parseFloat(StringUtils.prepararDecimal(aumento));
 
-        if (operationResultIsAlwaysInfinite(deudaActual, aumentoFloat,true)) {
-            showUselessOperationDialog();
-        } else if (additionWouldBeInfinite(deudaActual, aumentoFloat)) {
+        if (InfinityManagerKt.additionResultIsInfinite(deudaActual, aumentoFloat)) {
             showInfiniteResultDialogAndAdd(position, entidad, aumentoFloat);
         } else {
             aumentar(entidad, aumentoFloat, position);
@@ -530,19 +564,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
         float cantidadActual = entidad.getCantidad();
         float cantidadDescuento = Float.parseFloat(StringUtils.prepararDecimal(descuento));
 
-        boolean descuentoEsMayorQueDerechoCobro = entidad.getTipoEntidad() == Entidad.DERECHO_COBRO
-                && cantidadDescuento > cantidadActual;
-        boolean descuentoEsMayorQueDeuda = entidad.getTipoEntidad() == Entidad.DEUDA
-                && cantidadDescuento > -cantidadActual;
-
-        if (descuentoEsMayorQueDerechoCobro || descuentoEsMayorQueDeuda) {
+        if (EntidadesUtilKt.descuentoEsSuperior(entidad, cantidadDescuento)) {
             Snackbar.make(rvDeudas, R.string.mensaje_disminucion_excesiva, Snackbar.LENGTH_LONG).show();
-        } else if (operationResultIsAlwaysInfinite(cantidadActual, cantidadDescuento, false)) {
-            showUselessOperationDialog();
-        } else if (operandsAreInfinite(cantidadActual, cantidadDescuento)) {
-            entidad.setCantidad(0F);
-            actualizarEntidadYAdapter(position, entidad);
-        } else if (subtractionWouldBeInfinite(cantidadActual, cantidadDescuento)) {
+        } else if (InfinityManagerKt.substractionResultIsInfinite(cantidadActual, cantidadDescuento)) {
             showInfiniteResultDialogAndSubtract(position, entidad, cantidadDescuento);
         } else {
             disminuir(entidad, cantidadDescuento, position);
@@ -556,28 +580,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
         actualizarEntidadYAdapter(position, entidad);
     }
 
-    private boolean operationResultIsAlwaysInfinite(float cantidadBase, float cantidadAdicional,
-                                                    boolean isAddition) {
-        return InfinityManagerKt.isInfiniteFloat(cantidadBase) &&
-                (isAddition || !InfinityManagerKt.isInfiniteFloat(cantidadAdicional));
-    }
-
-    private boolean additionWouldBeInfinite(float cantidadBase, float cantidadAumento) {
-        return !InfinityManagerKt.isInfiniteFloat(cantidadAumento) &&
-                InfinityManagerKt.additionResultIsInfinite(cantidadBase, cantidadAumento);
-    }
-
-    private boolean subtractionWouldBeInfinite(float cantidadBase, float cantidadDescuento) {
-        return !InfinityManagerKt.isInfiniteFloat(cantidadDescuento) &&
-                InfinityManagerKt.substractionResultIsInfinite(cantidadBase, cantidadDescuento);
-    }
-
     private void showUselessOperationDialog() {
         InfinityManagerKt.showUselessOperationDialog(this);
-    }
-
-    private boolean operandsAreInfinite(float... operands) {
-        return InfinityManagerKt.operandsAreInfinite(operands);
     }
 
     private void showInfiniteResultDialogAndAdd(final int position, final Entidad entidad,
@@ -624,7 +628,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
-    public void actualizarLista(List<Entidad> entidades) {
+    public void insertarNuevasEntidades(List<Entidad> entidades) {
         adaptador.nuevasEntidades(entidades);
         mostrarVacio(adaptador.getItemCount() + entidades.size() == 0);
         layoutManager.scrollToPosition(0);
@@ -662,7 +666,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     private void procesarResultNuevasDeudas(Intent data) {
         List<Integer> idsEntidades = data.getIntegerArrayListExtra(ActivityNuevasDeudas.RESULT_ENTITIES_ADDED);
-        actualizarLista(gestor.getEntidades(idsEntidades));
+        insertarNuevasEntidades(gestor.getEntidades(idsEntidades));
         BusProvider.getBus().post(new EventoDeudaModificada(persona));
     }
 

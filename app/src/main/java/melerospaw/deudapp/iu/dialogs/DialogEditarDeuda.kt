@@ -67,7 +67,7 @@ class DialogEditarDeuda : DialogFragment() {
             btnCancelar.setOnClickListener {
                 dismiss()
             }
-            ibCambiarFecha.setOnClickListener {
+            tvCambiarFecha.setOnClickListener {
                 mostrarDialogFecha()
             }
         }
@@ -115,34 +115,41 @@ class DialogEditarDeuda : DialogFragment() {
                 shortToast(getString(R.string.concepto_vacio))
                 return false
             }
+
             cantidad.isBlank() -> {
                 shortToast(getString(R.string.cantidad_vacia))
                 return false
             }
+
             StringUtils.esConvertible(StringUtils.prepararDecimal(cantidad)) == "string" &&
                     !cantidad.isInfinityCharacter() -> {
                 shortToast(getString(R.string.cantidad_no_numerica))
                 return false
             }
+
+            esLaMisma(concepto, Entidad.formatearFecha(fecha)) -> {
+                shortToast(getString(R.string.sin_cambios))
+                return false
+            }
+
             estaRepetida(concepto, Entidad.formatearFecha(fecha)) -> {
                 longToast(String.format(getString(R.string.nombre_repetido),
                         entidad.persona.nombre, concepto, fecha))
                 return false
             }
+
             else -> return true
         }
     }
 
-    private fun estaRepetida(concepto: String, fecha: Date): Boolean =
-            when {
-                // Si no ha cambiado nada importante, no se considera repetida
-                entidad.concepto == concepto && entidad.fecha == fecha -> false
-                else -> {
-                    val fakeDebt = Entidad(0F, concepto, Entidad.DEUDA)
-                    fakeDebt.fecha = fecha
-                    estaContenida(fakeDebt, entidad.persona.entidades)
-                }
-            }
+    private fun esLaMisma(concepto: String, fecha: Date) =
+            entidad.concepto == concepto && entidad.esMismoDia(fecha)
+
+    private fun estaRepetida(concepto: String, fecha: Date): Boolean {
+        val fakeDebt = Entidad(0F, concepto, Entidad.DEUDA)
+        fakeDebt.fecha = fecha
+        return estaContenida(fakeDebt, entidad.persona.entidades)
+    }
 
     private fun mostrarDialogFecha() {
         if (activity != null) {
