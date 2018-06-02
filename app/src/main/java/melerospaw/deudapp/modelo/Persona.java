@@ -230,17 +230,17 @@ public class Persona implements Serializable{
                     }
                 }
             }
-        } else if (tipo == AMBOS){
+        } else if (tipo == AMBOS) {
             float totalDeudas = 0;
             float totalDerechosCobro = 0;
             for (Entidad entidad : entidades) {
                 if (entidadOmitida == null || !entidad.equals(entidadOmitida)) {
                     if (entidad.getTipoEntidad() == Entidad.DEUDA &&
                             !InfinityManagerKt.isInfiniteFloat(totalDeudas)) {
-                        totalDeudas = SecureOperationKt.secureAdd(total, entidad.getCantidad());
+                        totalDeudas = SecureOperationKt.secureAdd(totalDeudas, entidad.getCantidad());
                     } else if (entidad.getTipoEntidad() == Entidad.DERECHO_COBRO &&
                             !InfinityManagerKt.isInfiniteFloat(totalDerechosCobro)) {
-                        totalDerechosCobro = SecureOperationKt.secureAdd(total, entidad.getCantidad());
+                        totalDerechosCobro = SecureOperationKt.secureAdd(totalDerechosCobro, entidad.getCantidad());
                     }
 
                     if (InfinityManagerKt.isInfiniteFloat(totalDeudas) &&

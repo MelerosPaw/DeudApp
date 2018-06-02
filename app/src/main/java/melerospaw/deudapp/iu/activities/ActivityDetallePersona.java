@@ -41,7 +41,6 @@ import com.squareup.otto.Bus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
