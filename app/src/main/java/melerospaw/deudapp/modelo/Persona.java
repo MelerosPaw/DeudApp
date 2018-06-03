@@ -265,13 +265,7 @@ public class Persona implements Serializable{
     }
 
     public boolean estanLasDeudasCanceladas() {
-        for (Entidad entidad : entidades) {
-            if (!entidad.estaCancelada()) {
-                return false;
-            }
-        }
-
-        return true;
+        return EntidadesUtilKt.estanCanceladas(getEntidades());
     }
 
     public boolean tieneImagen() {

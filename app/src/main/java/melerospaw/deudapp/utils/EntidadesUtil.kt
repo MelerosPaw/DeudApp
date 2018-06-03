@@ -79,3 +79,5 @@ fun descuentoEsSuperior(entidad: Entidad, descuento: Float) =
             entidad.tipoEntidad == Entidad.DEUDA -> descuento > -entidad.cantidad
             else -> true
         }
+
+fun estanCanceladas(entidades: List<Entidad>) = entidades.all {it.estaCancelada()}
