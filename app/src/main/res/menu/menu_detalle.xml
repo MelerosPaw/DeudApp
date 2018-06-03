@@ -6,20 +6,20 @@
     <item
         android:id="@+id/menu_nueva"
         android:orderInCategory="0"
+        android:icon="@drawable/ic_nueva_deuda_blanco"
         android:title="@string/nueva_deuda"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/imagen"
-        android:icon="@android:drawable/ic_menu_gallery"
-        android:orderInCategory="1"
-        android:title="@string/anadir_imagen"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/cancelar_todas"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:title="@string/cancelar_todas"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/imagen"
+        android:orderInCategory="2"
+        android:title="@string/anadir_imagen"
         app:showAsAction="never" />
 
     <item

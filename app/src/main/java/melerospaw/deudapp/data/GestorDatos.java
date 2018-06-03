@@ -292,7 +292,6 @@ public class GestorDatos {
     public boolean guardarFoto(Context context, Persona persona, Uri uri) {
 
         boolean guardada;
-
         Bitmap bitmap = null;
 
         try {
