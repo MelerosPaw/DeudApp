@@ -121,5 +121,6 @@
     <string name="nombre_sin_modificar">No has modificado el %1$s</string>
     <string name="sin_cambios">No has cambiado nada</string>
     <string name="cambiar_fecha">Cambiar fecha</string>
+    <string name="cambiar_imagen">Cambiar imagen</string>
 
 </resources>
