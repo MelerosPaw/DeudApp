@@ -125,7 +125,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         loadView();
     }
 
-    public void loadView() {
+    private void loadView() {
         setToolbar();
         inicializarAdapter();
         cambiarColorTotal(null);
@@ -160,9 +160,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
             tvToolbarSubtitulo.setVisibility(View.GONE);
             tvToolbarTitulo.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         }
-        if (menu != null) {
-            menu.findItem(R.id.borrar_imagen).setVisible(persona.tieneImagen()).setEnabled(persona.tieneImagen());
-        }
+
+        setMenuOptions();
     }
 
     private void inicializarAdapter() {
@@ -246,6 +245,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
                         mostrarDeshacer();
                         mostrarTotal(adaptador.getItemProvisional());
                         cambiarColorTotal(adaptador.getItemProvisional());
+                        setMenuOptions();
+                        showCancelarTodas(persona.getEntidades().size() > 1);
                     }
                 });
         itemTouchHelper.attachToRecyclerView(rvDeudas);
@@ -265,6 +266,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 mostrarVacio(false);
                 mostrarTotal(null);
                 cambiarColorTotal(null);
+                showCancelarTodas(true);
                 isDeshacerShowing = false;
             }
         });
@@ -278,7 +280,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         if (adaptador.getItemProvisional() != null) {
             gestor.eliminarEntidades(Collections.singletonList(adaptador.getItemProvisional()));
             actualizarTotal();
-            toggleDeleteAllMenuOption();
+            setMenuOptions();
             adaptador.eliminarProvisionales();
             bus.post(new EventoDeudaModificada(persona));
         }
@@ -376,10 +378,16 @@ public class ActivityDetallePersona extends AppCompatActivity {
         ViewCompat.setNestedScrollingEnabled(rvDeudas, persona.tieneImagen());
     }
 
-    private void toggleDeleteAllMenuOption() {
+    private void setMenuOptions() {
         if (menu != null) {
             menu.findItem(R.id.cancelar_todas).setVisible(!persona.estanLasDeudasCanceladas()).setEnabled(!persona.estanLasDeudasCanceladas());
             menu.findItem(R.id.borrar_imagen).setVisible(persona.tieneImagen()).setEnabled(persona.tieneImagen());
+        }
+    }
+
+    private void showCancelarTodas(boolean show) {
+        if (menu != null) {
+            menu.findItem(R.id.cancelar_todas).setVisible(show);
         }
     }
 
@@ -387,7 +395,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_detalles, menu);
-        toggleDeleteAllMenuOption();
+        setMenuOptions();
         return true;
     }
 
@@ -618,7 +626,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         gestor.actualizarEntidad(entidad);
         adaptador.alterItemInPosition(position, entidad);
         actualizarTotal();
-        toggleDeleteAllMenuOption();
+        setMenuOptions();
         bus.post(new EventoDeudaModificada(persona));
     }
 
@@ -668,6 +676,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         List<Integer> idsEntidades = data.getIntegerArrayListExtra(ActivityNuevasDeudas.RESULT_ENTITIES_ADDED);
         insertarNuevasEntidades(gestor.getEntidades(idsEntidades));
         BusProvider.getBus().post(new EventoDeudaModificada(persona));
+        setMenuOptions();
     }
 
     private void mostrarFoto() {
@@ -690,7 +699,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         tvSubtitulo.setVisibility(View.VISIBLE);
         setExpandEnabled(persona.tieneImagen());
         toggleScroll();
-        toggleDeleteAllMenuOption();
+        setMenuOptions();
         setTextIfImagePresent();
     }
 
