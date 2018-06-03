@@ -148,7 +148,7 @@ public class DialogoCambiarNombre extends DialogFragment {
 
     private boolean nombreEstaRepetido(String nuevoNombre) {
         return esEntidad() ?
-                persona.hasConceptoRepetido(nuevoNombre) : gestor.cambiarNombre(persona, nuevoNombre);
+                persona.hasConceptoRepetido(nuevoNombre, entidad.getFecha()) : gestor.cambiarNombre(persona, nuevoNombre);
     }
 
     private boolean esEntidad() {

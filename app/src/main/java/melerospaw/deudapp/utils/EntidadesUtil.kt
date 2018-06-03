@@ -7,7 +7,7 @@ import java.util.*
 // Una deuda está repetida cuando es el mismo concepto para el mismo día
 fun hayEntidadesRepetidas(entidades: List<EntidadVO>): Boolean {
     for (i in 0 until entidades.size) {
-        val entidad: Entidad = entidades[i].entidad
+        val entidad = entidades[i].entidad
         for (j in i + 1 until entidades.size) {
             if (esRepetida(entidad, entidades[j].entidad)) {
                 return true
@@ -69,8 +69,8 @@ fun repartirEntidadesGrupales(entidades: List<EntidadVO>, cantidadDeudores: Int)
     }
 }
 
-fun contieneMismoConcepto(concepto: String, entidades: List<Entidad>) = entidades.any {
-    it.concepto == concepto
+fun contieneDeudaSimilar(concepto: String, fecha: Date, entidades: List<Entidad>) = entidades.any {
+    it.concepto == concepto && it.esMismoDia(fecha)
 }
 
 fun descuentoEsSuperior(entidad: Entidad, descuento: Float) =

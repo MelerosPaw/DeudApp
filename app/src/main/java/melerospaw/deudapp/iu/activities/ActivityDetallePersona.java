@@ -100,10 +100,14 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 @Override
                 public void onDismissed(Snackbar transientBottomBar, int event) {
                     super.onDismissed(transientBottomBar, event);
-                    eliminarProvisionalDefinitivo();
-                    isDeshacerShowing = false;
+                    onSnackbarDismissed();
                 }
             };
+
+    private void onSnackbarDismissed() {
+        eliminarProvisionalDefinitivo();
+        isDeshacerShowing = false;
+    }
 
     public static void start(Context context, String nombre) {
         Intent starter = new Intent(context, ActivityDetallePersona.class);
@@ -223,8 +227,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
         rvDeudas.setLayoutManager(layoutManager);
         rvDeudas.setAdapter(adaptador);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
-                        | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT |
+                        ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END |
+                        ItemTouchHelper.DOWN) {
                     @Override
                     public boolean onMove(RecyclerView recyclerView,
                                           RecyclerView.ViewHolder viewHolder,
@@ -234,22 +239,43 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                        if (isDeshacerShowing) {
-                            eliminarProvisionalDefinitivo();
-                            if (snackbar != null) {
-                                snackbar.removeCallback(snackbarCallback);
-                            }
+
+                        ocultarDeshacer();
+
+                        if (swipeDir == ItemTouchHelper.DOWN) {
+                            swipedToDuplicate(viewHolder);
+                        } else {
+                            swipedToDismiss(viewHolder);
                         }
-                        adaptador.eliminarItem(viewHolder);
-                        mostrarVacio(adaptador.getItemCount() == 0);
-                        mostrarDeshacer();
-                        mostrarTotal(adaptador.getItemProvisional());
-                        cambiarColorTotal(adaptador.getItemProvisional());
-                        setMenuOptions();
-                        showCancelarTodas(persona.getEntidades().size() > 1);
                     }
                 });
         itemTouchHelper.attachToRecyclerView(rvDeudas);
+    }
+
+    private void ocultarDeshacer() {
+        if (isDeshacerShowing) {
+            onSnackbarDismissed();
+            if (snackbar != null) {
+                snackbar.removeCallback(snackbarCallback);
+                snackbar.dismiss();
+            }
+        }
+    }
+
+    private void swipedToDuplicate(RecyclerView.ViewHolder viewHolder) {
+        adaptador.notifyItemChanged(viewHolder.getAdapterPosition());
+        eliminarProvisionalDefinitivo();
+        duplicarEntidad(adaptador.getEntidadByPosition(viewHolder.getAdapterPosition()));
+    }
+
+    private void swipedToDismiss(RecyclerView.ViewHolder viewHolder) {
+        adaptador.eliminarItem(viewHolder);
+        mostrarVacio(adaptador.getItemCount() == 0);
+        mostrarDeshacer();
+        mostrarTotal(adaptador.getItemProvisional());
+        cambiarColorTotal(adaptador.getItemProvisional());
+        setMenuOptions();
+        showCancelarTodas(persona.getEntidades().size() > 1);
     }
 
     private void mostrarVacio(boolean mostrar) {
@@ -691,6 +717,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             float altura = getResources().getDisplayMetrics().heightPixels / 2F;
             params.height = (int) altura;
         } else {
+            TransitionManager.beginDelayedTransition(appBar);
             params.height = (int) getResources().getDisplayMetrics().density * 56;
             ivFoto.setImageBitmap(null);
         }
@@ -704,7 +731,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void setExpandEnabled(boolean enabled) {
-        appBar.setExpanded(enabled);
+        appBar.setExpanded(enabled, true);
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
 
         if (enabled) {

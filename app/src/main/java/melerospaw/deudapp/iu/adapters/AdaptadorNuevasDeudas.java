@@ -93,7 +93,7 @@ public class AdaptadorNuevasDeudas
         return EntidadesUtilKt.hayEntidadesIncompletas(mDatos);
     }
 
-    public boolean hayEntidadesRepetidas() {
+    public boolean hayConceptosRepetidos() {
         return EntidadesUtilKt.hayEntidadesRepetidas(mDatos);
     }
 
