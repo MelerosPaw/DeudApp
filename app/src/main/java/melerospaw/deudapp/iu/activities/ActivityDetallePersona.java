@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -65,6 +66,7 @@ import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
+import melerospaw.deudapp.utils.SharedPreferencesManager;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class ActivityDetallePersona extends AppCompatActivity {
@@ -72,6 +74,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
     public static final String BUNDLE_PERSONA = "PERSONA";
     private static final int RC_FOTO = 0;
 
+    @BindView(R.id.root)                        ViewGroup root;
+    @BindView(R.id.ll_swipe_indications)        ViewGroup llIndicacionesSwipe;
     @BindView(R.id.toolbar)                     Toolbar toolbar;
     @BindView(R.id.tv_toolbar_titulo)           TextView tvToolbarTitulo;
     @BindView(R.id.tv_titulo)                   TextView tvTitulo;
@@ -135,6 +139,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         cambiarColorTotal(null);
         mostrarFoto();
         mostrarTotal(null);
+        showDebtSwipeTutorial();
     }
 
     private void setToolbar() {
@@ -415,6 +420,18 @@ public class ActivityDetallePersona extends AppCompatActivity {
         if (menu != null) {
             menu.findItem(R.id.cancelar_todas).setVisible(show);
         }
+    }
+
+    private void showDebtSwipeTutorial() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (new SharedPreferencesManager(ActivityDetallePersona.this).mustShowSwipeTutorial()) {
+                    TransitionManager.beginDelayedTransition(root, new CustomTransitionSet().setDuration(500));
+                    llIndicacionesSwipe.setVisibility(View.VISIBLE);
+                }
+            }
+        }, 650);
     }
 
     @Override
@@ -759,7 +776,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.add_debt, R.id.delete_person})
+    @OnClick({R.id.add_debt, R.id.delete_person, R.id.tv_cerrar_indicaciones})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_debt:
@@ -768,6 +785,15 @@ public class ActivityDetallePersona extends AppCompatActivity {
             case R.id.delete_person:
                 eliminarPersona();
                 break;
+            case R.id.tv_cerrar_indicaciones:
+                ocultarTutorialSwipe();
+                break;
         }
+    }
+
+    private void ocultarTutorialSwipe() {
+        new SharedPreferencesManager(this).setMustShowSwipeTutorial(false);
+        TransitionManager.beginDelayedTransition(root, new CustomTransitionSet().setDuration(500));
+        llIndicacionesSwipe.setVisibility(View.GONE);
     }
 }

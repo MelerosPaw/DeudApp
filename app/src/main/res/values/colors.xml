@@ -18,6 +18,7 @@
     <color name="light_red">#22CC0000</color>
     <color name="light_gray">#EEE</color>
     <color name="transparent_white">#88FFFFFF</color>
+    <color name="less_transparent_white">#EFFFFFFF</color>
     <color name="text_button_icon">#888</color>
 
 </resources>

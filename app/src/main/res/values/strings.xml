@@ -92,6 +92,7 @@
     <string name="deuda_grupal_explicacion">Al marcar un concepto como \"deuda grupal\" su cantidad será divida entre todos los deudores especificados.</string>
     <string name="no_mostrar_dialogo">No volver a mostar este diálogo</string>
     <string name="entendido">Entendido</string>
+    <string name="entendido_enfatico">¡Entendido!</string>
     <string name="deuda_grupal">Deuda grupal</string>
     <string name="imposible_borrar_foto">No se ha podido eliminar la foto.</string>
     <string name="balance_total">Balance total</string>
@@ -121,5 +122,7 @@
     <string name="nombre_sin_modificar">No has modificado el %1$s</string>
     <string name="sin_cambios">No has cambiado nada</string>
     <string name="cambiar_fecha">Cambiar fecha</string>
+    <string name="indicaciones_lados">Desliza un concepto\nhacia un lado\npara eliminarlo</string>
+    <string name="indicaciones_abajo">Desliza un concepto\nhacia abajo\npara duplicarlo</string>
 
 </resources>

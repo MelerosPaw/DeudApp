@@ -89,6 +89,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevas_entidades_layout);
+        // TODO: 03/06/2018 remove
+//        new SharedPreferencesManager(this).setMustShowSwipeTutorial(true);
         ButterKnife.bind(this);
 
         gestor = GestorDatos.getGestor(this);
