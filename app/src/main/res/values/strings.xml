@@ -101,7 +101,7 @@
     <string name="total">Total</string>
     <string name="selecciona_una_imagen">Selecciona una imagen…</string>
     <string name="imposible_obtener_foto">No se ha podido obtener la foto correctamente.</string>
-    <string name="primera_deuda_contraida">Primera deuda contraída el </string>
+    <string name="primera_deuda_contraida">"Primera deuda contraída el "</string>
     <string name="mensaje_dialog_permisos">DeudApp puede utilizar sus contactos para mostrar sugerencias de autocompletado al crear una nueva persona. Sin este permiso, esta opción no estará habilitada. ¿Seguro que prefiere denegar este permiso?\n\nLea nuestra sencilla Política de privacidad.</string>
     <string name="url_politica_privacidad" formatted="false">https://github.com/MelerosPaw/DeudApp/blob/master/README.md</string>
     <string name="dialog__infinite_amount_title">Cantidad infinita</string>
@@ -122,6 +122,7 @@
     <string name="nombre_sin_modificar">No has modificado el %1$s</string>
     <string name="sin_cambios">No has cambiado nada</string>
     <string name="cambiar_fecha">Cambiar fecha</string>
+    <string name="cambiar_imagen">Cambiar imagen</string>
     <string name="indicaciones_lados">Desliza un concepto\nhacia un lado\npara eliminarlo</string>
     <string name="indicaciones_abajo">Desliza un concepto\nhacia abajo\npara duplicarlo</string>
     <string name="no_volver_a_mostrar">¡Ya no se me olvida!</string>

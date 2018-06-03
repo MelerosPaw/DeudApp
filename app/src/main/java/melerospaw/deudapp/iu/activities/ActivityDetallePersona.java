@@ -416,6 +416,13 @@ public class ActivityDetallePersona extends AppCompatActivity {
         if (menu != null) {
             menu.findItem(R.id.cancelar_todas).setVisible(!persona.estanLasDeudasCanceladas()).setEnabled(!persona.estanLasDeudasCanceladas());
             menu.findItem(R.id.borrar_imagen).setVisible(persona.tieneImagen()).setEnabled(persona.tieneImagen());
+            cambiarTituloOpcionImagen();
+        }
+    }
+
+    private void cambiarTituloOpcionImagen() {
+        if (menu != null) {
+            menu.findItem(R.id.imagen).setTitle(getString(persona.tieneImagen() ? R.string.cambiar_imagen : R.string.anadir_imagen));
         }
     }
 
@@ -442,7 +449,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
-        getMenuInflater().inflate(R.menu.menu_detalles, menu);
+        getMenuInflater().inflate(R.menu.menu_detalle, menu);
         setMenuOptions();
         return true;
     }
@@ -750,6 +757,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         toggleScroll();
         setMenuOptions();
         setTextIfImagePresent();
+        cambiarTituloOpcionImagen();
     }
 
     private void setExpandEnabled(boolean enabled) {
