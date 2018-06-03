@@ -9,6 +9,7 @@ class SharedPreferencesManager(context: Context) {
     private val prefNoEsPrimeraVez = "PRIMERA_VEZ"
     private val prefDebeMostrarDialog = "DEBE_MOSTRAR_DIALOG"
     private val prefMustShowTutorial = "DEBE_MOSTRAR_TUTORIAL"
+    private val prefMustShowIgnoreTutorial = "DEBE_MOSTRAR_IGNORAR_TUTORIAL"
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     fun setMustShowExplanatoryDialog(mustShow: Boolean) {
@@ -30,6 +31,14 @@ class SharedPreferencesManager(context: Context) {
     fun setMustShowSwipeTutorial(mustShow: Boolean) {
         sharedPreferences.editar {
             putBoolean(prefMustShowTutorial, mustShow)
+        }
+    }
+
+    fun mustShowIgnoreSwipeTutorial() = sharedPreferences.getBoolean(prefMustShowIgnoreTutorial, false)
+
+    fun setMustShowIgnoreSwipeTutorial(mustShow: Boolean) {
+        sharedPreferences.editar {
+            putBoolean(prefMustShowIgnoreTutorial, mustShow)
         }
     }
 

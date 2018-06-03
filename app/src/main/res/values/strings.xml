@@ -124,5 +124,6 @@
     <string name="cambiar_fecha">Cambiar fecha</string>
     <string name="indicaciones_lados">Desliza un concepto\nhacia un lado\npara eliminarlo</string>
     <string name="indicaciones_abajo">Desliza un concepto\nhacia abajo\npara duplicarlo</string>
+    <string name="no_volver_a_mostrar">¡Ya no se me olvida!</string>
 
 </resources>

@@ -76,6 +76,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     @BindView(R.id.root)                        ViewGroup root;
     @BindView(R.id.ll_swipe_indications)        ViewGroup llIndicacionesSwipe;
+    @BindView(R.id.tv_no_volver_a_mostrar)      TextView tvNoVolverAMostrar;
     @BindView(R.id.toolbar)                     Toolbar toolbar;
     @BindView(R.id.tv_toolbar_titulo)           TextView tvToolbarTitulo;
     @BindView(R.id.tv_titulo)                   TextView tvTitulo;
@@ -92,6 +93,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private GestorDatos gestor;
     private Bus bus = BusProvider.getBus();
+    private SharedPreferencesManager preferencesManager;
     private CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(this);
     private AdaptadorDeudas adaptador;
     private Persona persona;
@@ -128,6 +130,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
         String nombre = getIntent().getExtras().getString(BUNDLE_PERSONA);
         gestor = GestorDatos.getGestor(this);
+        preferencesManager = new SharedPreferencesManager(this);
         persona = gestor.getPersona(nombre);
         ButterKnife.bind(this);
         loadView();
@@ -423,15 +426,17 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void showDebtSwipeTutorial() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (new SharedPreferencesManager(ActivityDetallePersona.this).mustShowSwipeTutorial()) {
+        if (preferencesManager.mustShowSwipeTutorial()) {
+            tvNoVolverAMostrar.setVisibility(preferencesManager.mustShowIgnoreSwipeTutorial() ?
+                    View.VISIBLE : View.INVISIBLE);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
                     TransitionManager.beginDelayedTransition(root, new CustomTransitionSet().setDuration(500));
                     llIndicacionesSwipe.setVisibility(View.VISIBLE);
                 }
-            }
-        }, 650);
+            }, 650);
+        }
     }
 
     @Override
@@ -776,7 +781,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.add_debt, R.id.delete_person, R.id.tv_cerrar_indicaciones})
+    @OnClick({R.id.add_debt, R.id.delete_person, R.id.tv_cerrar_indicaciones,
+            R.id.tv_no_volver_a_mostrar})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_debt:
@@ -786,13 +792,19 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 eliminarPersona();
                 break;
             case R.id.tv_cerrar_indicaciones:
-                ocultarTutorialSwipe();
+                ocultarTutorialSwipe(true);
+                break;
+            case R.id.tv_no_volver_a_mostrar:
+                ocultarTutorialSwipe(false);
                 break;
         }
     }
 
-    private void ocultarTutorialSwipe() {
-        new SharedPreferencesManager(this).setMustShowSwipeTutorial(false);
+    private void ocultarTutorialSwipe(boolean volverAMostrar) {
+        new SharedPreferencesManager(this).setMustShowIgnoreSwipeTutorial(true);
+        if (!volverAMostrar) {
+            new SharedPreferencesManager(this).setMustShowSwipeTutorial(false);
+        }
         TransitionManager.beginDelayedTransition(root, new CustomTransitionSet().setDuration(500));
         llIndicacionesSwipe.setVisibility(View.GONE);
     }

@@ -2,9 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/root">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -193,8 +193,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textSize="16sp"
-                android:text="@string/indicaciones_lados" />
+                android:text="@string/indicaciones_lados"
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="100dp"
@@ -204,8 +204,7 @@
                 android:layout_marginStart="10dp"
                 app:srcCompat="@drawable/flecha" />
 
-            <android.support.v4.widget.Space
-                android:layout_height="50dp" />
+            <android.support.v4.widget.Space android:layout_height="50dp" />
 
             <android.support.v4.widget.Space />
 
@@ -215,8 +214,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textSize="16sp"
-                android:text="@string/indicaciones_abajo" />
+                android:text="@string/indicaciones_abajo"
+                android:textSize="16sp" />
 
             <android.support.v4.widget.Space />
 
@@ -229,17 +228,30 @@
 
             <TextView
                 android:id="@+id/tv_cerrar_indicaciones"
-                android:layout_gravity="fill_horizontal"
                 android:layout_width="0dp"
+                android:layout_columnSpan="2"
+                android:layout_gravity="fill_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/dashed_button"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
-                android:textSize="20sp"
-                android:layout_marginTop="20dp"
                 android:text="@string/entendido_enfatico"
-                android:layout_columnSpan="2"
-                android:background="@drawable/dashed_button"/>
+                android:textSize="20sp" />
 
-            <android.support.v4.widget.Space />
+            <TextView
+                android:id="@+id/tv_no_volver_a_mostrar"
+                android:layout_width="0dp"
+                android:layout_columnSpan="2"
+                android:layout_gravity="fill_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/dashed_button_orange"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="@string/no_volver_a_mostrar"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </GridLayout>
 
