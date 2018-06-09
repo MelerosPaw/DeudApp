@@ -4,6 +4,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -236,8 +237,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         rvDeudas.setAdapter(adaptador);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT |
-                        ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END |
-                        ItemTouchHelper.DOWN) {
+                        ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
                     @Override
                     public boolean onMove(RecyclerView recyclerView,
                                           RecyclerView.ViewHolder viewHolder,
@@ -246,14 +246,71 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                        if (isValidViewHolder(viewHolder)) {
+                            getDefaultUIUtil().onSelected(adaptador.getForegroundView(viewHolder));
+                        } else {
+                            super.onSelectedChanged(viewHolder, actionState);
+                        }
+                    }
 
+                    @Override
+                    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                        if (isValidViewHolder(viewHolder)) {
+                            getDefaultUIUtil().clearView(adaptador.getForegroundView(viewHolder));
+                        } else {
+                            super.clearView(recyclerView, viewHolder);
+                        }
+                    }
+
+                    @Override
+                    public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                            RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                            int actionState, boolean isCurrentlyActive) {
+                        if (isValidViewHolder(viewHolder)) {
+                            getDefaultUIUtil().onDraw(c, recyclerView,
+                                    adaptador.getForegroundView(viewHolder), dX, dY, actionState,
+                                    isCurrentlyActive);
+                        } else {
+                            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState,
+                                    isCurrentlyActive);
+                        }
+                        setbackgroundView(viewHolder, dX);
+                    }
+
+                    @Override
+                    public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
+                                                RecyclerView.ViewHolder viewHolder, float dX,
+                                                float dY, int actionState, boolean isCurrentlyActive) {
+                        if (isValidViewHolder(viewHolder)) {
+                            getDefaultUIUtil().onDrawOver(c, recyclerView,
+                                    adaptador.getForegroundView(viewHolder), dX, dY, actionState,
+                                    isCurrentlyActive);
+                        } else {
+                            super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState,
+                                    isCurrentlyActive);
+                        }
+
+                        setbackgroundView(viewHolder, dX);
+                    }
+
+                    private void setbackgroundView(RecyclerView.ViewHolder vh, float x) {
+                        adaptador.setBackgroundView(vh, x < 0 ?
+                                AdaptadorDeudas.BACKGROUND_BORRAR : AdaptadorDeudas.BACKGROUND_DUPLICAR);
+                    }
+
+                    private boolean isValidViewHolder(RecyclerView.ViewHolder viewHolder) {
+                        return viewHolder != null && adaptador.isValidViewHolder(viewHolder);
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                         ocultarDeshacer();
 
-                        if (swipeDir == ItemTouchHelper.DOWN) {
+                        if (swipeDir == ItemTouchHelper.RIGHT) {
                             swipedToDuplicate(viewHolder);
                         } else {
-                            swipedToDismiss(viewHolder);
+                            swipedToDelete(viewHolder);
                         }
                     }
                 });
@@ -276,7 +333,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         duplicarEntidad(adaptador.getEntidadByPosition(viewHolder.getAdapterPosition()));
     }
 
-    private void swipedToDismiss(RecyclerView.ViewHolder viewHolder) {
+    private void swipedToDelete(RecyclerView.ViewHolder viewHolder) {
         adaptador.eliminarItem(viewHolder);
         mostrarVacio(adaptador.getItemCount() == 0);
         mostrarDeshacer();

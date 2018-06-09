@@ -9,12 +9,30 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="BorderlessButton" parent="TextAppearance.AppCompat">
+    <style name="BorderlessRipple" parent="TextAppearance.AppCompat">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="BorderlessButton" parent="BorderlessRipple">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:padding">10dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:background">?selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="SwipeHiddenOption" parent="BorderlessRipple">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+
     </style>
 
 </resources>

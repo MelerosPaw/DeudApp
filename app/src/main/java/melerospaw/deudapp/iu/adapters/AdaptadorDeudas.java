@@ -1,7 +1,9 @@
 package melerospaw.deudapp.iu.adapters;
 
+import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -10,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,6 +28,13 @@ import melerospaw.deudapp.utils.DecimalFormatUtils;
 
 
 public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas.ViewHolder> {
+
+    @IntDef({BACKGROUND_BORRAR, BACKGROUND_DUPLICAR})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface BackgroundOption{}
+
+    public static final int BACKGROUND_BORRAR = 0;
+    public static final int BACKGROUND_DUPLICAR = 1;
 
     private List<Entidad> mData;
     private AppCompatActivity mContext;
@@ -57,6 +68,26 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public boolean isValidViewHolder(RecyclerView.ViewHolder viewHolder) {
+        return viewHolder instanceof AdaptadorDeudas.ViewHolder;
+    }
+
+    public View getForegroundView(RecyclerView.ViewHolder viewHolder) {
+        return ((AdaptadorDeudas.ViewHolder) viewHolder).foregroundView;
+    }
+
+    public void setBackgroundView(RecyclerView.ViewHolder holder, @BackgroundOption int opcion) {
+        if (opcion == BACKGROUND_BORRAR &&
+                ((ViewHolder)holder).tvDelete.getVisibility() == View.GONE) {
+            ((ViewHolder)holder).tvDelete.setVisibility(View.VISIBLE);
+            ((ViewHolder)holder).tvDuplicate.setVisibility(View.GONE);
+        } else if (opcion == BACKGROUND_DUPLICAR &&
+                ((ViewHolder)holder).tvDuplicate.getVisibility() == View.GONE) {
+            ((ViewHolder)holder).tvDuplicate.setVisibility(View.VISIBLE);
+            ((ViewHolder)holder).tvDelete.setVisibility(View.GONE);
+        }
     }
 
     public Entidad getEntidadByPosition(int position) {
@@ -195,14 +226,17 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
      */
     class ViewHolder extends ContextRecyclerView.ViewHolder {
 
-        @BindView(R.id.cv_item)             LinearLayout cvItem;
-        @BindView(R.id.tv_fecha)            TextView tvFecha;
-        @BindView(R.id.tv_concepto)         TextView tvConcepto;
-        @BindView(R.id.tv_cantidad)         TextView tvCantidad;
-        @BindView(R.id.ll_opciones_entidad) LinearLayout llOpcionesEntidad;
-        @BindView(R.id.tv_aumentar)         TextView tvAumentar;
-        @BindView(R.id.tv_descontar)        TextView tvDescontar;
-        @BindView(R.id.tv_cancelar)         TextView tvCancelar;
+        @BindView(R.id.tv_swipe_option_duplicate)   TextView tvDuplicate;
+        @BindView(R.id.tv_swipe_option_delete)      TextView tvDelete;
+        @BindView(R.id.foreground_view)             CardView foregroundView;
+        @BindView(R.id.ll_item)                     LinearLayout llItem;
+        @BindView(R.id.tv_fecha)                    TextView tvFecha;
+        @BindView(R.id.tv_concepto)                 TextView tvConcepto;
+        @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
+        @BindView(R.id.ll_opciones_entidad)         LinearLayout llOpcionesEntidad;
+        @BindView(R.id.tv_aumentar)                 TextView tvAumentar;
+        @BindView(R.id.tv_descontar)                TextView tvDescontar;
+        @BindView(R.id.tv_cancelar)                 TextView tvCancelar;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -245,10 +279,10 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             tvCancelar.setVisibility(estaCancelada ? View.GONE : View.VISIBLE);
         }
 
-        @OnClick({R.id.cv_item, R.id.tv_aumentar, R.id.tv_descontar, R.id.tv_cancelar})
+        @OnClick({R.id.ll_item, R.id.tv_aumentar, R.id.tv_descontar, R.id.tv_cancelar})
         public void onViewClicked(View view) {
             switch (view.getId()) {
-                case R.id.cv_item:
+                case R.id.ll_item:
                     toggleOptions();
                     break;
                 case R.id.tv_aumentar:
@@ -263,9 +297,9 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             }
         }
 
-        @OnLongClick(R.id.cv_item)
+        @OnLongClick(R.id.ll_item)
         public boolean onLongClick() {
-            callback.onLongClick(cvItem, getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
+            callback.onLongClick(llItem, getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
             return true;
         }
 

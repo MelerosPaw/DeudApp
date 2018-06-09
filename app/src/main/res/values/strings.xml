@@ -112,11 +112,13 @@
     <string name="useless_operation_message">Esta operación es inútil ya que el resultado seguirá siendo infinito.</string>
     <string name="i_know">Lo sé</string>
     <string name="delete_person">Eliminar persona</string>
+    <string name="delete">Eliminar</string>
     <string name="add_debt">Añadir deuda</string>
     <string name="person_without_debts">Esta persona no tiene deudas.</string>
     <string name="person_deleted">Persona eliminada</string>
     <string name="edit">Editar</string>
     <string name="duplicate_debt">Duplicar deuda</string>
+    <string name="duplicate">Duplicar</string>
     <string name="escribe_un_concepto">Escribe un concepto</string>
     <string name="concepto_repetido">%1$s ya tiene una deuda con el concepto %2$s</string>
     <string name="nombre_sin_modificar">No has modificado el %1$s</string>
