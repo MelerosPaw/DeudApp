@@ -25,8 +25,8 @@
             <TextView
                 android:id="@+id/tv_swipe_option_duplicate"
                 style="@style/SwipeHiddenOption"
-                android:drawableLeft="@drawable/ic_nueva_deuda_blanco"
-                android:drawableStart="@drawable/ic_nueva_deuda_blanco"
+                android:drawableLeft="@drawable/ic_duplicar_deuda"
+                android:drawableStart="@drawable/ic_duplicar_deuda"
                 android:gravity="start|center_vertical"
                 android:text="@string/duplicate"
                 android:background="@color/blue"
