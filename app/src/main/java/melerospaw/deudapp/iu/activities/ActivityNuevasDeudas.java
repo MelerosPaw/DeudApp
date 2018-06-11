@@ -312,7 +312,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
             } else if (adaptadorNuevasDeudas.hayEntidadesIncompletas()) {
                 Snackbar.make(rvNuevasEntidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorNuevasDeudas.hayEntidadesRepetidas()) {
+            } else if (adaptadorNuevasDeudas.hayConceptosRepetidos()) {
                 Snackbar.make(rvNuevasEntidades, "Hay deudas repetidas", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else {
@@ -331,7 +331,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
             } else if (adaptadorNuevasDeudas.hayEntidadesIncompletas()) {
                 Snackbar.make(rvNuevasEntidades, "Faltan datos por indicar", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
-            } else if (adaptadorNuevasDeudas.hayEntidadesRepetidas()) {
+            } else if (adaptadorNuevasDeudas.hayConceptosRepetidos()) {
                 Snackbar.make(rvNuevasEntidades, "Hay deudas con el mismo concepto", Snackbar.LENGTH_LONG).show();
                 sePuedeGuardar = false;
             } else {

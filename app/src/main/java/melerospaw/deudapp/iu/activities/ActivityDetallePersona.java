@@ -4,8 +4,10 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -65,6 +67,7 @@ import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
+import melerospaw.deudapp.utils.SharedPreferencesManager;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class ActivityDetallePersona extends AppCompatActivity {
@@ -72,6 +75,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
     public static final String BUNDLE_PERSONA = "PERSONA";
     private static final int RC_FOTO = 0;
 
+    @BindView(R.id.root)                        ViewGroup root;
+    @BindView(R.id.ll_swipe_indications)        ViewGroup llIndicacionesSwipe;
+    @BindView(R.id.tv_no_volver_a_mostrar)      TextView tvNoVolverAMostrar;
     @BindView(R.id.toolbar)                     Toolbar toolbar;
     @BindView(R.id.tv_toolbar_titulo)           TextView tvToolbarTitulo;
     @BindView(R.id.tv_titulo)                   TextView tvTitulo;
@@ -88,6 +94,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
     private GestorDatos gestor;
     private Bus bus = BusProvider.getBus();
+    private SharedPreferencesManager preferencesManager;
     private CustomLinearLayoutManager layoutManager = new CustomLinearLayoutManager(this);
     private AdaptadorDeudas adaptador;
     private Persona persona;
@@ -100,10 +107,14 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 @Override
                 public void onDismissed(Snackbar transientBottomBar, int event) {
                     super.onDismissed(transientBottomBar, event);
-                    eliminarProvisionalDefinitivo();
-                    isDeshacerShowing = false;
+                    onSnackbarDismissed();
                 }
             };
+
+    private void onSnackbarDismissed() {
+        eliminarProvisionalDefinitivo();
+        isDeshacerShowing = false;
+    }
 
     public static void start(Context context, String nombre) {
         Intent starter = new Intent(context, ActivityDetallePersona.class);
@@ -120,6 +131,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
         String nombre = getIntent().getExtras().getString(BUNDLE_PERSONA);
         gestor = GestorDatos.getGestor(this);
+        preferencesManager = new SharedPreferencesManager(this);
         persona = gestor.getPersona(nombre);
         ButterKnife.bind(this);
         loadView();
@@ -131,6 +143,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         cambiarColorTotal(null);
         mostrarFoto();
         mostrarTotal(null);
+        showDebtSwipeTutorial();
     }
 
     private void setToolbar() {
@@ -223,8 +236,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
         rvDeudas.setLayoutManager(layoutManager);
         rvDeudas.setAdapter(adaptador);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
-                        | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT |
+                        ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
                     @Override
                     public boolean onMove(RecyclerView recyclerView,
                                           RecyclerView.ViewHolder viewHolder,
@@ -233,23 +246,101 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                        if (isDeshacerShowing) {
-                            eliminarProvisionalDefinitivo();
-                            if (snackbar != null) {
-                                snackbar.removeCallback(snackbarCallback);
-                            }
+                    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                        if (isValidViewHolder(viewHolder)) {
+                            getDefaultUIUtil().onSelected(adaptador.getForegroundView(viewHolder));
+                        } else {
+                            super.onSelectedChanged(viewHolder, actionState);
                         }
-                        adaptador.eliminarItem(viewHolder);
-                        mostrarVacio(adaptador.getItemCount() == 0);
-                        mostrarDeshacer();
-                        mostrarTotal(adaptador.getItemProvisional());
-                        cambiarColorTotal(adaptador.getItemProvisional());
-                        setMenuOptions();
-                        showCancelarTodas(persona.getEntidades().size() > 1);
+                    }
+
+                    @Override
+                    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                        if (isValidViewHolder(viewHolder)) {
+                            getDefaultUIUtil().clearView(adaptador.getForegroundView(viewHolder));
+                        } else {
+                            super.clearView(recyclerView, viewHolder);
+                        }
+                    }
+
+                    @Override
+                    public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                            RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                            int actionState, boolean isCurrentlyActive) {
+                        if (isValidViewHolder(viewHolder)) {
+                            getDefaultUIUtil().onDraw(c, recyclerView,
+                                    adaptador.getForegroundView(viewHolder), dX, dY, actionState,
+                                    isCurrentlyActive);
+                        } else {
+                            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState,
+                                    isCurrentlyActive);
+                        }
+                        setbackgroundView(viewHolder, dX);
+                    }
+
+                    @Override
+                    public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
+                                                RecyclerView.ViewHolder viewHolder, float dX,
+                                                float dY, int actionState, boolean isCurrentlyActive) {
+                        if (isValidViewHolder(viewHolder)) {
+                            getDefaultUIUtil().onDrawOver(c, recyclerView,
+                                    adaptador.getForegroundView(viewHolder), dX, dY, actionState,
+                                    isCurrentlyActive);
+                        } else {
+                            super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState,
+                                    isCurrentlyActive);
+                        }
+
+                        setbackgroundView(viewHolder, dX);
+                    }
+
+                    private void setbackgroundView(RecyclerView.ViewHolder vh, float x) {
+                        adaptador.setBackgroundView(vh, x < 0 ?
+                                AdaptadorDeudas.BACKGROUND_BORRAR : AdaptadorDeudas.BACKGROUND_DUPLICAR);
+                    }
+
+                    private boolean isValidViewHolder(RecyclerView.ViewHolder viewHolder) {
+                        return viewHolder != null && adaptador.isValidViewHolder(viewHolder);
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                        ocultarDeshacer();
+
+                        if (swipeDir == ItemTouchHelper.RIGHT) {
+                            swipedToDuplicate(viewHolder);
+                        } else {
+                            swipedToDelete(viewHolder);
+                        }
                     }
                 });
         itemTouchHelper.attachToRecyclerView(rvDeudas);
+    }
+
+    private void ocultarDeshacer() {
+        if (isDeshacerShowing) {
+            onSnackbarDismissed();
+            if (snackbar != null) {
+                snackbar.removeCallback(snackbarCallback);
+                snackbar.dismiss();
+            }
+        }
+    }
+
+    private void swipedToDuplicate(RecyclerView.ViewHolder viewHolder) {
+        adaptador.notifyItemChanged(viewHolder.getAdapterPosition());
+        eliminarProvisionalDefinitivo();
+        duplicarEntidad(adaptador.getEntidadByPosition(viewHolder.getAdapterPosition()));
+    }
+
+    private void swipedToDelete(RecyclerView.ViewHolder viewHolder) {
+        adaptador.eliminarItem(viewHolder);
+        mostrarVacio(adaptador.getItemCount() == 0);
+        mostrarDeshacer();
+        mostrarTotal(adaptador.getItemProvisional());
+        cambiarColorTotal(adaptador.getItemProvisional());
+        setMenuOptions();
+        showCancelarTodas(persona.getEntidades().size() > 1);
     }
 
     private void mostrarVacio(boolean mostrar) {
@@ -395,6 +486,20 @@ public class ActivityDetallePersona extends AppCompatActivity {
     private void showCancelarTodas(boolean show) {
         if (menu != null) {
             menu.findItem(R.id.cancelar_todas).setVisible(show);
+        }
+    }
+
+    private void showDebtSwipeTutorial() {
+        if (preferencesManager.mustShowSwipeTutorial()) {
+            tvNoVolverAMostrar.setVisibility(preferencesManager.mustShowIgnoreSwipeTutorial() ?
+                    View.VISIBLE : View.INVISIBLE);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    TransitionManager.beginDelayedTransition(root, new CustomTransitionSet().setDuration(500));
+                    llIndicacionesSwipe.setVisibility(View.VISIBLE);
+                }
+            }, 650);
         }
     }
 
@@ -698,6 +803,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             float altura = getResources().getDisplayMetrics().heightPixels / 2F;
             params.height = (int) altura;
         } else {
+            TransitionManager.beginDelayedTransition(appBar);
             params.height = (int) getResources().getDisplayMetrics().density * 56;
             ivFoto.setImageBitmap(null);
         }
@@ -712,7 +818,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void setExpandEnabled(boolean enabled) {
-        appBar.setExpanded(enabled);
+        appBar.setExpanded(enabled, true);
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) collapsingToolbarLayout.getLayoutParams();
 
         if (enabled) {
@@ -740,7 +846,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.add_debt, R.id.delete_person})
+    @OnClick({R.id.add_debt, R.id.delete_person, R.id.tv_cerrar_indicaciones,
+            R.id.tv_no_volver_a_mostrar})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_debt:
@@ -749,6 +856,21 @@ public class ActivityDetallePersona extends AppCompatActivity {
             case R.id.delete_person:
                 eliminarPersona();
                 break;
+            case R.id.tv_cerrar_indicaciones:
+                ocultarTutorialSwipe(true);
+                break;
+            case R.id.tv_no_volver_a_mostrar:
+                ocultarTutorialSwipe(false);
+                break;
         }
+    }
+
+    private void ocultarTutorialSwipe(boolean volverAMostrar) {
+        new SharedPreferencesManager(this).setMustShowIgnoreSwipeTutorial(true);
+        if (!volverAMostrar) {
+            new SharedPreferencesManager(this).setMustShowSwipeTutorial(false);
+        }
+        TransitionManager.beginDelayedTransition(root, new CustomTransitionSet().setDuration(500));
+        llIndicacionesSwipe.setVisibility(View.GONE);
     }
 }

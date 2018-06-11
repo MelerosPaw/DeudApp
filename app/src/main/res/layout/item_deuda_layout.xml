@@ -1,140 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:layout_marginTop="5dp"
-    android:orientation="vertical"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="4dp">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="0dp">
 
         <LinearLayout
-            android:id="@+id/cv_item"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ripple_orange"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_fecha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:paddingBottom="2dp"
-                android:paddingEnd="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingStart="5dp"
-                android:paddingTop="2dp"
-                android:textColor="@android:color/white"
-                tools:text="12/05/2015" />
+                android:id="@+id/tv_swipe_option_duplicate"
+                style="@style/SwipeHiddenOption"
+                android:drawableLeft="@drawable/ic_duplicar_deuda"
+                android:drawableStart="@drawable/ic_duplicar_deuda"
+                android:gravity="start|center_vertical"
+                android:text="@string/duplicate"
+                android:background="@color/blue"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_swipe_option_delete"
+                style="@style/SwipeHiddenOption"
+                android:drawableEnd="@drawable/ic_borrar"
+                android:drawableRight="@drawable/ic_borrar"
+                android:background="@color/red"
+                android:gravity="end|center_vertical"
+                android:text="@string/delete"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/foreground_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        tools:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/ll_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_orange"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_fecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:paddingBottom="2dp"
+                    android:paddingEnd="5dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="2dp"
+                    android:textColor="@android:color/white"
+                    tools:text="12/05/2015" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_concepto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_detalle_entidad"
+                        android:textStyle="bold"
+                        tools:text="Concepto" />
+
+                    <TextView
+                        android:id="@+id/tv_cantidad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20sp"
+                        tools:text="350,25 €" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_opciones_entidad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/tv_concepto"
+                    android:id="@+id/tv_aumentar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_detalle_entidad"
-                    android:textStyle="bold"
-                    tools:text="Concepto" />
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/ripple_orange"
+                    android:drawableLeft="@drawable/ic_aumentar"
+                    android:drawablePadding="14dp"
+                    android:drawableStart="@drawable/ic_aumentar"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="14dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/aumentar_deuda"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_detalle_entidad" />
 
                 <TextView
-                    android:id="@+id/tv_cantidad"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_descontar"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20sp"
-                    tools:text="350,25 €" />
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/ripple_orange"
+                    android:drawableLeft="@drawable/ic_descontar"
+                    android:drawablePadding="14dp"
+                    android:drawableStart="@drawable/ic_descontar"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="14dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/descontar_deuda"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_detalle_entidad" />
+
+                <TextView
+                    android:id="@+id/tv_cancelar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ripple_orange"
+                    android:drawableLeft="@drawable/ic_cancelar"
+                    android:drawablePadding="14dp"
+                    android:drawableStart="@drawable/ic_cancelar"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="14dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/cancelar_deuda"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_detalle_entidad" />
+
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/ll_opciones_entidad"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
+    </android.support.v7.widget.CardView>
 
-            <TextView
-                android:id="@+id/tv_aumentar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/ripple_orange"
-                android:drawableLeft="@drawable/ic_aumentar"
-                android:drawablePadding="14dp"
-                android:drawableStart="@drawable/ic_aumentar"
-                android:gravity="center_vertical"
-                android:paddingBottom="4dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="14dp"
-                android:paddingRight="10dp"
-                android:paddingStart="14dp"
-                android:paddingTop="4dp"
-                android:text="@string/aumentar_deuda"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_detalle_entidad" />
-
-            <TextView
-                android:id="@+id/tv_descontar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="1dp"
-                android:background="@drawable/ripple_orange"
-                android:drawableLeft="@drawable/ic_descontar"
-                android:drawablePadding="14dp"
-                android:drawableStart="@drawable/ic_descontar"
-                android:gravity="center_vertical"
-                android:paddingBottom="4dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="14dp"
-                android:paddingRight="10dp"
-                android:paddingStart="14dp"
-                android:paddingTop="4dp"
-                android:text="@string/descontar_deuda"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_detalle_entidad" />
-
-            <TextView
-                android:id="@+id/tv_cancelar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ripple_orange"
-                android:drawableLeft="@drawable/ic_cancelar"
-                android:drawablePadding="14dp"
-                android:drawableStart="@drawable/ic_cancelar"
-                android:gravity="center_vertical"
-                android:paddingBottom="4dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="14dp"
-                android:paddingRight="10dp"
-                android:paddingStart="14dp"
-                android:paddingTop="4dp"
-                android:text="@string/cancelar_deuda"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_size_detalle_entidad" />
-
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</android.support.v7.widget.CardView>
+</FrameLayout>

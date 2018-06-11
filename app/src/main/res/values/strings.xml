@@ -92,6 +92,7 @@
     <string name="deuda_grupal_explicacion">Al marcar un concepto como \"deuda grupal\" su cantidad será divida entre todos los deudores especificados.</string>
     <string name="no_mostrar_dialogo">No volver a mostar este diálogo</string>
     <string name="entendido">Entendido</string>
+    <string name="entendido_enfatico">¡Entendido!</string>
     <string name="deuda_grupal">Deuda grupal</string>
     <string name="imposible_borrar_foto">No se ha podido eliminar la foto.</string>
     <string name="balance_total">Balance total</string>
@@ -111,16 +112,21 @@
     <string name="useless_operation_message">Esta operación es inútil ya que el resultado seguirá siendo infinito.</string>
     <string name="i_know">Lo sé</string>
     <string name="delete_person">Eliminar persona</string>
+    <string name="delete">Eliminar</string>
     <string name="add_debt">Añadir deuda</string>
     <string name="person_without_debts">Esta persona no tiene deudas.</string>
     <string name="person_deleted">Persona eliminada</string>
     <string name="edit">Editar</string>
     <string name="duplicate_debt">Duplicar deuda</string>
+    <string name="duplicate">Duplicar</string>
     <string name="escribe_un_concepto">Escribe un concepto</string>
     <string name="concepto_repetido">%1$s ya tiene una deuda con el concepto %2$s</string>
     <string name="nombre_sin_modificar">No has modificado el %1$s</string>
     <string name="sin_cambios">No has cambiado nada</string>
     <string name="cambiar_fecha">Cambiar fecha</string>
     <string name="cambiar_imagen">Cambiar imagen</string>
+    <string name="indicaciones_lados">Desliza un concepto\nhacia un lado\npara eliminarlo</string>
+    <string name="indicaciones_abajo">Desliza un concepto\nhacia abajo\npara duplicarlo</string>
+    <string name="no_volver_a_mostrar">¡Ya no se me olvida!</string>
 
 </resources>
