@@ -3,9 +3,9 @@
     android:shape="rectangle">
 
     <stroke
-        android:dashGap="18dp"
+        android:dashGap="8dp"
         android:color="@color/colorPrimary"
-        android:width="4dp"
+        android:width="2dp"
         android:dashWidth="18dp"/>
 
     <corners
