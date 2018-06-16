@@ -125,8 +125,8 @@
     <string name="sin_cambios">No has cambiado nada</string>
     <string name="cambiar_fecha">Cambiar fecha</string>
     <string name="cambiar_imagen">Cambiar imagen</string>
-    <string name="indicaciones_lados">Desliza un concepto\nhacia un lado\npara eliminarlo</string>
-    <string name="indicaciones_abajo">Desliza un concepto\nhacia abajo\npara duplicarlo</string>
+    <string name="indicaciones_izquierda">Desliza un concepto\nhacia la izquierda\npara eliminarlo</string>
+    <string name="indicaciones_derecha">Desliza un concepto\nhacia la derecha\npara duplicarlo</string>
     <string name="no_volver_a_mostrar">¡Ya no se me olvida!</string>
 
 </resources>
