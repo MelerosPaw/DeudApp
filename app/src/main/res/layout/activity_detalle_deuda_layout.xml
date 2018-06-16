@@ -193,7 +193,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/indicaciones_lados"
+                android:text="@string/indicaciones_derecha"
                 android:textSize="16sp" />
 
             <ImageView
@@ -202,36 +202,33 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                app:srcCompat="@drawable/flecha" />
+                app:srcCompat="@drawable/flecha_derecha" />
 
             <android.support.v4.widget.Space android:layout_height="50dp" />
 
             <android.support.v4.widget.Space />
 
-            <android.support.v4.widget.Space />
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                app:srcCompat="@drawable/flecha_izquierda" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/indicaciones_abajo"
+                android:text="@string/indicaciones_izquierda"
                 android:textSize="16sp" />
-
-            <android.support.v4.widget.Space />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                app:srcCompat="@drawable/flecha_abajo" />>
 
             <TextView
                 android:id="@+id/tv_cerrar_indicaciones"
                 android:layout_width="0dp"
                 android:layout_columnSpan="2"
                 android:layout_gravity="fill_horizontal"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/dashed_button"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
