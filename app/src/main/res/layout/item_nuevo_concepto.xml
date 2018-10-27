@@ -13,7 +13,7 @@
         android:layout_weight="1"
         android:hint="@string/concepto"
         android:imeOptions="actionNext"
-        android:inputType="text"
+        android:inputType="textCapSentences"
         android:maxLines="1"
         android:nextFocusRight="@+id/et_cantidad"
         android:textSize="18sp" />
