@@ -31,13 +31,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        pre {
-            minifyEnabled false
-            ext.enableCrashlytics = true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
-
         debug {
             minifyEnabled false
             ext.enableCrashlytics = false
@@ -50,8 +43,8 @@ android {
     productFlavors {
 
         store {
-            versionCode 4
-            versionName "1.1.1"
+            versionCode 3
+            versionName "1.1.0"
             dimension "environment"
             resValue "string", "app_name", "DeudApp"
         }
