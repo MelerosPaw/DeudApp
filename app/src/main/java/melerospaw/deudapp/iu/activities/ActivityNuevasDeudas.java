@@ -103,14 +103,16 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISO_CONTACTOS) {
-            if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-                cargarAdaptador(false);
-            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                mostrarDialogoPermisoContactos();
-            } else {
-                cargarAdaptador(true);
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (requestCode == PERMISO_CONTACTOS) {
+                boolean granted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                if (granted) {
+                    cargarAdaptador(true);
+                } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+                    mostrarDialogoPermisoContactos();
+                } else {
+                    cargarAdaptador(false);
+                }
             }
         }
     }
