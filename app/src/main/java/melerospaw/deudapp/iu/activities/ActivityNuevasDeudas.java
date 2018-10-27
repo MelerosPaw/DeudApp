@@ -101,6 +101,47 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
         inicializarLayout();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISO_CONTACTOS) {
+            if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+                cargarAdaptador(false);
+            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                mostrarDialogoPermisoContactos();
+            } else {
+                cargarAdaptador(true);
+            }
+        }
+    }
+
+    @OnClick({R.id.btn_nueva_persona, R.id.btn_nueva_deuda, R.id.btn_nuevo_derecho,
+            R.id.btn_cancelar, R.id.btn_guardar})
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.btn_nueva_persona:
+                nuevaPersona();
+                break;
+            case R.id.btn_nueva_deuda:
+                nuevaEntidad(Entidad.DEUDA);
+                break;
+            case R.id.btn_nuevo_derecho:
+                nuevaEntidad(Entidad.DERECHO_COBRO);
+                break;
+            case R.id.btn_cancelar:
+                cerrar();
+                TecladoUtils.ocultarTeclado(this);
+                break;
+            case R.id.btn_guardar:
+                iniciarProcesoGuardado();
+                TecladoUtils.ocultarTeclado(this);
+                break;
+            default:
+                // NO-OP No more cases
+        }
+    }
+
     private void recuperarPersona() {
         persona = (Persona) getIntent().getSerializableExtra(BUNDLE_PERSONA);
         isForResult = persona != null;
@@ -230,33 +271,6 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
         llSeccionPersonas.setVisibility(isForResult ? View.GONE : View.VISIBLE);
     }
 
-    @OnClick({R.id.btn_nueva_persona, R.id.btn_nueva_deuda, R.id.btn_nuevo_derecho,
-            R.id.btn_cancelar, R.id.btn_guardar})
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-            case R.id.btn_nueva_persona:
-                nuevaPersona();
-                break;
-            case R.id.btn_nueva_deuda:
-                nuevaEntidad(Entidad.DEUDA);
-                break;
-            case R.id.btn_nuevo_derecho:
-                nuevaEntidad(Entidad.DERECHO_COBRO);
-                break;
-            case R.id.btn_cancelar:
-                cerrar();
-                TecladoUtils.ocultarTeclado(this);
-                break;
-            case R.id.btn_guardar:
-                iniciarProcesoGuardado();
-                TecladoUtils.ocultarTeclado(this);
-                break;
-            default:
-                // NO-OP No more cases
-        }
-    }
-
     private void nuevaPersona() {
         adaptadorNuevasPersonas.nuevaPersona();
         layoutManagerPersonas.scrollToPosition(adaptadorNuevasPersonas.getItemCount() - 1);
@@ -285,8 +299,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
             guardar();
         }
     }
-
     // Makes any focus dissappear from both RecyclerViews so OnFocusChange listeners are triggered
+
     private void clearFocus() {
         if (!isForResult) {
             View v = layoutManagerPersonas.getFocusedChild();
@@ -427,20 +441,6 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
         intent.putIntegerArrayListExtra(RESULT_ENTITIES_ADDED, EntidadesUtilKt.getIds(entidades));
         setResult(RESULT_OK, intent);
         finish();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISO_CONTACTOS) {
-            if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
-                cargarAdaptador(false);
-            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                mostrarDialogoPermisoContactos();
-            } else {
-                cargarAdaptador(true);
-            }
-        }
     }
 
     private void mostrarDialogoPermisoContactos() {
