@@ -32,6 +32,7 @@ public class AdaptadorPersonasNuevas
     private Context mContext;
     private AutocompleteAdapter adapter;
     private boolean focus;
+    private boolean isJustAdded;
 
     public AdaptadorPersonasNuevas(Context context, List<Contact> mDatos,
                                    List<Contact> personas) {
