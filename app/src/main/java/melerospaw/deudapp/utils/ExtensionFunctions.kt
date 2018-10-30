@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.ViewUtils
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
@@ -36,4 +37,36 @@ fun enableAnimateChanges(views: List<ViewGroup>) {
             it.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
         }
     }
+}
+
+fun ViewGroup.forEachChildView(onEachView: (View) -> Unit) {
+    for (i in 0 until childCount) {
+        onEachView(getChildAt(i))
+    }
+}
+
+inline fun <reified T: View?> ViewGroup.findFirstChild(condition: (View)-> Boolean): T? {
+    for (i in 0 until childCount) {
+        val child = getChildAt(i)
+        if (condition(child)) {
+            return if (child is T) child else null
+        }
+    }
+    return null
+}
+
+fun ViewGroup.getChildList(): List<View> {
+    val childList = ArrayList<View>()
+    forEachChildView { childList.add(it) }
+    return childList
+}
+
+fun ViewGroup.getChildPosition(view: View): Int {
+    val views: List<View> = getChildList()
+    for (i in 0 until views.size) {
+        if (views[i] == view) {
+            return i
+        }
+    }
+    return -1
 }

@@ -1,6 +1,7 @@
 package melerospaw.deudapp.iu.adapters;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -24,14 +25,14 @@ import butterknife.OnLongClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.widgets.ContextRecyclerView;
 import melerospaw.deudapp.modelo.Entidad;
-import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.CurrencyUtilKt;
 
 
 public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas.ViewHolder> {
 
     @IntDef({BACKGROUND_BORRAR, BACKGROUND_DUPLICAR})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface BackgroundOption{}
+    private @interface BackgroundOption{}
 
     public static final int BACKGROUND_BORRAR = 0;
     public static final int BACKGROUND_DUPLICAR = 1;
@@ -50,13 +51,13 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_deuda_layout, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Entidad entidad = mData.get(position);
         if (position > 0) {
             Entidad anterior = mData.get(position - 1);
@@ -252,9 +253,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             }
 
             tvConcepto.setText(entidad.getConcepto());
-            String cantidad = String.format(mContext.getString(R.string.cantidad),
-                    DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad(), 2, ".", ","));
-            tvCantidad.setText(cantidad);
+            tvCantidad.setText(CurrencyUtilKt.formatAmount(mContext, entidad.getCantidad()));
             if (entidad.getCantidad() == 0.00f) {
                 tvCantidad.setTextColor(ContextCompat.getColor(mContext, R.color.inactive));
                 tvCantidad.setText(R.string.cancelada);

@@ -15,16 +15,21 @@ class ContactManager {
         fun obtainContacts(context: Context): List<Contact> {
             val contacts = LinkedList<Contact>()
             val contentResolver = context.contentResolver
-            val cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-            while (cursor.moveToNext()) {
-                val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                val photoThumbnailUri = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
-                val photoUri = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI))
-                if (name != null) {
-                    contacts.add(Contact(name, photoThumbnailUri, photoUri))
+            val cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                    null, null, null, null)
+
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                    val photoThumbnailUri = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
+                    val photoUri = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI))
+                    if (name != null) {
+                        contacts.add(Contact(name, photoThumbnailUri, photoUri))
+                    }
                 }
+
+                cursor.close()
             }
-            cursor.close()
 
             return contacts
         }

@@ -63,6 +63,7 @@ import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.ColorManager;
+import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
@@ -428,7 +429,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         CharSequence cantidad;
         float cantidadTotal = persona.getCantidadTotal(entidadOmitida);
 
-        if (cantidadTotal == 0f) {
+        if (cantidadTotal == 0F) {
             mostrarConcepto = false;
             concepto = "";
             cantidad = getString(R.string.deudas_canceladas);
@@ -456,8 +457,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     mostrarConcepto = false;
             }
 
-            cantidad = String.format(getString(R.string.cantidad),
-                    DecimalFormatUtils.decimalToStringIfZero(cantidadTotal, 2, ".", ","));
+            cantidad = CurrencyUtilKt.formatAmount(this, cantidadTotal);
         }
 
         tvConcepto.setText(concepto);

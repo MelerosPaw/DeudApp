@@ -16,6 +16,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
+import melerospaw.deudapp.utils.Currency;
+import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
 
@@ -31,12 +33,13 @@ public class DialogoModificarCantidad extends DialogFragment {
     public static final String EXTRA_POSICION = "POSICION";
     public static final String EXTRA_ENTIDAD = "EXTRA_ENTIDAD";
 
-    @BindView(R.id.tv_titulo)       TextView tvTitulo;
-    @BindView(R.id.tv_mensaje)      TextView tvMensaje;
-    @BindView(R.id.et_cantidad)     EditText etCantidad;
-    @BindView(R.id.tv_euro)         TextView tvEuro;
-    @BindView(R.id.tv_guardar)      TextView btnAceptar;
-    @BindView(R.id.tv_cancelar)     TextView btnCancelar;
+    @BindView(R.id.llCurrencyRoot)      ViewGroup llCurrencyGroup;
+    @BindView(R.id.tv_titulo)           TextView tvTitulo;
+    @BindView(R.id.tv_mensaje)          TextView tvMensaje;
+    @BindView(R.id.et_cantidad)         EditText etCantidad;
+    @BindView(R.id.tv_moneda)           TextView tvMoneda;
+    @BindView(R.id.tv_guardar)          TextView btnAceptar;
+    @BindView(R.id.tv_cancelar)         TextView btnCancelar;
 
     private String modo;
     private int position;
@@ -85,6 +88,8 @@ public class DialogoModificarCantidad extends DialogFragment {
 
     public void loadView(){
         tvTitulo.setText(modo);
+        setCurrency();
+
         switch (modo) {
             case TIPO_AUMENTAR:
                 loadViewAumentar();
@@ -100,6 +105,14 @@ public class DialogoModificarCantidad extends DialogFragment {
                 break;
             default:
                 // NO-OP No more types
+        }
+    }
+
+    private void setCurrency() {
+        Currency currency = CurrencyUtilKt.getCurrency(getContext());
+        tvMoneda.setText(currency.getSigno());
+        if (currency.getPosicion() == Currency.Position.DELANTE) {
+            CurrencyUtilKt.exchangeViewsPositions(llCurrencyGroup, etCantidad, tvMoneda);
         }
     }
 
@@ -146,7 +159,7 @@ public class DialogoModificarCantidad extends DialogFragment {
                 R.string.pregunta_cancelar_deuda : R.string.pregunta_cancelar_derecho_cobro);
         btnAceptar.setText(R.string.si);
         btnCancelar.setText(R.string.no);
-        tvEuro.setVisibility(View.GONE);
+        tvMoneda.setVisibility(View.GONE);
         etCantidad.setVisibility(View.GONE);
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +180,7 @@ public class DialogoModificarCantidad extends DialogFragment {
         tvMensaje.setText(R.string.pregunta_cancelar_todas);
         btnAceptar.setText(R.string.si);
         btnCancelar.setText(R.string.no);
-        tvEuro.setVisibility(View.GONE);
+        tvMoneda.setVisibility(View.GONE);
         etCantidad.setVisibility(View.GONE);
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override

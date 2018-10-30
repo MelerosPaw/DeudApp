@@ -1,6 +1,7 @@
 package melerospaw.deudapp.iu.adapters;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
@@ -24,7 +25,7 @@ import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
-import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.SecureOperationKt;
 import melerospaw.deudapp.utils.TextDrawableManager;
 
@@ -50,13 +51,13 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     }
 
     @Override
-    public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PersonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate( R.layout.item_acreedores_layout, parent, false);
         return new PersonViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(PersonViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PersonViewHolder holder, int position) {
         Persona persona = mDatos.get(position);
         holder.bindView(persona);
     }
@@ -237,13 +238,13 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         BusProvider.getBus().register(this);
     }
 
     @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         BusProvider.getBus().unregister(this);
     }
@@ -269,14 +270,6 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
             onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
         }
     }
-
-//    @Subscribe
-//    public void onPersonaEliminada(EventoPersonaEliminada evento) {
-//        Persona personaEliminada = evento.getPersona();
-//        mDatos.remove(personaEliminada);
-//        notifyItemRemoved(getPosition(personaEliminada));
-//        onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
-//    }
 
     public interface ContextualMenuInterface {
         void mostrarMenuContextual(Persona persona, int posicionEnAdapter);
@@ -316,8 +309,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
 
         void bindView(final Persona persona) {
             tvNombre.setText(persona.getNombre());
-            tvDeudaRestante.setText(String.format(context.getString(R.string.cantidad),
-                    DecimalFormatUtils.decimalToStringIfZero(persona.getCantidadTotal(), 2, ".", ",")));
+            tvDeudaRestante.setText(CurrencyUtilKt.formatAmount(context, persona.getCantidadTotal()));
 
             ColorGenerator cg = ColorGenerator.MATERIAL;
             if (persona.getColor() == -1) {

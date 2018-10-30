@@ -1,20 +1,15 @@
 package melerospaw.deudapp.iu.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,7 +38,7 @@ import melerospaw.deudapp.iu.dialogs.DialogoCambiarNombre;
 import melerospaw.deudapp.iu.dialogs.MenuContextualPersona;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.ColorManager;
-import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.SecureOperationKt;
 
@@ -269,10 +264,18 @@ public class FragmentViewPagerPersonas extends Fragment {
 
     private void mostrarTotal() {
 
-        float total = adaptadorPersonas.obtenerTotal();
-        tvCantidad.setText(String.format(getString(R.string.cantidad),
-                DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",")));
+        tvTotal.setText(getTextoTotal());
+        llSubtotal.getLayoutParams().width = 0;
 
+        final Context context = getContext();
+        final float total = adaptadorPersonas.obtenerTotal();
+        tvCantidad.setText(CurrencyUtilKt.formatAmount(context, total));
+        ColorManager.pintarColorDeuda(flBarraTotal, total);
+        flBarraTotal.setVisibility(total == 0F ? View.GONE: View.VISIBLE);
+        setTotales(context);
+    }
+
+    private String getTextoTotal() {
         String texto;
         switch (mTipo) {
             case ConstantesGenerales.DEBO:
@@ -286,27 +289,23 @@ public class FragmentViewPagerPersonas extends Fragment {
                 break;
         }
 
-        tvTotal.setText(texto);
-        ColorManager.pintarColorDeuda(flBarraTotal, total);
-        flBarraTotal.setVisibility(total == 0F ? View.GONE: View.VISIBLE);
-        llSubtotal.getLayoutParams().width = 0;
+        return texto;
+    }
 
-        float totalAcreedores = mTipo.equals(ConstantesGenerales.DEBO) ?
+    private void setTotales(Context context) {
+        final float totalAcreedores = mTipo.equals(ConstantesGenerales.DEBO) ?
                 adaptadorPersonas.obtenerTotal() : gestor.getTotalAcreedores();
-        float totalDeudores= mTipo.equals(ConstantesGenerales.ME_DEBEN) ?
+        final float totalDeudores= mTipo.equals(ConstantesGenerales.ME_DEBEN) ?
                 adaptadorPersonas.obtenerTotal() : gestor.getTotalDeudores();
-        float totalAmbos = mTipo.equals(ConstantesGenerales.AMBOS) ?
+        final float totalAmbos = mTipo.equals(ConstantesGenerales.AMBOS) ?
                 adaptadorPersonas.obtenerTotal() : gestor.getTotalAmbos();
-        float totalTotal = SecureOperationKt.secureAdd(SecureOperationKt.secureAdd(totalAcreedores, totalDeudores), totalAmbos);
+        final float totalTotal = SecureOperationKt.secureAdd(
+                SecureOperationKt.secureAdd(totalAcreedores, totalDeudores), totalAmbos);
 
-        tvTotalDebido.setText(String.format(getString(R.string.cantidad),
-                DecimalFormatUtils.decimalToStringIfZero(totalAcreedores, 2, ".", ",")));
-        tvTotalAdeudado.setText(String.format(getString(R.string.cantidad),
-                DecimalFormatUtils.decimalToStringIfZero(totalDeudores, 2, ".", ",")));
-        tvTotalAmbos.setText(String.format(getString(R.string.cantidad),
-                DecimalFormatUtils.decimalToStringIfZero(totalAmbos, 2, ".", ",")));
-        tvTotalTotal.setText(String.format(getString(R.string.cantidad),
-                DecimalFormatUtils.decimalToStringIfZero(totalTotal, 2, ".", ",")));
+        tvTotalDebido.setText(CurrencyUtilKt.formatAmount(context, totalAcreedores));
+        tvTotalAdeudado.setText(CurrencyUtilKt.formatAmount(context, totalDeudores));
+        tvTotalAmbos.setText(CurrencyUtilKt.formatAmount(context, totalAmbos));
+        tvTotalTotal.setText(CurrencyUtilKt.formatAmount(context, totalTotal));
     }
 
     private void mostrarSubtotal() {
@@ -314,13 +313,12 @@ public class FragmentViewPagerPersonas extends Fragment {
         if (adaptadorPersonas.getItemCount() == 0) {
             desactivarModoEliminacion();
         } else {
-            float total = adaptadorPersonas.obtenerTotal();
-            float subtotal = adaptadorPersonas.obtenerSubtotal();
+            final float total = adaptadorPersonas.obtenerTotal();
+            final float subtotal = adaptadorPersonas.obtenerSubtotal();
 
             tvTotal.setText(R.string.total_seleccionado);
-            tvSubtotal.setText(DecimalFormatUtils.decimalToStringIfZero(subtotal, 2, ".", ","));
-            tvCantidad.setText(String.format(getString(R.string.cantidad),
-                    DecimalFormatUtils.decimalToStringIfZero(total, 2, ".", ",")));
+            tvSubtotal.setText(CurrencyUtilKt.formatAmount(getContext(), subtotal));
+            tvCantidad.setText(CurrencyUtilKt.formatAmount(getContext(), total));
             ColorManager.pintarColorDeuda(flBarraTotal, total);
             flBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
             llSubtotal.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -389,8 +387,9 @@ public class FragmentViewPagerPersonas extends Fragment {
 
             @Override
             public void cambiarNombre(MenuContextualPersona dialog) {
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction().addToBackStack(DialogoCambiarNombre.TAG);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .addToBackStack(DialogoCambiarNombre.TAG);
                 DialogoCambiarNombre dialog2 = DialogoCambiarNombre.getInstance(personaSeleccionada,
                         adaptadorPersonas.getPosition(personaSeleccionada));
                 dialog2.setCallback(new DialogoCambiarNombre.Callback() {

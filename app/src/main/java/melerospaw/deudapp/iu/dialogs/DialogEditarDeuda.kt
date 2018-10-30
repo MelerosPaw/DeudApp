@@ -10,10 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.dialog_editar_deuda.*
+import kotlinx.android.synthetic.main.item_nuevo_concepto.*
 import melerospaw.deudapp.R
 import melerospaw.deudapp.data.GestorDatos
 import melerospaw.deudapp.modelo.Entidad
 import melerospaw.deudapp.utils.*
+import melerospaw.deudapp.utils.Currency
 import java.util.*
 
 
@@ -61,16 +63,13 @@ class DialogEditarDeuda : DialogFragment() {
             etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(cantidad , 2, ".", ","))
             etCantidad.setTextColor(ContextCompat.getColor(context!!,
                     if (entidad.tipoEntidad == Entidad.DEUDA) R.color.red else R.color.green))
-            btnGuardar.setOnClickListener {
-                guardar()
-            }
-            btnCancelar.setOnClickListener {
-                dismiss()
-            }
-            tvCambiarFecha.setOnClickListener {
-                mostrarDialogFecha()
-            }
         }
+
+        setCurrency()
+        btnGuardar.setOnClickListener { guardar() }
+        btnCancelar.setOnClickListener { dismiss() }
+        tvCambiarFecha.setOnClickListener {mostrarDialogFecha() }
+
         if (Build.VERSION.SDK_INT >= 16) {
             flRoot.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
         }
@@ -81,6 +80,14 @@ class DialogEditarDeuda : DialogFragment() {
         ScreenUtils.pantallaCompleta(this, true)
     }
 
+    private fun setCurrency() {
+        val currency = getCurrency(context!!)
+        tvMoneda.text = currency.signo
+        if (currency.posicion == Currency.Position.DELANTE) {
+            exchangeViewsPositions(llCurrencyRoot, etCantidad, tvMoneda)
+        }
+    }
+
     private fun guardar() {
         if (verificarDatos()) {
             with(entidad) {
@@ -88,7 +95,7 @@ class DialogEditarDeuda : DialogFragment() {
                 fecha = Entidad.formatearFecha(tvFecha.texto)
                 concepto = etConcepto.texto
 
-                val auxCantidad = etCantidad.texto
+                val auxCantidad = et_cantidad.texto
                 if (auxCantidad.isInfinityCharacter() ||
                         StringUtils.prepararDecimal(auxCantidad).isInfiniteFloat()) {
                     if (!cantidad.isInfiniteFloat()) {
@@ -107,7 +114,7 @@ class DialogEditarDeuda : DialogFragment() {
 
     private fun verificarDatos() : Boolean {
         val concepto = etConcepto.texto
-        val cantidad = etCantidad.texto
+        val cantidad = et_cantidad.texto
         val fecha = tvFecha.texto
 
         when {

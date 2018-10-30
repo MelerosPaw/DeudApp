@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -56,8 +55,7 @@
         android:layout_marginTop="5dp"
         android:orientation="vertical"
         app:cardCornerRadius="4dp"
-        app:cardElevation="4dp"
-        tools:visibility="gone">
+        app:cardElevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"

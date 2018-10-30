@@ -102,7 +102,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (Build.VERSION.SDK_INT >= 23) {
             if (requestCode == PERMISO_CONTACTOS) {
                 boolean granted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
@@ -212,7 +213,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     private void inicializarAdaptadorNuevasEntidades() {
-        adaptadorNuevasDeudas = new AdaptadorNuevasDeudas(this, new LinkedList<Entidad>(), !isForResult);
+        adaptadorNuevasDeudas = new AdaptadorNuevasDeudas(this, new LinkedList<Entidad>(),
+                !isForResult);
         layoutManagerEntidades = new LinearLayoutManager(this);
         rvNuevasEntidades.setLayoutManager(layoutManagerEntidades);
         rvNuevasEntidades.setAdapter(adaptadorNuevasDeudas);

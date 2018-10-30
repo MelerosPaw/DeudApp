@@ -33,12 +33,12 @@ public class ContextRecyclerView extends RecyclerView {
         return false;
     }
 
-    /**Contains the id and the position in the adapter's data collection of the view
+    /**Contains the id and the posicion in the adapter's data collection of the view
      * triggering its context menu. */
     public static class RecyclerContextMenuInfo implements ContextMenu.ContextMenuInfo {
 
-        final public int position;
-        final public long id;
+        public final int position;
+        public final long id;
 
         public RecyclerContextMenuInfo(int position, long id) {
             this.position = position;

@@ -30,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:id="@+id/llCurrencyRoot"
         android:orientation="horizontal">
 
         <EditText
@@ -40,6 +41,7 @@
             android:layout_marginRight="6dp"
             android:digits="1234567890,."
             android:ems="4"
+            android:hint="0"
             android:gravity="center"
             android:inputType="numberDecimal"
             android:maxLines="1"
@@ -47,10 +49,10 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/tv_euro"
+            android:id="@+id/tv_moneda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/euro"
+            android:text="@string/moneda_por_defecto"
             android:textSize="24sp" />
 
     </LinearLayout>

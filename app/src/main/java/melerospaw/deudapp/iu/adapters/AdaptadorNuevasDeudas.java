@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -25,6 +26,8 @@ import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.vo.EntidadVO;
 import melerospaw.deudapp.modelo.Entidad;
+import melerospaw.deudapp.utils.Currency;
+import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
@@ -47,13 +50,13 @@ public class AdaptadorNuevasDeudas
     }
 
     @Override
-    public EntidadNuevaViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EntidadNuevaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.item_nuevo_concepto, parent, false);
         return new EntidadNuevaViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(EntidadNuevaViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EntidadNuevaViewHolder holder, int position) {
         Entidad entidad = mDatos.get(position).getEntidad();
         holder.bindView(entidad);
     }
@@ -138,9 +141,10 @@ public class AdaptadorNuevasDeudas
      */
     class EntidadNuevaViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.root)                ViewGroup root;
         @BindView(R.id.et_concepto)         EditText etConcepto;
         @BindView(R.id.et_cantidad)         EditText etCantidad;
-        @BindView(R.id.tv_euro)             TextView tvEuro;
+        @BindView(R.id.tv_moneda)           TextView tvMoneda;
         @BindView(R.id.chk_deuda_grupal)    CheckBox chkDeudaGrupal;
 
         private Entidad entidad;
@@ -189,12 +193,13 @@ public class AdaptadorNuevasDeudas
         }
 
         private void setTextColor() {
-            @ColorRes int colorId = entidad.getTipoEntidad() == Entidad.DEUDA ?
+            @ColorRes final int colorId = entidad.getTipoEntidad() == Entidad.DEUDA ?
                     R.color.red : R.color.green;
-            @ColorInt int colorResource = ContextCompat.getColor(mContext, colorId);
+            @ColorInt final int colorResource = ContextCompat.getColor(mContext, colorId);
             etCantidad.setTextColor(colorResource);
-            tvEuro.setTextColor(colorResource);
+            tvMoneda.setTextColor(colorResource);
             etConcepto.setTextColor(colorResource);
+            setCurrency();
         }
 
         @OnFocusChange({R.id.et_cantidad, R.id.et_concepto})
@@ -206,10 +211,18 @@ public class AdaptadorNuevasDeudas
                 } else if (v.getId() == R.id.et_cantidad) {
                     cerrarCantidad();
                 }
-            } else if (v.getId() == R.id.et_cantidad) {
-                if (entidad.getTipoEntidad() == Entidad.DEUDA && entidad.getCantidad() != 0F) {
-                    abrirCantidad();
-                }
+            } else if (v.getId() == R.id.et_cantidad &&
+                    entidad.getTipoEntidad() == Entidad.DEUDA &&
+                    entidad.getCantidad() != 0F) {
+                abrirCantidad();
+            }
+        }
+
+        void setCurrency() {
+            Currency currency = CurrencyUtilKt.getCurrency(mContext);
+            tvMoneda.setText(currency.getSigno());
+            if (currency.getPosicion() == Currency.Position.DELANTE) {
+                CurrencyUtilKt.exchangeViewsPositions(root, etCantidad, tvMoneda);
             }
         }
 

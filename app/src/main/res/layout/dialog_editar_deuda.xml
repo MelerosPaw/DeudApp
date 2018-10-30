@@ -11,10 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical"
         app:cardCornerRadius="4dp"
         app:cardElevation="4dp">
@@ -35,12 +35,12 @@
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary"
                     android:drawablePadding="10dp"
-                    android:paddingBottom="2dp"
-                    android:paddingEnd="5dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
                     android:paddingStart="5dp"
+                    android:paddingLeft="5dp"
                     android:paddingTop="2dp"
+                    android:paddingEnd="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="2dp"
                     android:textColor="@android:color/white"
                     tools:text="12/05/2015" />
 
@@ -56,6 +56,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:maxLines="1"
+                        android:hint="@string/concepto"
                         android:textSize="@dimen/text_size_detalle_entidad"
                         android:textStyle="bold"
                         tools:text="Concepto" />
@@ -70,15 +71,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:drawableStart="@drawable/ic_fecha_gris"
                             android:drawableLeft="@drawable/ic_fecha_gris"
                             android:drawablePadding="10dp"
-                            android:drawableStart="@drawable/ic_fecha_gris"
                             android:gravity="center_vertical"
                             android:padding="10dp"
                             android:text="@string/cambiar_fecha"
                             android:textColor="@color/colorPrimary" />
 
                         <LinearLayout
+                            android:id="@+id/llCurrencyRoot"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
@@ -99,11 +101,12 @@
                                 tools:text="350,25" />
 
                             <TextView
+                                android:id="@+id/tvMoneda"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/euro_espacio"
                                 android:textColor="@color/colorPrimaryDark"
-                                android:textSize="20sp" />
+                                android:textSize="20sp"
+                                tools:text="€" />
 
                         </LinearLayout>
 
