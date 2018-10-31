@@ -2,13 +2,14 @@ package melerospaw.deudapp.iu.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
+import android.support.v7.preference.ListPreference
+import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import melerospaw.deudapp.R
-import melerospaw.deudapp.utils.SharedPreferencesManager
+import melerospaw.deudapp.preferences.SharedPreferencesManager
+import melerospaw.deudapp.utils.Currency
 import melerospaw.deudapp.utils.TextDrawableManager
 
-@Suppress("DEPRECATION")
 class FragmentPreferencias: PreferenceFragmentCompat(),
         SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -17,16 +18,25 @@ class FragmentPreferencias: PreferenceFragmentCompat(),
     }
 
     lateinit var sharedPreferencesManager: SharedPreferencesManager
+    lateinit var currencyPreference: ListPreference
 
     override fun onCreatePreferences(savedStateInstance: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
-        preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
+        sharedPreferencesManager.registerOnSharedPreferenceChangeListener(this)
+        currencyPreference = findPreference(sharedPreferencesManager.PREF_CURRENCY) as ListPreference
+        currencyPreference.isPersistent = false
+        currencyPreference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener {
+            _, newValue ->
+            val realValue = newValue.toString().replace(Regex("[\\p{Cf}]"), "")
+            currencyPreference.value = realValue
+            sharedPreferencesManager.setCurrency(Currency.getCurrencyBySign(realValue))
+            false
+        }
         setCurrencyIcon()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        // TODO 31/10/2018 Poner persistent a false y obtener el value del seleccionado mediante la PReference de tipo List
         if (context != null && key != null) {
             if (key == requireContext().getString(R.string.clave_preferencia_moneda)) {
                 setCurrencyIcon()
@@ -38,7 +48,11 @@ class FragmentPreferencias: PreferenceFragmentCompat(),
         val currencyDrawable = TextDrawableManager.createDrawable(
                 sharedPreferencesManager.getCurrency(), android.R.color.transparent,
                 R.color.colorPrimary)
-        findPreference(sharedPreferencesManager.PREF_CURRENCY).icon = currencyDrawable
+        currencyPreference.icon = currencyDrawable
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        sharedPreferencesManager.unregisterOnSharedPreferenceChangeListener(this)
     }
 }

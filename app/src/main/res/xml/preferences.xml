@@ -6,7 +6,7 @@
         android:defaultValue="@string/moneda_por_defecto"
         android:summary="@string/resumen_preferencia_moneda"
         android:entries="@array/currencies"
-        android:entryValues="@array/currencies"
+        android:entryValues="@array/currency_values"
         android:icon="@drawable/app_icon"/>
 
 </PreferenceScreen>

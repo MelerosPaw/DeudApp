@@ -1,9 +1,10 @@
-package melerospaw.deudapp.utils
+package melerospaw.deudapp.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import melerospaw.deudapp.R
+import melerospaw.deudapp.utils.Currency
 
 class SharedPreferencesManager(context: Context) {
 
@@ -51,7 +52,15 @@ class SharedPreferencesManager(context: Context) {
 
     fun getCurrency() = sharedPreferences.getString(PREF_CURRENCY, Currency.EURO.signo)
 
+    fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
     private fun SharedPreferences.editar(block: SharedPreferences.Editor.() -> SharedPreferences.Editor) {
         this.edit().block().apply()
     }
-}
+    }

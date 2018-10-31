@@ -3,6 +3,7 @@ package melerospaw.deudapp.utils
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import melerospaw.deudapp.preferences.SharedPreferencesManager
 
 fun getCurrency(context: Context) = Currency.getCurrencyBySign(SharedPreferencesManager(context).getCurrency())
 

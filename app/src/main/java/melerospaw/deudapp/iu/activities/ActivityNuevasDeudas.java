@@ -47,7 +47,7 @@ import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.modelo.Persona.TipoPersona;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
-import melerospaw.deudapp.utils.SharedPreferencesManager;
+import melerospaw.deudapp.preferences.SharedPreferencesManager;
 import melerospaw.deudapp.utils.TecladoUtils;
 
 public class ActivityNuevasDeudas extends AppCompatActivity {

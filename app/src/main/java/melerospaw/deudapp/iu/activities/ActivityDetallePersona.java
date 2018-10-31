@@ -64,11 +64,10 @@ import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.ColorManager;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
-import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
-import melerospaw.deudapp.utils.SharedPreferencesManager;
+import melerospaw.deudapp.preferences.SharedPreferencesManager;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class ActivityDetallePersona extends AppCompatActivity {

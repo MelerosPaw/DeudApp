@@ -5,18 +5,14 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.dialog_explicativo.*
 import melerospaw.deudapp.R
-import melerospaw.deudapp.modelo.Entidad
-import melerospaw.deudapp.utils.SharedPreferencesManager
-import melerospaw.deudapp.utils.StringUtils
+import melerospaw.deudapp.preferences.SharedPreferencesManager
 import melerospaw.deudapp.utils.inflate
-import java.util.*
 
 class DialogExplicativo : DialogFragment() {
 

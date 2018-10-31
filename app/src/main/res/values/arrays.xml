@@ -6,6 +6,20 @@
     </array>
 
     <array name="currencies">
+        <item>€ - Euro</item>
+        <item>$ - Peso o dólar</item>
+        <item>₱ - Peso filipino</item>
+        <item>Bs.S.​ - Bolivar</item>
+        <item>Esc.​ - Escudo</item>
+        <item>UF​ - Unidad de fomento</item>
+        <item>₡​ - Colón</item>
+        <item>£ - Libra</item>
+        <item>Q - Quetzal</item>
+        <item>L - Lempira</item>
+        <item>C$ - Córdoba</item>
+    </array>
+
+    <array name="currency_values">
         <item>€</item>
         <item>$</item>
         <item>₱</item>
