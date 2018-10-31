@@ -3,16 +3,15 @@ package melerospaw.deudapp.utils
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import melerospaw.deudapp.R
 
 class SharedPreferencesManager(context: Context) {
 
-    companion object {
-        private const val PREF_NO_ES_PRIMERA_VEZ = "PRIMERA_VEZ"
-        private const val PREF_DEBE_MOSTRAR_DIALOG = "DEBE_MOSTRAR_DIALOG"
-        private const val PREF_MUST_SHOW_TUTORIAL = "DEBE_MOSTRAR_TUTORIAL"
-        private const val PREF_MUST_SHOW_IGNORE_TUTORIAL = "DEBE_MOSTRAR_IGNORAR_TUTORIAL"
-        private const val PREF_CURRENCY = "CURRENCY"
-    }
+        private val PREF_NO_ES_PRIMERA_VEZ = "PRIMERA_VEZ"
+        private val PREF_DEBE_MOSTRAR_DIALOG = "DEBE_MOSTRAR_DIALOG"
+        private val PREF_MUST_SHOW_TUTORIAL = "DEBE_MOSTRAR_TUTORIAL"
+        private val PREF_MUST_SHOW_IGNORE_TUTORIAL = "DEBE_MOSTRAR_IGNORAR_TUTORIAL"
+        val PREF_CURRENCY = context.getString(R.string.clave_preferencia_moneda)
 
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -46,7 +45,7 @@ class SharedPreferencesManager(context: Context) {
         }
     }
 
-    fun setCurrency(currency: melerospaw.deudapp.utils.Currency) {
+    fun setCurrency(currency: Currency) {
         sharedPreferences.editar { putString(PREF_CURRENCY, currency.signo) }
     }
 

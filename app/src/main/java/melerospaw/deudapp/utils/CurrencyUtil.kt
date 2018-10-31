@@ -14,10 +14,16 @@ fun formatAmount(context: Context, amount: Float): String {
             decimalChar, desiredDecimalChar)
     val currency = getCurrency(context)
 
-    return if (currency.posicion == Currency.Position.DELANTE) {
-        "${currency.signo}$formattedAmount"
-    } else {
-        "$formattedAmount ${currency.signo}"
+    return when {
+        currency.posicion == Currency.Position.DELANTE -> {
+            if (amount < 0) {
+                "-${currency.signo}${formattedAmount.substring(1, formattedAmount.length)}"
+            } else {
+                "${currency.signo}$formattedAmount"
+            }
+        }
+
+        else -> "$formattedAmount ${currency.signo}"
     }
 }
 

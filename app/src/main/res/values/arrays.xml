@@ -4,4 +4,18 @@
         <item>Deudor</item>
         <item>Acreedor</item>
     </array>
+
+    <array name="currencies">
+        <item>€</item>
+        <item>$</item>
+        <item>₱</item>
+        <item>Bs.S.​</item>
+        <item>Esc.​</item>
+        <item>UF​</item>
+        <item>₡​</item>
+        <item>£</item>
+        <item>Q</item>
+        <item>L</item>
+        <item>C$</item>
+    </array>
 </resources>

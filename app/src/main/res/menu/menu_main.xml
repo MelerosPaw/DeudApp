@@ -6,8 +6,12 @@
     <item
         android:id="@+id/menu_nueva"
         android:title="@string/anadir_deuda"
-        android:orderInCategory="0"
         android:icon="@drawable/ic_nueva_persona"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_config"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="@string/config"
         app:showAsAction="always" />
 
 </menu>

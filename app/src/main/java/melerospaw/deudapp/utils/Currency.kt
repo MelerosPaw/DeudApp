@@ -1,7 +1,5 @@
 package melerospaw.deudapp.utils
 
-import android.support.annotation.Nullable
-
 enum class Currency(val signo: String, val posicion: Position) {
     EURO("€", Position.DETRAS),
     PESO("$", Position.DELANTE),

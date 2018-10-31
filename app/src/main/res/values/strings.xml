@@ -126,4 +126,11 @@
     <string name="indicaciones_derecha">Desliza un concepto\nhacia la derecha\npara duplicarlo</string>
     <string name="no_volver_a_mostrar">¡Ya no se me olvida!</string>
 
+    <!-- Config -->
+    <string name="config">Configuración</string>
+    <string name="clave_preferencia_moneda">CURRENCY</string>
+    <string name="moneda">Moneda</string>
+    <string name="resumen_preferencia_moneda">Tipo de moneda que quieres utilizar</string>
+    <string name="cero">0</string>
+
 </resources>

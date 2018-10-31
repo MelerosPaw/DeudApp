@@ -41,7 +41,7 @@
             android:layout_marginRight="6dp"
             android:digits="1234567890,."
             android:ems="4"
-            android:hint="0"
+            android:hint="@string/cero"
             android:gravity="center"
             android:inputType="numberDecimal"
             android:maxLines="1"

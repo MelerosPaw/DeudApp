@@ -15,5 +15,12 @@ class TextDrawableManager {
         }
 
         @JvmStatic fun createDrawable(text: Char, color: Int) = createDrawable(text.toString(), color)
+
+        @JvmStatic fun createDrawable(text: String, shapeColor: Int, textColor: Int): Drawable =
+                TextDrawable.builder()
+                        .beginConfig()
+                        .textColor(textColor)
+                        .endConfig()
+                        .buildRound(text, shapeColor)
     }
 }

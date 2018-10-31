@@ -33,6 +33,7 @@ import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.activities.ActivityDetallePersona;
 import melerospaw.deudapp.iu.activities.ActivityNuevasDeudas;
+import melerospaw.deudapp.iu.activities.ActivityPreferencias;
 import melerospaw.deudapp.iu.adapters.AdaptadorPersonas;
 import melerospaw.deudapp.iu.dialogs.DialogoCambiarNombre;
 import melerospaw.deudapp.iu.dialogs.MenuContextualPersona;
@@ -126,6 +127,9 @@ public class FragmentViewPagerPersonas extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_nueva:
                 ActivityNuevasDeudas.start(getContext());
+                break;
+            case R.id.menu_config:
+                ActivityPreferencias.start(getContext());
                 break;
             case R.id.menu_opcion_eliminar:
                 mostrarDialogEliminar(true);
