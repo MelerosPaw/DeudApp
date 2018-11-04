@@ -9,7 +9,7 @@ import android.widget.TextView
 import melerospaw.deudapp.R
 import melerospaw.deudapp.utils.Currency
 import melerospaw.deudapp.utils.findIndexOfValueNonUnicodeCharacters
-import melerospaw.deudapp.utils.getCurrency
+import melerospaw.deudapp.utils.removeUnicodeInvisibleCharacters
 
 class CustomListPreference : ListPreference {
 
@@ -40,7 +40,7 @@ class CustomListPreference : ListPreference {
         isPersistent = false
         onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             value = newValue as String
-            val realValue = (newValue).replace(Regex("[\\p{Cf}]"), "")
+            val realValue = newValue.removeUnicodeInvisibleCharacters()
             setUpCurrencySummary(realValue)
             sharedPreferencesManager.setCurrency(Currency.getCurrencyBySign(realValue))
             false
@@ -65,10 +65,14 @@ class CustomListPreference : ListPreference {
     }
 
     private fun setCurrencyIcon(currentValue: String) {
+        reduceTextSize()
+        // TODO Calcular tamaño con el texto puesto
         currencyIcon.text = currentValue
     }
 
-    private fun setValue() {
-        value = sharedPreferencesManager.getCurrency()
+    private fun reduceTextSize() {
+        if (currencyIcon.lineCount > 1) {
+
+        }
     }
 }

@@ -6,11 +6,9 @@ import android.os.Build
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.support.v7.preference.ListPreference
-import android.support.v7.widget.ViewUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 
@@ -73,9 +71,9 @@ fun ViewGroup.getChildPosition(view: View): Int {
 }
 
 fun ListPreference.findIndexOfValueNonUnicodeCharacters(value: String): Int {
-    val parsedValue = value.removeUnicodeinvisibleCharacters()
+    val parsedValue = value.removeUnicodeInvisibleCharacters()
     for (i in 0 until entryValues.size) {
-        val parsedEntry = entryValues[i].toString().removeUnicodeinvisibleCharacters()
+        val parsedEntry = entryValues[i].toString().removeUnicodeInvisibleCharacters()
         if (parsedValue == parsedEntry) {
             return i
         }
@@ -84,4 +82,4 @@ fun ListPreference.findIndexOfValueNonUnicodeCharacters(value: String): Int {
     return -1
 }
 
-private fun String.removeUnicodeinvisibleCharacters() = replace(Regex("[\\p{Cf}]"), "")
+fun String.removeUnicodeInvisibleCharacters() = replace(Regex("[\\p{Cf}]"), "")

@@ -25,6 +25,7 @@ import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
+import melerospaw.deudapp.task.EventoMonedaCambiada;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.SecureOperationKt;
 import melerospaw.deudapp.utils.TextDrawableManager;
@@ -35,7 +36,8 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     private List<Persona> mDatos;
     private Activity context;
     private boolean modoEliminarActivado;
-    private @Persona.TipoPersona int tipoPersonas;
+    private @Persona.TipoPersona
+    int tipoPersonas;
     private SparseBooleanArray seleccionados;
     private ContextualMenuInterface contextualMenuInterface;
     private OnItemClickListener itemClickListener;
@@ -52,7 +54,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
 
     @Override
     public PersonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate( R.layout.item_acreedores_layout, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.item_acreedores_layout, parent, false);
         return new PersonViewHolder(v);
     }
 
@@ -67,7 +69,8 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
         return mDatos.size();
     }
 
-    private  @Persona.TipoPersona int getTipo(String tipo) {
+    private @Persona.TipoPersona
+    int getTipo(String tipo) {
 
         @Persona.TipoPersona int tipoInferido = Persona.INACTIVO;
 
@@ -264,11 +267,16 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     @Subscribe
     public void onEventoDeudaModificada(EventoDeudaModificada evento) {
         if (evento.getPersona() != null) {
-            Persona persona = evento.getPersona();
+            final Persona persona = evento.getPersona();
             gestor.recargarPersona(persona);
             modificarItemPersona(persona);
             onDeudaModificadaListener.onDeudaModificada(obtenerTotal());
         }
+    }
+
+    @Subscribe
+    public void onEventoMonedaCambiada(EventoMonedaCambiada eventoMonedaCambiada) {
+        notifyItemRangeChanged(0, getItemCount() - 1);
     }
 
     public interface ContextualMenuInterface {
@@ -281,6 +289,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
 
     public interface OnPersonaSeleccionadaListener {
         void personaSeleccionada(boolean activarModoEliminacion);
+
         void personaDeseleccionada(boolean desactivarModoEliminacion);
     }
 
@@ -289,15 +298,17 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     }
 
 
-
     /**
      * VIEWHOLDER
      */
     class PersonViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_nombre)           TextView tvNombre;
-        @BindView(R.id.tv_deudaRestante)    TextView tvDeudaRestante;
-        @BindView(R.id.iv_letra)            ImageView ivLetra;
+        @BindView(R.id.tv_nombre)
+        TextView tvNombre;
+        @BindView(R.id.tv_deudaRestante)
+        TextView tvDeudaRestante;
+        @BindView(R.id.iv_letra)
+        ImageView ivLetra;
 
         private View item;
 

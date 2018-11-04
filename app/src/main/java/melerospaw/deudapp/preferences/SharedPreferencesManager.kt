@@ -8,11 +8,11 @@ import melerospaw.deudapp.utils.Currency
 
 class SharedPreferencesManager(context: Context) {
 
-        private val PREF_NO_ES_PRIMERA_VEZ = "PRIMERA_VEZ"
-        private val PREF_DEBE_MOSTRAR_DIALOG = "DEBE_MOSTRAR_DIALOG"
-        private val PREF_MUST_SHOW_TUTORIAL = "DEBE_MOSTRAR_TUTORIAL"
-        private val PREF_MUST_SHOW_IGNORE_TUTORIAL = "DEBE_MOSTRAR_IGNORAR_TUTORIAL"
-        val PREF_CURRENCY = context.getString(R.string.clave_preferencia_moneda)
+    private val PREF_NO_ES_PRIMERA_VEZ = "PRIMERA_VEZ"
+    private val PREF_DEBE_MOSTRAR_DIALOG = "DEBE_MOSTRAR_DIALOG"
+    private val PREF_MUST_SHOW_TUTORIAL = "DEBE_MOSTRAR_TUTORIAL"
+    private val PREF_MUST_SHOW_IGNORE_TUTORIAL = "DEBE_MOSTRAR_IGNORAR_TUTORIAL"
+    val PREF_CURRENCY = context.getString(R.string.clave_preferencia_moneda)
 
     private val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
@@ -50,7 +50,7 @@ class SharedPreferencesManager(context: Context) {
         sharedPreferences.editar { putString(PREF_CURRENCY, currency.signo) }
     }
 
-    fun getCurrency() : String = sharedPreferences.getString(PREF_CURRENCY, Currency.EURO.signo)!!
+    fun getCurrency(): String = sharedPreferences.getString(PREF_CURRENCY, Currency.EURO.signo)!!
 
     fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
@@ -63,4 +63,4 @@ class SharedPreferencesManager(context: Context) {
     private fun SharedPreferences.editar(block: SharedPreferences.Editor.() -> SharedPreferences.Editor) {
         this.edit().block().apply()
     }
-    }
+}

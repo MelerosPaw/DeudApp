@@ -6,6 +6,9 @@ import android.support.v7.preference.PreferenceFragmentCompat
 import melerospaw.deudapp.R
 import melerospaw.deudapp.preferences.CustomListPreference
 import melerospaw.deudapp.preferences.SharedPreferencesManager
+import melerospaw.deudapp.task.BusProvider
+import melerospaw.deudapp.task.EventoMonedaCambiada
+import melerospaw.deudapp.utils.Currency
 
 class FragmentPreferencias: PreferenceFragmentCompat(),
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -30,8 +33,7 @@ class FragmentPreferencias: PreferenceFragmentCompat(),
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-//        if (key != null && key == requireContext().getString(R.string.clave_preferencia_moneda)) {
-//            currencyPreference.setCurrencyIcon()
-//        }
+        val newCurrency = Currency.getCurrencyBySign(sharedPreferencesManager.getCurrency())
+        BusProvider.getBus().post(EventoMonedaCambiada(newCurrency))
     }
 }
