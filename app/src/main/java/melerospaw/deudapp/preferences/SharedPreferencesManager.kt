@@ -50,7 +50,7 @@ class SharedPreferencesManager(context: Context) {
         sharedPreferences.editar { putString(PREF_CURRENCY, currency.signo) }
     }
 
-    fun getCurrency() = sharedPreferences.getString(PREF_CURRENCY, Currency.EURO.signo)
+    fun getCurrency() : String = sharedPreferences.getString(PREF_CURRENCY, Currency.EURO.signo)!!
 
     fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         sharedPreferences.registerOnSharedPreferenceChangeListener(listener)

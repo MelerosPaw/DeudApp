@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
+import android.support.v7.preference.ListPreference
 import android.support.v7.widget.ViewUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -70,3 +71,17 @@ fun ViewGroup.getChildPosition(view: View): Int {
     }
     return -1
 }
+
+fun ListPreference.findIndexOfValueNonUnicodeCharacters(value: String): Int {
+    val parsedValue = value.removeUnicodeinvisibleCharacters()
+    for (i in 0 until entryValues.size) {
+        val parsedEntry = entryValues[i].toString().removeUnicodeinvisibleCharacters()
+        if (parsedValue == parsedEntry) {
+            return i
+        }
+    }
+
+    return -1
+}
+
+private fun String.removeUnicodeinvisibleCharacters() = replace(Regex("[\\p{Cf}]"), "")

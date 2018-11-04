@@ -21,6 +21,6 @@ class TextDrawableManager {
                         .beginConfig()
                         .textColor(textColor)
                         .endConfig()
-                        .buildRound(text, shapeColor)
+                        .buildRect(text, shapeColor)
     }
 }
