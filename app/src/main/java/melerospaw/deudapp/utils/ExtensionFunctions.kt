@@ -6,6 +6,7 @@ import android.os.Build
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.support.v7.preference.ListPreference
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,3 +84,7 @@ fun ListPreference.findIndexOfValueNonUnicodeCharacters(value: String): Int {
 }
 
 fun String.removeUnicodeInvisibleCharacters() = replace(Regex("[\\p{Cf}]"), "")
+
+fun Number.toDpi(context: Context) = toFloat() * context.resources.displayMetrics.density
+
+fun Number.toPx(context: Context) = toFloat() / context.resources.displayMetrics.density

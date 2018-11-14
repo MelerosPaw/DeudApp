@@ -271,7 +271,7 @@ public class FragmentViewPagerPersonas extends Fragment {
         tvTotal.setText(getTextoTotal());
         llSubtotal.getLayoutParams().width = 0;
 
-        final Context context = getContext();
+        final Context context = requireContext();
         final float total = adaptadorPersonas.obtenerTotal();
         tvCantidad.setText(CurrencyUtilKt.formatAmount(context, total));
         ColorManager.pintarColorDeuda(flBarraTotal, total);
