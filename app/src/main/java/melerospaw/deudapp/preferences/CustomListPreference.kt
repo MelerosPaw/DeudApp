@@ -12,10 +12,7 @@ import melerospaw.deudapp.R
 import melerospaw.deudapp.utils.*
 import android.text.TextUtils
 import melerospaw.deudapp.utils.Currency
-import java.nio.file.Files.size
 import java.util.*
-import java.util.Arrays.asList
-
 
 
 class CustomListPreference : ListPreference {
@@ -50,7 +47,7 @@ class CustomListPreference : ListPreference {
         onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             value = newValue as String
             val realValue = newValue.removeUnicodeInvisibleCharacters()
-            sharedPreferencesManager.setCurrency(Currency.getCurrencyBySign(realValue))
+            sharedPreferencesManager.currency = Currency.getCurrencyByDescription(realValue)
             if (isHolderInitialized) {
                 setUpCurrencySummary(realValue)
                 setCurrencyIcon(realValue)
@@ -67,20 +64,21 @@ class CustomListPreference : ListPreference {
                 currencySummary = it.findViewById(R.id.tv_summary) as TextView
             }
 
-            val currentValue = sharedPreferencesManager.getCurrency()
-            setCurrencyIcon(currentValue)
-            setUpCurrencySummary(currentValue)
+            val currentValue = sharedPreferencesManager.currency
+            setCurrencyIcon(currentValue.signo)
+            setUpCurrencySummary(currentValue.nombreCompleto)
         }
     }
 
     private fun setUpCurrencySummary(currentValue: String) {
-        val valueIndex = findIndexOfValueNonUnicodeCharacters(currentValue)
-        currencySummary?.text = entries[valueIndex]
+//        val valueIndex = findIndexOfValueNonUnicodeCharacters(currentValue)
+//        currencySummary?.text = entries[valueIndex]
+        currencySummary?.text = currentValue
     }
 
-    private fun setCurrencyIcon(currentValue: String) {
-        currencyIcon!!.textSize = resizeTextSize(currentValue)
-        currencyIcon!!.text = currentValue
+    private fun setCurrencyIcon(signo: String) {
+        currencyIcon!!.textSize = resizeTextSize(signo)
+        currencyIcon!!.text = signo
     }
 
     private fun resizeTextSize(currentText: String): Float {

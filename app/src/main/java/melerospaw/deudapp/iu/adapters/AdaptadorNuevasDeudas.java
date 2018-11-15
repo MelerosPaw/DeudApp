@@ -72,7 +72,7 @@ public class AdaptadorNuevasDeudas
     }
 
     /**
-     * Añade un nuevo hueco para acreedor a la lista
+     * Añade un nuevo hueco para acreedor a la lista.
      */
     public void nuevaEntidad(@Entidad.TipoEntidad int tipoEntidad) {
         setJustAdded(true);
@@ -157,6 +157,7 @@ public class AdaptadorNuevasDeudas
         private void bindView(Entidad entidad) {
             this.entidad = entidad;
             setTextColor();
+            CurrencyUtilKt.setUpAmount(mContext, null, root, etCantidad, tvMoneda);
 
             if (!StringUtils.isCadenaVacia(entidad.getConcepto())) {
                 etConcepto.setText(entidad.getConcepto());
@@ -199,7 +200,6 @@ public class AdaptadorNuevasDeudas
             etCantidad.setTextColor(colorResource);
             tvMoneda.setTextColor(colorResource);
             etConcepto.setTextColor(colorResource);
-            setCurrency();
         }
 
         @OnFocusChange({R.id.et_cantidad, R.id.et_concepto})
@@ -215,14 +215,6 @@ public class AdaptadorNuevasDeudas
                     entidad.getTipoEntidad() == Entidad.DEUDA &&
                     entidad.getCantidad() != 0F) {
                 abrirCantidad();
-            }
-        }
-
-        void setCurrency() {
-            Currency currency = CurrencyUtilKt.getCurrency(mContext);
-            tvMoneda.setText(currency.getSigno());
-            if (currency.getPosicion() == Currency.Position.DELANTE) {
-                CurrencyUtilKt.exchangeViewsPositions(root, etCantidad, tvMoneda);
             }
         }
 

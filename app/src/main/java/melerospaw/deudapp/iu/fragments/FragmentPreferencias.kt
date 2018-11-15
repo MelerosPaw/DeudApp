@@ -2,9 +2,9 @@ package melerospaw.deudapp.iu.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.support.v7.preference.ListPreference
 import android.support.v7.preference.PreferenceFragmentCompat
 import melerospaw.deudapp.R
-import melerospaw.deudapp.preferences.CustomListPreference
 import melerospaw.deudapp.preferences.SharedPreferencesManager
 import melerospaw.deudapp.task.BusProvider
 import melerospaw.deudapp.task.EventoMonedaCambiada
@@ -17,14 +17,20 @@ class FragmentPreferencias: PreferenceFragmentCompat(),
         val TAG: String = FragmentPreferencias::class.java.simpleName
     }
 
-    private lateinit var currencyPreference: CustomListPreference
+//    private lateinit var currencyPreference: CustomListPreference
+    private lateinit var currencyPreference: ListPreference
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
 
     override fun onCreatePreferences(savedStateInstance: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
         sharedPreferencesManager = SharedPreferencesManager(requireContext())
-        currencyPreference = findPreference(sharedPreferencesManager.PREF_CURRENCY) as CustomListPreference
         sharedPreferencesManager.registerOnSharedPreferenceChangeListener(this)
+        setUpCurrencyPreference()
+    }
+
+    private fun setUpCurrencyPreference() {
+        currencyPreference = findPreference(sharedPreferencesManager.prefCurrencyKey) as ListPreference
+        currencyPreference.summary = sharedPreferencesManager.currency.nombreCompleto
     }
 
     override fun onDestroy() {
@@ -33,7 +39,8 @@ class FragmentPreferencias: PreferenceFragmentCompat(),
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        val newCurrency = Currency.getCurrencyBySign(sharedPreferencesManager.getCurrency())
+        val newCurrency = sharedPreferencesManager.currency
+        currencyPreference.summary = newCurrency.nombreCompleto
         BusProvider.getBus().post(EventoMonedaCambiada(newCurrency))
     }
 }

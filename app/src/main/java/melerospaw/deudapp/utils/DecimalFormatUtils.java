@@ -66,26 +66,32 @@ public class DecimalFormatUtils{
 
         if (InfinityManagerKt.isInfiniteFloat(cantidad)) {
             return InfinityManagerKt.getSignedInfinityCharacter((Float)cantidad);
+
         } else {
-            String valor = String.valueOf(cantidad);
+            final String valor = String.valueOf(cantidad);
 
             // Separa los decimales de la parte entera
-            StringTokenizer elementos = new StringTokenizer(valor, caracterDecimal);
-            String entero = (String) elementos.nextElement();
-            String decimales = (String) elementos.nextElement();
+            final StringTokenizer elementos = new StringTokenizer(valor, caracterDecimal);
+            final String entero = (String) elementos.nextElement();
+            final String decimales = (String) elementos.nextElement();
 
             try {
+
                 //Si los decimales valen 0, devuelven solo la parte entera
                 if (Integer.parseInt(decimales) == 0) {
                     return entero;
-                    //Si los decimales tienen valor, recibir -1 en decimalesDeseados indica que
-                    //queremos recibir el número con todos sus decimales
+
+                //Si los decimales tienen valor, recibir -1 en decimalesDeseados indica que
+                //queremos recibir el número con todos sus decimales
                 } else if (decimalesDeseados == -1) {
                     return entero + caracterDecimalDeseado + decimales;
-                    //Si no, devuelve el número con tantos decimales como se desee
+
+                //Si no, devuelve el número con tantos decimales como se desee
                 } else {
-                    return decimalToString(cantidad, decimalesDeseados, caracterDecimal, caracterDecimalDeseado);
+                    return decimalToString(cantidad, decimalesDeseados, caracterDecimal,
+                            caracterDecimalDeseado);
                 }
+
             } catch (NumberFormatException e) {
                 Log.e(TAG, "decimalToStringIfZero: el número no se ha podido convertir a decimales", e);
                 return String.valueOf(cantidad);

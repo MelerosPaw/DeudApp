@@ -38,7 +38,7 @@ class DialogExplicativo : DialogFragment() {
         mensaje.setSpan(StyleSpan(Typeface.BOLD), mensaje.indexOf("\""), mensaje.lastIndexOf("\"") + 1,
                 Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
         tvDescripcion.text = mensaje
-        chkNoMostrarDialogo.visibility = if (!SharedPreferencesManager(context!!).esPrimeraVez()) View.VISIBLE else View.GONE
+        chkNoMostrarDialogo.visibility = if (!SharedPreferencesManager(context!!).isFirstTime) View.VISIBLE else View.GONE
     }
 
     interface PositiveCallback {

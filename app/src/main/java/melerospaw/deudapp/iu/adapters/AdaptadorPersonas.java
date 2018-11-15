@@ -36,8 +36,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
     private List<Persona> mDatos;
     private Activity context;
     private boolean modoEliminarActivado;
-    private @Persona.TipoPersona
-    int tipoPersonas;
+    private @Persona.TipoPersona int tipoPersonas;
     private SparseBooleanArray seleccionados;
     private ContextualMenuInterface contextualMenuInterface;
     private OnItemClickListener itemClickListener;
@@ -303,12 +302,11 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
      */
     class PersonViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_nombre)
-        TextView tvNombre;
-        @BindView(R.id.tv_deudaRestante)
-        TextView tvDeudaRestante;
-        @BindView(R.id.iv_letra)
-        ImageView ivLetra;
+        @BindView(R.id.tv_nombre)           TextView tvNombre;
+        @BindView(R.id.ll_root)             ViewGroup llRoot;
+        @BindView(R.id.tv_deudaRestante)    TextView tvDeudaRestante;
+        @BindView(R.id.tv_moneda)           TextView tvMoneda;
+        @BindView(R.id.iv_letra)            ImageView ivLetra;
 
         private View item;
 
@@ -320,9 +318,9 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
 
         void bindView(final Persona persona) {
             tvNombre.setText(persona.getNombre());
-            tvDeudaRestante.setText(CurrencyUtilKt.formatAmount(context, persona.getCantidadTotal()));
+            CurrencyUtilKt.setUpAmount(context, persona.getCantidadTotal(), llRoot, tvDeudaRestante, tvMoneda);
 
-            ColorGenerator cg = ColorGenerator.MATERIAL;
+            final ColorGenerator cg = ColorGenerator.MATERIAL;
             if (persona.getColor() == -1) {
                 persona.setColor(cg.getRandomColor());
                 gestor.actualizarPersona(persona, persona.getTipo());

@@ -145,7 +145,7 @@
         </android.support.design.widget.CoordinatorLayout>
 
         <LinearLayout
-            android:id="@+id/fl_barra_total"
+            android:id="@+id/ll_barra_total"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/light_blue"
@@ -165,8 +165,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="30sp"
-                tools:text="30 €" />
+                android:textSize="26sp"
+                tools:text="30" />
+
+            <TextView
+                android:id="@+id/tv_moneda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="26sp"
+                tools:text=" €" />
 
         </LinearLayout>
 
@@ -181,7 +189,7 @@
         android:focusable="true"
         android:padding="16dp"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <GridLayout
             android:layout_width="wrap_content"

@@ -65,7 +65,8 @@ class DialogEditarDeuda : DialogFragment() {
                     if (entidad.tipoEntidad == Entidad.DEUDA) R.color.red else R.color.green))
         }
 
-        setCurrency()
+        setUpAmount(context = requireContext(), rootView = llCurrencyRoot, amountView = etCantidad,
+                currencyView = tvMoneda)
         btnGuardar.setOnClickListener { guardar() }
         btnCancelar.setOnClickListener { dismiss() }
         tvCambiarFecha.setOnClickListener {mostrarDialogFecha() }
@@ -78,14 +79,6 @@ class DialogEditarDeuda : DialogFragment() {
     override fun onStart() {
         super.onStart()
         ScreenUtils.pantallaCompleta(this, true)
-    }
-
-    private fun setCurrency() {
-        val currency = getCurrency(context!!)
-        tvMoneda.text = currency.signo
-        if (currency.posicion == Currency.Position.DELANTE) {
-            exchangeViewsPositions(llCurrencyRoot, etCantidad, tvMoneda)
-        }
     }
 
     private fun guardar() {

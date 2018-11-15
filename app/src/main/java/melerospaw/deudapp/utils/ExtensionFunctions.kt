@@ -2,6 +2,7 @@ package melerospaw.deudapp.utils
 
 import android.animation.LayoutTransition
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
@@ -81,6 +82,10 @@ fun ListPreference.findIndexOfValueNonUnicodeCharacters(value: String): Int {
     }
 
     return -1
+}
+
+fun SharedPreferences.editar(block: SharedPreferences.Editor.() -> SharedPreferences.Editor) {
+    this.edit().block().apply()
 }
 
 fun String.removeUnicodeInvisibleCharacters() = replace(Regex("[\\p{Cf}]"), "")

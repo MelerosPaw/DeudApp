@@ -88,7 +88,8 @@ public class DialogoModificarCantidad extends DialogFragment {
 
     public void loadView(){
         tvTitulo.setText(modo);
-        setCurrency();
+        CurrencyUtilKt.setUpAmount(requireContext(), null, llCurrencyGroup, etCantidad,
+                tvMoneda);
 
         switch (modo) {
             case TIPO_AUMENTAR:
@@ -105,14 +106,6 @@ public class DialogoModificarCantidad extends DialogFragment {
                 break;
             default:
                 // NO-OP No more types
-        }
-    }
-
-    private void setCurrency() {
-        Currency currency = CurrencyUtilKt.getCurrency(getContext());
-        tvMoneda.setText(currency.getSigno());
-        if (currency.getPosicion() == Currency.Position.DELANTE) {
-            CurrencyUtilKt.exchangeViewsPositions(llCurrencyGroup, etCantidad, tvMoneda);
         }
     }
 

@@ -248,13 +248,13 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
 
     private void mostrarDialogExplicativo() {
         final SharedPreferencesManager spm = new SharedPreferencesManager(ActivityNuevasDeudas.this);
-        if (spm.mustShowExplanatoryDialog()) {
+        if (spm.isShowExplanatoryDialog()) {
             final DialogExplicativo dialogExplicativo = new DialogExplicativo();
             dialogExplicativo.setCallback(new DialogExplicativo.PositiveCallback() {
                 @Override
                 public void onDialogClosed(boolean stopShow) {
-                    spm.setMustShowExplanatoryDialog(!stopShow);
-                    spm.setNoEsPrimeraVez(true);
+                    spm.setShowExplanatoryDialog(!stopShow);
+                    spm.setFirstTime(false);
                 }
             });
             dialogExplicativo.show(getSupportFragmentManager(), DialogExplicativo.getTAG());
@@ -303,8 +303,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
             guardar();
         }
     }
-    // Makes any focus dissappear from both RecyclerViews so OnFocusChange listeners are triggered
 
+    // Makes any focus disappear from both RecyclerViews so OnFocusChange listeners are triggered
     private void clearFocus() {
         if (!isForResult) {
             View v = layoutManagerPersonas.getFocusedChild();

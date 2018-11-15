@@ -233,7 +233,9 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         @BindView(R.id.ll_item)                     LinearLayout llItem;
         @BindView(R.id.tv_fecha)                    TextView tvFecha;
         @BindView(R.id.tv_concepto)                 TextView tvConcepto;
+        @BindView(R.id.ll_amount_root)              LinearLayout llAmountRoot;
         @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
+        @BindView(R.id.tv_moneda)                   TextView tvMoneda;
         @BindView(R.id.ll_opciones_entidad)         LinearLayout llOpcionesEntidad;
         @BindView(R.id.tv_aumentar)                 TextView tvAumentar;
         @BindView(R.id.tv_descontar)                TextView tvDescontar;
@@ -253,11 +255,11 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             }
 
             tvConcepto.setText(entidad.getConcepto());
-            tvCantidad.setText(CurrencyUtilKt.formatAmount(mContext, entidad.getCantidad()));
             if (entidad.getCantidad() == 0.00f) {
                 tvCantidad.setTextColor(ContextCompat.getColor(mContext, R.color.inactive));
                 tvCantidad.setText(R.string.cancelada);
             } else {
+                CurrencyUtilKt.setUpAmount(mContext, entidad.getCantidad(), llAmountRoot, tvCantidad, tvMoneda);
                 tvCantidad.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
             }
 

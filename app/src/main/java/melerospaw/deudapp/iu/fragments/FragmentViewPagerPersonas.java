@@ -47,21 +47,30 @@ public class FragmentViewPagerPersonas extends Fragment {
 
     public static final String BUNDLE_TIPO = "TIPO";
 
-    @BindView(R.id.rv_personas)             RecyclerView rvPersonas;
-    @BindView(R.id.ll_vacio)                ViewGroup llVacio;
-    @BindView(R.id.tv_vacio)                TextView tvVacio;
-    @BindView(R.id.fl_barra_total)          FrameLayout flBarraTotal;
-    @BindView(R.id.fl_total)                FrameLayout flTotal;
-    @BindView(R.id.tv_total)                TextView tvTotal;
-    @BindView(R.id.ll_subtotal)             LinearLayout llSubtotal;
-    @BindView(R.id.tv_subtotal)             TextView tvSubtotal;
-    @BindView(R.id.tv_cantidad)             TextView tvCantidad;
-    @BindView(R.id.ll_total_simple)         LinearLayout llTotalSimple;
-    @BindView(R.id.ll_barra_total_resumen)  LinearLayout llTotalResumen;
-    @BindView(R.id.tv_total_debido)         TextView tvTotalDebido;
-    @BindView(R.id.tv_total_adeudado)       TextView tvTotalAdeudado;
-    @BindView(R.id.tv_total_ambos)          TextView tvTotalAmbos;
-    @BindView(R.id.tv_total_total)          TextView tvTotalTotal;
+    @BindView(R.id.rv_personas)                 RecyclerView rvPersonas;
+    @BindView(R.id.ll_vacio)                    ViewGroup llVacio;
+    @BindView(R.id.tv_vacio)                    TextView tvVacio;
+    @BindView(R.id.ll_barra_total)              FrameLayout flBarraTotal;
+    @BindView(R.id.fl_total)                    FrameLayout flTotal;
+    @BindView(R.id.tv_total)                    TextView tvTotal;
+    @BindView(R.id.ll_subtotal)                 LinearLayout llSubtotal;
+    @BindView(R.id.tv_subtotal)                 TextView tvSubtotal;
+    @BindView(R.id.ll_total_simple)             LinearLayout llTotalSimple;
+    @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
+    @BindView(R.id.tv_moneda)                   TextView tvMoneda;
+    @BindView(R.id.ll_barra_total_resumen)      LinearLayout llTotalResumen;
+    @BindView(R.id.ll_root_total_debido)        LinearLayout llRootTotalDebido;
+    @BindView(R.id.tv_total_debido)             TextView tvTotalDebido;
+    @BindView(R.id.tv_total_debido_moneda)      TextView tvTotalDebidoMoneda;
+    @BindView(R.id.ll_root_total_adeudado)      LinearLayout llRootTotalAdeudado;
+    @BindView(R.id.tv_total_adeudado)           TextView tvTotalAdeudado;
+    @BindView(R.id.tv_total_adeudado_moneda)    TextView tvTotalAdeudadoMoneda;
+    @BindView(R.id.ll_root_total_ambos)         LinearLayout llRootTotalAmbos;
+    @BindView(R.id.tv_total_ambos)              TextView tvTotalAmbos;
+    @BindView(R.id.tv_total_ambos_moneda)       TextView tvTotalAmbosMoneda;
+    @BindView(R.id.ll_root_total_total)         LinearLayout llRootTotalTotal;
+    @BindView(R.id.tv_total_total)              TextView tvTotalTotal;
+    @BindView(R.id.tv_total_total_moneda)       TextView tvTotalTotalMoneda;
 
     private GestorDatos gestor;
     private AdaptadorPersonas adaptadorPersonas;
@@ -273,7 +282,7 @@ public class FragmentViewPagerPersonas extends Fragment {
 
         final Context context = requireContext();
         final float total = adaptadorPersonas.obtenerTotal();
-        tvCantidad.setText(CurrencyUtilKt.formatAmount(context, total));
+        CurrencyUtilKt.setUpAmount(context, total, llTotalSimple, tvCantidad, tvMoneda);
         ColorManager.pintarColorDeuda(flBarraTotal, total);
         flBarraTotal.setVisibility(total == 0F ? View.GONE: View.VISIBLE);
         setTotales(context);
@@ -306,10 +315,10 @@ public class FragmentViewPagerPersonas extends Fragment {
         final float totalTotal = SecureOperationKt.secureAdd(
                 SecureOperationKt.secureAdd(totalAcreedores, totalDeudores), totalAmbos);
 
-        tvTotalDebido.setText(CurrencyUtilKt.formatAmount(context, totalAcreedores));
-        tvTotalAdeudado.setText(CurrencyUtilKt.formatAmount(context, totalDeudores));
-        tvTotalAmbos.setText(CurrencyUtilKt.formatAmount(context, totalAmbos));
-        tvTotalTotal.setText(CurrencyUtilKt.formatAmount(context, totalTotal));
+        CurrencyUtilKt.setUpAmount(context, totalAcreedores, llRootTotalDebido,tvTotalDebido, tvTotalDebidoMoneda);
+        CurrencyUtilKt.setUpAmount(context, totalDeudores, llRootTotalAdeudado, tvTotalAdeudado, tvTotalAdeudadoMoneda);
+        CurrencyUtilKt.setUpAmount(context, totalAmbos, llRootTotalAmbos, tvTotalAmbos, tvTotalAmbosMoneda);
+        CurrencyUtilKt.setUpAmount(context, totalTotal, llRootTotalTotal, tvTotalTotal, tvTotalTotalMoneda);
     }
 
     private void mostrarSubtotal() {
@@ -321,8 +330,9 @@ public class FragmentViewPagerPersonas extends Fragment {
             final float subtotal = adaptadorPersonas.obtenerSubtotal();
 
             tvTotal.setText(R.string.total_seleccionado);
-            tvSubtotal.setText(CurrencyUtilKt.formatAmount(getContext(), subtotal));
-            tvCantidad.setText(CurrencyUtilKt.formatAmount(getContext(), total));
+            tvSubtotal.setText(CurrencyUtilKt.formatAmountWithoutCurrencyPosition(getContext(),
+                    null, subtotal));
+            CurrencyUtilKt.setUpAmount(requireContext(), total, llTotalSimple, tvCantidad, tvMoneda);
             ColorManager.pintarColorDeuda(flBarraTotal, total);
             flBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
             llSubtotal.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;

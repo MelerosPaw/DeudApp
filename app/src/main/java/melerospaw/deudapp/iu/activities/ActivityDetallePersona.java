@@ -87,9 +87,10 @@ public class ActivityDetallePersona extends AppCompatActivity {
     @BindView(R.id.rv_deudas)                   ContextRecyclerView rvDeudas;
     @BindView(R.id.tv_concepto)                 TextView tvConcepto;
     @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
+    @BindView(R.id.tv_moneda)                   TextView tvMoneda;
     @BindView(R.id.app_bar)                     AppBarLayout appBar;
     @BindView(R.id.collapsing_toolbar_layout)   CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.fl_barra_total)              LinearLayout llBarraTotal;
+    @BindView(R.id.ll_barra_total)              LinearLayout llBarraTotal;
     @BindView(R.id.iv_foto)                     ImageView ivFoto;
 
     private GestorDatos gestor;
@@ -423,18 +424,28 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void mostrarTotal(@Nullable Entidad entidadOmitida) {
-        boolean mostrarConcepto;
-        CharSequence concepto;
-        CharSequence cantidad;
-        float cantidadTotal = persona.getCantidadTotal(entidadOmitida);
+        final float cantidadTotal = persona.getCantidadTotal(entidadOmitida);
+        final CharSequence concepto = getConcepto(persona.getTipo(), cantidadTotal);
+        final boolean mostrarConcepto = concepto.length() > 0;
+
+        tvConcepto.setText(concepto);
+        tvConcepto.setVisibility(mostrarConcepto ? View.VISIBLE : View.GONE);
+
+        if (mostrarConcepto) {
+            CurrencyUtilKt.setUpAmount(this, cantidadTotal, llBarraTotal, tvCantidad, tvMoneda);
+        } else {
+            tvCantidad.setText(getString(R.string.deudas_canceladas));
+        }
+    }
+
+    private CharSequence getConcepto(@Persona.TipoPersona int tipoPersona, float cantidadTotal) {
+
+        String concepto;
 
         if (cantidadTotal == 0F) {
-            mostrarConcepto = false;
             concepto = "";
-            cantidad = getString(R.string.deudas_canceladas);
         } else {
-            mostrarConcepto = true;
-            switch (persona.getTipo()) {
+            switch (tipoPersona) {
                 case Persona.ACREEDOR:
                     concepto = getString(R.string.debes_un_total_de);
                     break;
@@ -453,15 +464,10 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 case Persona.INACTIVO:
                 default:
                     concepto = "";
-                    mostrarConcepto = false;
             }
-
-            cantidad = CurrencyUtilKt.formatAmount(this, cantidadTotal);
         }
 
-        tvConcepto.setText(concepto);
-        tvCantidad.setText(cantidad);
-        tvConcepto.setVisibility(mostrarConcepto ? View.VISIBLE : View.GONE);
+        return concepto;
     }
 
     private void toggleScroll() {
@@ -489,8 +495,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void showDebtSwipeTutorial() {
-        if (preferencesManager.mustShowSwipeTutorial()) {
-            tvNoVolverAMostrar.setVisibility(preferencesManager.mustShowIgnoreSwipeTutorial() ?
+        if (preferencesManager.isShowSwipeTutorial()) {
+            tvNoVolverAMostrar.setVisibility(preferencesManager.isShowIgnoreSwipeTutorial() ?
                     View.VISIBLE : View.INVISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -865,9 +871,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void ocultarTutorialSwipe(boolean volverAMostrar) {
-        new SharedPreferencesManager(this).setMustShowIgnoreSwipeTutorial(true);
+        new SharedPreferencesManager(this).setShowIgnoreSwipeTutorial(true);
         if (!volverAMostrar) {
-            new SharedPreferencesManager(this).setMustShowSwipeTutorial(false);
+            new SharedPreferencesManager(this).setShowSwipeTutorial(false);
         }
         TransitionManager.beginDelayedTransition(root, new CustomTransitionSet().setDuration(500));
         llIndicacionesSwipe.setVisibility(View.GONE);
