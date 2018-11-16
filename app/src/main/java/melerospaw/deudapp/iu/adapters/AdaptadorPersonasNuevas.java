@@ -21,6 +21,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.ContactManager;
 import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Persona;
+import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
 
@@ -133,7 +134,7 @@ public class AdaptadorPersonasNuevas
             });
 
             if (StringUtils.isCadenaVacia(this.contact.getName()) && focus) {
-                actvAcreedor.setVisibility(View.VISIBLE);
+                ExtensionFunctionsKt.visible(actvAcreedor);
                 actvAcreedor.requestFocus();
                 TecladoUtils.mostrarTeclado(actvAcreedor);
             }

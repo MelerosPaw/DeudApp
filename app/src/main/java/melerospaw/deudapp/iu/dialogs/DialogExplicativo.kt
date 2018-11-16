@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.dialog_explicativo.*
 import melerospaw.deudapp.R
 import melerospaw.deudapp.preferences.SharedPreferencesManager
+import melerospaw.deudapp.utils.hidden
 import melerospaw.deudapp.utils.inflate
 
 class DialogExplicativo : DialogFragment() {
@@ -38,7 +39,7 @@ class DialogExplicativo : DialogFragment() {
         mensaje.setSpan(StyleSpan(Typeface.BOLD), mensaje.indexOf("\""), mensaje.lastIndexOf("\"") + 1,
                 Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
         tvDescripcion.text = mensaje
-        chkNoMostrarDialogo.visibility = if (!SharedPreferencesManager(context!!).isFirstTime) View.VISIBLE else View.GONE
+        chkNoMostrarDialogo.hidden(SharedPreferencesManager(context!!).isFirstTime)
     }
 
     interface PositiveCallback {

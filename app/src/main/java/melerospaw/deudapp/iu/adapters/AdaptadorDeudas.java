@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.security.cert.Extension;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.widgets.ContextRecyclerView;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
+import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 
 
 public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas.ViewHolder> {
@@ -81,13 +83,13 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
 
     public void setBackgroundView(RecyclerView.ViewHolder holder, @BackgroundOption int opcion) {
         if (opcion == BACKGROUND_BORRAR &&
-                ((ViewHolder)holder).tvDelete.getVisibility() == View.GONE) {
-            ((ViewHolder)holder).tvDelete.setVisibility(View.VISIBLE);
-            ((ViewHolder)holder).tvDuplicate.setVisibility(View.GONE);
+                ExtensionFunctionsKt.isHidden(((ViewHolder)holder).tvDelete)) {
+            ExtensionFunctionsKt.visible(((ViewHolder)holder).tvDelete);
+            ExtensionFunctionsKt.hide(((ViewHolder)holder).tvDuplicate);
         } else if (opcion == BACKGROUND_DUPLICAR &&
-                ((ViewHolder)holder).tvDuplicate.getVisibility() == View.GONE) {
-            ((ViewHolder)holder).tvDuplicate.setVisibility(View.VISIBLE);
-            ((ViewHolder)holder).tvDelete.setVisibility(View.GONE);
+                ExtensionFunctionsKt.isHidden(((ViewHolder)holder).tvDuplicate)) {
+            ExtensionFunctionsKt.hide(((ViewHolder)holder).tvDelete);
+            ExtensionFunctionsKt.visible(((ViewHolder)holder).tvDuplicate);
         }
     }
 
@@ -248,9 +250,9 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
 
         void bindView(final Entidad entidad, final Entidad anterior) {
             if ((anterior != null && anterior.esMismoDia(entidad.getFecha())))
-                tvFecha.setVisibility(View.GONE);
+                ExtensionFunctionsKt.hide(tvFecha);
             else {
-                tvFecha.setVisibility(View.VISIBLE);
+                ExtensionFunctionsKt.visible(tvFecha);
                 tvFecha.setText(entidad.getReadableDate());
             }
 
@@ -268,16 +270,12 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         }
 
         private void mostrarOpciones() {
-            int visibility = elementosAbiertos.get(getAdapterPosition()) ?
-                    View.VISIBLE : View.GONE;
-            if (visibility != llOpcionesEntidad.getVisibility()) {
-                llOpcionesEntidad.setVisibility(visibility);
-            }
+            ExtensionFunctionsKt.hidden(llOpcionesEntidad, !elementosAbiertos.get(getAdapterPosition()));
         }
 
         private void configurarOpciones(boolean estaCancelada) {
-            tvDescontar.setVisibility(estaCancelada ? View.GONE : View.VISIBLE);
-            tvCancelar.setVisibility(estaCancelada ? View.GONE : View.VISIBLE);
+            ExtensionFunctionsKt.hidden(tvDescontar, estaCancelada);
+            ExtensionFunctionsKt.hidden(tvCancelar, estaCancelada);
         }
 
         @OnClick({R.id.ll_item, R.id.tv_aumentar, R.id.tv_descontar, R.id.tv_cancelar})

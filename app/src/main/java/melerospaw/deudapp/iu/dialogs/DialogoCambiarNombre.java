@@ -20,7 +20,7 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
-import melerospaw.deudapp.utils.StringUtils;
+import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 
 public class DialogoCambiarNombre extends DialogFragment {
 
@@ -123,7 +123,7 @@ public class DialogoCambiarNombre extends DialogFragment {
     }
 
     private void showLoading(boolean show) {
-        flLoadingView.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        ExtensionFunctionsKt.hidden(flLoadingView, !show);
     }
 
     @StringRes

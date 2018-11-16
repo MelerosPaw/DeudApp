@@ -186,7 +186,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
         layoutManagerPersonas = new LinearLayoutManager(this);
         rvPersonas.setLayoutManager(layoutManagerPersonas);
         rvPersonas.setAdapter(adaptadorNuevasPersonas);
-        rvPersonas.setVisibility(View.VISIBLE);
+        ExtensionFunctionsKt.visible(rvPersonas, true);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
                         | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
@@ -209,7 +209,9 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     private void toggleMensajeVacioPersonas() {
-        tvPersonasVacias.setVisibility(!isForResult && adaptadorNuevasPersonas == null || adaptadorNuevasPersonas.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
+        ExtensionFunctionsKt.visible(tvPersonasVacias, !isForResult &&
+                adaptadorNuevasPersonas == null ||
+                adaptadorNuevasPersonas.getItemCount() == 0);
     }
 
     private void inicializarAdaptadorNuevasEntidades() {
@@ -262,7 +264,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     private void toggleMensajeVacioEntidades() {
-        tvEntidadesVacias.setVisibility(adaptadorNuevasDeudas == null || adaptadorNuevasDeudas.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
+        ExtensionFunctionsKt.visible(tvEntidadesVacias, adaptadorNuevasDeudas == null ||
+                adaptadorNuevasDeudas.getItemCount() == 0);
     }
 
     private void inicializarBotones() {
@@ -272,7 +275,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     private void inicializarLayout() {
-        llSeccionPersonas.setVisibility(isForResult ? View.GONE : View.VISIBLE);
+        ExtensionFunctionsKt.hidden(llSeccionPersonas, isForResult);
     }
 
     private void nuevaPersona() {

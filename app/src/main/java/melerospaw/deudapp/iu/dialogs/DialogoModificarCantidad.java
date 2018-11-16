@@ -17,6 +17,7 @@ import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
+import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
 
@@ -151,8 +152,7 @@ public class DialogoModificarCantidad extends DialogFragment {
                 R.string.pregunta_cancelar_deuda : R.string.pregunta_cancelar_derecho_cobro);
         btnAceptar.setText(R.string.si);
         btnCancelar.setText(R.string.no);
-        tvMoneda.setVisibility(View.GONE);
-        etCantidad.setVisibility(View.GONE);
+        ExtensionFunctionsKt.hide(tvMoneda, etCantidad);
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,8 +172,7 @@ public class DialogoModificarCantidad extends DialogFragment {
         tvMensaje.setText(R.string.pregunta_cancelar_todas);
         btnAceptar.setText(R.string.si);
         btnCancelar.setText(R.string.no);
-        tvMoneda.setVisibility(View.GONE);
-        etCantidad.setVisibility(View.GONE);
+        ExtensionFunctionsKt.hide(tvMoneda, etCantidad);
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

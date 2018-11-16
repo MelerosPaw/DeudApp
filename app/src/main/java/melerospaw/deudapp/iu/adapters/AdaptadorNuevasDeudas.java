@@ -29,6 +29,7 @@ import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
+import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
 import melerospaw.deudapp.utils.TecladoUtils;
@@ -186,7 +187,7 @@ public class AdaptadorNuevasDeudas
                 setJustAdded(false);
             }
 
-            chkDeudaGrupal.setVisibility(mostrarNuevasDeudas ? View.VISIBLE : View.GONE);
+            ExtensionFunctionsKt.hidden(chkDeudaGrupal, !mostrarNuevasDeudas);
             if (mostrarNuevasDeudas) {
                 chkDeudaGrupal.setChecked(getEntidadByPosition(getAdapterPosition()).getEsGrupal());
             }

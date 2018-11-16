@@ -4,10 +4,9 @@ import android.animation.LayoutTransition
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
+import android.preference.ListPreference
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
-import android.support.v7.preference.ListPreference
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,7 +45,7 @@ fun ViewGroup.forEachChildView(onEachView: (View) -> Unit) {
     }
 }
 
-inline fun <reified T: View?> ViewGroup.findFirstChild(condition: (View)-> Boolean): T? {
+inline fun <reified T : View?> ViewGroup.findFirstChild(condition: (View) -> Boolean): T? {
     for (i in 0 until childCount) {
         val child = getChildAt(i)
         if (condition(child)) {
@@ -93,3 +92,47 @@ fun String.removeUnicodeInvisibleCharacters() = replace(Regex("[\\p{Cf}]"), "")
 fun Number.toDpi(context: Context) = toFloat() * context.resources.displayMetrics.density
 
 fun Number.toPx(context: Context) = toFloat() / context.resources.displayMetrics.density
+
+fun View.hidden(hidden: Boolean) {
+    if (hidden) hide() else visible()
+}
+
+fun View.visible(visible: Boolean) {
+    if (visible) visible() else invisible()
+}
+
+fun View.hide() {
+    visibility = View.GONE
+}
+
+fun View.visible() {
+    visibility = View.VISIBLE
+}
+
+fun View.invisible() {
+    visibility = View.INVISIBLE
+}
+
+fun View.isHidden() = visibility == View.GONE
+
+fun View.isVisible() = visibility == View.VISIBLE
+
+fun View.isInvisible() = visibility == View.INVISIBLE
+
+fun visible(vararg views: View) {
+    for (view in views) {
+        view.visible()
+    }
+}
+
+fun invisible(vararg views: View) {
+    for (view in views) {
+        view.invisible()
+    }
+}
+
+fun hide(vararg views: View) {
+    for (view in views) {
+        view.hide()
+    }
+}

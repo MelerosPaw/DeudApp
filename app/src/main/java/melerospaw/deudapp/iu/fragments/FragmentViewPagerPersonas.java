@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.security.cert.Extension;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -264,8 +265,9 @@ public class FragmentViewPagerPersonas extends Fragment {
     }
 
     private void inicializarMensajeVacio() {
-        rvPersonas.setVisibility(adaptadorPersonas.getItemCount() > 0 ? View.VISIBLE : View.INVISIBLE);
-        llVacio.setVisibility(adaptadorPersonas.getItemCount() > 0 ? View.INVISIBLE : View.VISIBLE);
+        final boolean hayPersonas = adaptadorPersonas.getItemCount() > 0;
+        ExtensionFunctionsKt.visible(rvPersonas, hayPersonas);
+        ExtensionFunctionsKt.visible(llVacio, !hayPersonas);
     }
 
     private void activarModoEliminacion() {
@@ -284,7 +286,7 @@ public class FragmentViewPagerPersonas extends Fragment {
         final float total = adaptadorPersonas.obtenerTotal();
         CurrencyUtilKt.setUpAmount(context, total, llTotalSimple, tvCantidad, tvMoneda);
         ColorManager.pintarColorDeuda(flBarraTotal, total);
-        flBarraTotal.setVisibility(total == 0F ? View.GONE: View.VISIBLE);
+        ExtensionFunctionsKt.hidden(flBarraTotal, total == 0F);
         setTotales(context);
     }
 
@@ -334,7 +336,7 @@ public class FragmentViewPagerPersonas extends Fragment {
                     null, subtotal));
             CurrencyUtilKt.setUpAmount(requireContext(), total, llTotalSimple, tvCantidad, tvMoneda);
             ColorManager.pintarColorDeuda(flBarraTotal, total);
-            flBarraTotal.setVisibility(total == 0f ? View.GONE: View.VISIBLE);
+            ExtensionFunctionsKt.hidden(flBarraTotal, total == 0f);
             llSubtotal.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
         }
     }
@@ -350,8 +352,8 @@ public class FragmentViewPagerPersonas extends Fragment {
 
     public void toggleTotal() {
         showResumen = !showResumen;
-        llTotalSimple.setVisibility(showResumen ? View.GONE : View.VISIBLE);
-        llTotalResumen.setVisibility(showResumen ? View.VISIBLE : View.GONE);
+        ExtensionFunctionsKt.hidden(llTotalSimple, showResumen);
+        ExtensionFunctionsKt.hidden(llTotalResumen, !showResumen);
     }
 
     private void setMenuEliminar() {
