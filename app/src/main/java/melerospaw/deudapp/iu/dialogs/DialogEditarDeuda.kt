@@ -10,12 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.dialog_editar_deuda.*
-import kotlinx.android.synthetic.main.item_nuevo_concepto.*
 import melerospaw.deudapp.R
 import melerospaw.deudapp.data.GestorDatos
 import melerospaw.deudapp.modelo.Entidad
 import melerospaw.deudapp.utils.*
-import melerospaw.deudapp.utils.Currency
 import java.util.*
 
 
@@ -60,12 +58,12 @@ class DialogEditarDeuda : DialogFragment() {
         with(entidad) {
             tvFecha.text = readableDate
             etConcepto.setText(concepto)
-            etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(cantidad , 2, ".", ","))
-            etCantidad.setTextColor(ContextCompat.getColor(context!!,
+            et_cantidad.setText(DecimalFormatUtils.decimalToStringIfZero(cantidad , 2, ".", ","))
+            et_cantidad.setTextColor(ContextCompat.getColor(context!!,
                     if (entidad.tipoEntidad == Entidad.DEUDA) R.color.red else R.color.green))
         }
 
-        setUpAmount(context = requireContext(), rootView = llCurrencyRoot, amountView = etCantidad,
+        setUpAmount(context = requireContext(), rootView = llCurrencyRoot, amountView = et_cantidad,
                 currencyView = tvMoneda)
         btnGuardar.setOnClickListener { guardar() }
         btnCancelar.setOnClickListener { dismiss() }

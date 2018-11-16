@@ -54,63 +54,59 @@
                         android:id="@+id/etConcepto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="@string/concepto"
                         android:inputType="text"
                         android:maxLines="1"
-                        android:hint="@string/concepto"
                         android:textSize="@dimen/text_size_detalle_entidad"
                         android:textStyle="bold"
                         tools:text="Concepto" />
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/llCurrencyRoot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_cantidad"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:digits="1234567890.,"
+                            android:ems="5"
+                            android:gravity="end"
+                            android:inputType="numberDecimal"
+                            android:lines="1"
+                            android:maxLines="1"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="20sp"
+                            tools:text="350,25" />
 
                         <TextView
-                            android:id="@+id/tvCambiarFecha"
-                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:id="@+id/tvMoneda"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:drawableStart="@drawable/ic_fecha_gris"
-                            android:drawableLeft="@drawable/ic_fecha_gris"
-                            android:drawablePadding="10dp"
-                            android:gravity="center_vertical"
-                            android:padding="10dp"
-                            android:text="@string/cambiar_fecha"
-                            android:textColor="@color/colorPrimary" />
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="20sp"
+                            tools:text=" €" />
 
-                        <LinearLayout
-                            android:id="@+id/llCurrencyRoot"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:orientation="horizontal">
+                    </LinearLayout>
 
-                            <EditText
-                                android:id="@+id/etCantidad"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:digits="1234567890.,"
-                                android:ems="5"
-                                android:gravity="end"
-                                android:inputType="numberDecimal"
-                                android:lines="1"
-                                android:maxLines="1"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:textSize="20sp"
-                                tools:text="350,25" />
-
-                            <TextView
-                                android:id="@+id/tvMoneda"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:textSize="20sp"
-                                tools:text="€" />
-
-                        </LinearLayout>
-
-                    </FrameLayout>
+                    <TextView
+                        android:id="@+id/tvCambiarFecha"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:drawableStart="@drawable/ic_fecha_gris"
+                        android:drawableLeft="@drawable/ic_fecha_gris"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:text="@string/cambiar_fecha"
+                        android:textColor="@color/colorPrimary" />
 
                 </LinearLayout>
 

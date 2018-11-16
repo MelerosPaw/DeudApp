@@ -16,11 +16,11 @@
         android:imeOptions="actionNext"
         android:inputType="textCapWords"
         android:maxLines="1"
-        android:nextFocusRight="@+id/et_cantidad"
+        android:nextFocusRight="@id/etCantidad"
         android:textSize="18sp" />
 
     <EditText
-        android:id="@id/et_cantidad"
+        android:id="@+id/etCantidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:digits="1234567890,."

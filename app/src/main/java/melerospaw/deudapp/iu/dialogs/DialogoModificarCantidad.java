@@ -16,7 +16,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
-import melerospaw.deudapp.utils.Currency;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
@@ -36,7 +35,7 @@ public class DialogoModificarCantidad extends DialogFragment {
     @BindView(R.id.llCurrencyRoot)      ViewGroup llCurrencyGroup;
     @BindView(R.id.tv_titulo)           TextView tvTitulo;
     @BindView(R.id.tv_mensaje)          TextView tvMensaje;
-    @BindView(R.id.et_cantidad)         EditText etCantidad;
+    @BindView(R.id.etCantidad)         EditText etCantidad;
     @BindView(R.id.tv_moneda)           TextView tvMoneda;
     @BindView(R.id.tv_guardar)          TextView btnAceptar;
     @BindView(R.id.tv_cancelar)         TextView btnCancelar;

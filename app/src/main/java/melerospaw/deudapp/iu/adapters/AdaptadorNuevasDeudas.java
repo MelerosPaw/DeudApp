@@ -26,7 +26,6 @@ import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.vo.EntidadVO;
 import melerospaw.deudapp.modelo.Entidad;
-import melerospaw.deudapp.utils.Currency;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.DecimalFormatUtils;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
@@ -143,7 +142,7 @@ public class AdaptadorNuevasDeudas
 
         @BindView(R.id.root)                ViewGroup root;
         @BindView(R.id.et_concepto)         EditText etConcepto;
-        @BindView(R.id.et_cantidad)         EditText etCantidad;
+        @BindView(R.id.etCantidad)          EditText etCantidad;
         @BindView(R.id.tv_moneda)           TextView tvMoneda;
         @BindView(R.id.chk_deuda_grupal)    CheckBox chkDeudaGrupal;
 
@@ -202,16 +201,16 @@ public class AdaptadorNuevasDeudas
             etConcepto.setTextColor(colorResource);
         }
 
-        @OnFocusChange({R.id.et_cantidad, R.id.et_concepto})
+        @OnFocusChange({R.id.etCantidad, R.id.et_concepto})
         public void cerrarEdicion(View v, boolean hasFocus) {
 
             if (!hasFocus) {
                 if (v.getId() == R.id.et_concepto) {
                     cerrarConcepto();
-                } else if (v.getId() == R.id.et_cantidad) {
+                } else if (v.getId() == R.id.etCantidad) {
                     cerrarCantidad();
                 }
-            } else if (v.getId() == R.id.et_cantidad &&
+            } else if (v.getId() == R.id.etCantidad &&
                     entidad.getTipoEntidad() == Entidad.DEUDA &&
                     entidad.getCantidad() != 0F) {
                 abrirCantidad();

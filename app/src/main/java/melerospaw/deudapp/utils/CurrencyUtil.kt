@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.ViewGroup
 import android.widget.TextView
 import melerospaw.deudapp.preferences.SharedPreferencesManager
-import java.lang.IllegalArgumentException
 
 fun getCurrency(context: Context) = SharedPreferencesManager(context).currency
 
