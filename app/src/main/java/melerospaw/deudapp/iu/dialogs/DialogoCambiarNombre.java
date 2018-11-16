@@ -20,7 +20,6 @@ import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
-import melerospaw.deudapp.utils.StringUtils;
 
 public class DialogoCambiarNombre extends DialogFragment {
 

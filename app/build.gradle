@@ -18,7 +18,7 @@ android {
         release {
             keyAlias 'llavesita'
             keyPassword 'javier*1237'
-            storeFile file('E:\\DOCUMENTOS GUARDADOS\\Android Studio Projects\\store.jks')
+            storeFile file('F:\\DOCUMENTOS GUARDADOS\\Android Studio Projects\\store.jks')
             storePassword 'javier*1237'
         }
     }
@@ -50,8 +50,8 @@ android {
     productFlavors {
 
         store {
-            versionCode 4
-            versionName "1.1.1"
+            versionCode 5
+            versionName "1.1.2"
             dimension "environment"
             resValue "string", "app_name", "DeudApp"
         }
