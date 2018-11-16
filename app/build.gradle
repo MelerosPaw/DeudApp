@@ -15,19 +15,19 @@ android {
     }
 
     signingConfigs {
-//        release {
+        release {
 //            keyAlias 'llavesita'
 //            keyPassword 'javier*1237'
 //            storeFile file('E:\\DOCUMENTOS GUARDADOS\\Android Studio Projects\\store.jks')
 //            storePassword 'javier*1237'
-//        }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled true
             ext.enableCrashlytics = true
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
@@ -35,7 +35,7 @@ android {
             minifyEnabled false
             ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
         }
 
         debug {
