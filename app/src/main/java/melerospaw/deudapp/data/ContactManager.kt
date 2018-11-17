@@ -18,7 +18,7 @@ class ContactManager {
             val cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
                     null, null, null, null)
 
-            if (cursor != null) {
+            cursor?.let {
                 while (cursor.moveToNext()) {
                     val name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
                     val photoThumbnailUri = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
