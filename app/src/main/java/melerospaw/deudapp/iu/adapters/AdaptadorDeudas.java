@@ -260,9 +260,11 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             if (entidad.getCantidad() == 0.00f) {
                 tvCantidad.setTextColor(ContextCompat.getColor(mContext, R.color.inactive));
                 tvCantidad.setText(R.string.cancelada);
+                ExtensionFunctionsKt.hide(tvMoneda);
             } else {
                 CurrencyUtilKt.setUpAmount(mContext, entidad.getCantidad(), llAmountRoot, tvCantidad, tvMoneda);
                 tvCantidad.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                ExtensionFunctionsKt.visible(tvMoneda);
             }
 
             mostrarOpciones();

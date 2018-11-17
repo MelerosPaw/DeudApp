@@ -429,13 +429,13 @@ public class ActivityDetallePersona extends AppCompatActivity {
         final boolean sinConcepto = concepto.length() == 0;
 
         tvConcepto.setText(concepto);
-        ExtensionFunctionsKt.hidden(tvConcepto,sinConcepto);
+        ExtensionFunctionsKt.hidden(tvConcepto, sinConcepto);
         ExtensionFunctionsKt.hidden(tvMoneda, sinConcepto);
 
         if (sinConcepto) {
-            CurrencyUtilKt.setUpAmount(this, cantidadTotal, llBarraTotal, tvCantidad, tvMoneda);
-        } else {
             tvCantidad.setText(getString(R.string.deudas_canceladas));
+        } else {
+            CurrencyUtilKt.setUpAmount(this, cantidadTotal, llBarraTotal, tvCantidad, tvMoneda);
         }
     }
 
