@@ -4,4 +4,38 @@
         <item>Deudor</item>
         <item>Acreedor</item>
     </array>
+
+    <!-- Estos dos arrays deben ir sincronizados con los símbolos y la descripción del enum
+    Currency -->
+    <array name="currencies">
+        <item>Bs.S.​ - Bolívares</item>
+        <item>₡​ - Colones</item>
+        <item>C$ - Córdobas</item>
+        <item>$ - Dólares</item>
+        <item>Esc.​ - Escudos</item>
+        <item>€ - Euros</item>
+        <item>L - Lempiras</item>
+        <item>£ - Libras</item>
+        <item>$ - Pesos</item>
+        <item>₱ - Pesos filipinos</item>
+        <item>Q - Quetzales</item>
+        <item>S/. - Soles</item>
+        <item>UF​ - Unidades de Fomento</item>
+    </array>
+
+    <array name="currency_values">
+        <item>Bolívares</item>
+        <item>Colones</item>
+        <item>Córdobas</item>
+        <item>Dólares</item>
+        <item>Escudos</item>
+        <item>Euros</item>
+        <item>Lempiras</item>
+        <item>Libras</item>
+        <item>Pesos</item>
+        <item>Pesos filipinos</item>
+        <item>Quetzales</item>
+        <item>Soles</item>
+        <item>Unidades de Fomento</item>
+    </array>
 </resources>

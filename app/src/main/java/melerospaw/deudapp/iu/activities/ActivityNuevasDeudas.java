@@ -47,7 +47,7 @@ import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.modelo.Persona.TipoPersona;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
-import melerospaw.deudapp.utils.SharedPreferencesManager;
+import melerospaw.deudapp.preferences.SharedPreferencesManager;
 import melerospaw.deudapp.utils.TecladoUtils;
 
 public class ActivityNuevasDeudas extends AppCompatActivity {
@@ -102,7 +102,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (Build.VERSION.SDK_INT >= 23) {
             if (requestCode == PERMISO_CONTACTOS) {
                 boolean granted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
@@ -185,7 +186,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
         layoutManagerPersonas = new LinearLayoutManager(this);
         rvPersonas.setLayoutManager(layoutManagerPersonas);
         rvPersonas.setAdapter(adaptadorNuevasPersonas);
-        rvPersonas.setVisibility(View.VISIBLE);
+        ExtensionFunctionsKt.visible(rvPersonas, true);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT
                         | ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
@@ -208,11 +209,14 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     private void toggleMensajeVacioPersonas() {
-        tvPersonasVacias.setVisibility(!isForResult && adaptadorNuevasPersonas == null || adaptadorNuevasPersonas.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
+        ExtensionFunctionsKt.visible(tvPersonasVacias, !isForResult &&
+                adaptadorNuevasPersonas == null ||
+                adaptadorNuevasPersonas.getItemCount() == 0);
     }
 
     private void inicializarAdaptadorNuevasEntidades() {
-        adaptadorNuevasDeudas = new AdaptadorNuevasDeudas(this, new LinkedList<Entidad>(), !isForResult);
+        adaptadorNuevasDeudas = new AdaptadorNuevasDeudas(this, new LinkedList<Entidad>(),
+                !isForResult);
         layoutManagerEntidades = new LinearLayoutManager(this);
         rvNuevasEntidades.setLayoutManager(layoutManagerEntidades);
         rvNuevasEntidades.setAdapter(adaptadorNuevasDeudas);
@@ -246,13 +250,13 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
 
     private void mostrarDialogExplicativo() {
         final SharedPreferencesManager spm = new SharedPreferencesManager(ActivityNuevasDeudas.this);
-        if (spm.mustShowExplanatoryDialog()) {
+        if (spm.isShowExplanatoryDialog()) {
             final DialogExplicativo dialogExplicativo = new DialogExplicativo();
             dialogExplicativo.setCallback(new DialogExplicativo.PositiveCallback() {
                 @Override
                 public void onDialogClosed(boolean stopShow) {
-                    spm.setMustShowExplanatoryDialog(!stopShow);
-                    spm.setNoEsPrimeraVez(true);
+                    spm.setShowExplanatoryDialog(!stopShow);
+                    spm.setFirstTime(false);
                 }
             });
             dialogExplicativo.show(getSupportFragmentManager(), DialogExplicativo.getTAG());
@@ -260,7 +264,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     private void toggleMensajeVacioEntidades() {
-        tvEntidadesVacias.setVisibility(adaptadorNuevasDeudas == null || adaptadorNuevasDeudas.getItemCount() == 0 ? View.VISIBLE : View.INVISIBLE);
+        ExtensionFunctionsKt.visible(tvEntidadesVacias, adaptadorNuevasDeudas == null ||
+                adaptadorNuevasDeudas.getItemCount() == 0);
     }
 
     private void inicializarBotones() {
@@ -270,7 +275,7 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     }
 
     private void inicializarLayout() {
-        llSeccionPersonas.setVisibility(isForResult ? View.GONE : View.VISIBLE);
+        ExtensionFunctionsKt.hidden(llSeccionPersonas, isForResult);
     }
 
     private void nuevaPersona() {
@@ -301,8 +306,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
             guardar();
         }
     }
-    // Makes any focus dissappear from both RecyclerViews so OnFocusChange listeners are triggered
 
+    // Makes any focus disappear from both RecyclerViews so OnFocusChange listeners are triggered
     private void clearFocus() {
         if (!isForResult) {
             View v = layoutManagerPersonas.getFocusedChild();

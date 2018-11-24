@@ -15,10 +15,9 @@
     <string name="cancelar_todas">Cancelar todas las deudas</string>
     <string name="mensaje_cantidad_no_valida">No has escrito una cantidad válida</string>
     <string name="mensaje_disminucion_excesiva">No puedes descontar más de la cantidad debida</string>
-    <string name="euro">€</string>
-    <string name="euro_espacio"> €</string>
-    <string name="acreedor">Acreedor</string>
+    <string name="moneda_por_defecto">€</string>
     <string name="concepto">Concepto</string>
+    <string name="acreedor">Acreedor</string>
     <string name="conceptos_y_cantidades">Conceptos y cantidades</string>
     <string name="crear">Crear</string>
     <string name="eliminar_deuda">Eliminar deuda</string>
@@ -27,8 +26,6 @@
     <string name="ver_deuda">Ver deuda</string>
     <string name="aumentar_deuda">Aumentar deuda</string>
     <string name="descontar_deuda">Descontar de la deuda</string>
-    <string name="cantidad" formatted="false">%1$s €</string>
-    <string name="cantidad_infinity" formatted="false">%1$f €</string>
     <string name="cancelada">CANCELADA</string>
     <string name="personas">Personas</string>
     <string name="nuevo_concepto">Nuevo concepto</string>
@@ -128,5 +125,12 @@
     <string name="indicaciones_izquierda">Desliza un concepto\nhacia la izquierda\npara eliminarlo</string>
     <string name="indicaciones_derecha">Desliza un concepto\nhacia la derecha\npara duplicarlo</string>
     <string name="no_volver_a_mostrar">¡Ya no se me olvida!</string>
+
+    <!-- Config -->
+    <string name="config">Configuración</string>
+    <string name="clave_preferencia_moneda">CURRENCY</string>
+    <string name="moneda">Moneda</string>
+    <string name="resumen_preferencia_moneda">Tipo de moneda que quieres utilizar</string>
+    <string name="cero">0</string>
 
 </resources>

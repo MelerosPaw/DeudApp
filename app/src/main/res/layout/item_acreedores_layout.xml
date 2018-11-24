@@ -1,34 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="10dp"
+    android:background="@drawable/selector_item_persona"
     android:gravity="center_vertical"
-    android:background="@drawable/selector_item_persona">
+    android:orientation="horizontal"
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/iv_letra"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp" />
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:id="@+id/tv_nombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_weight="1"
-        tools:text="Nombre de la persona"/>
+        android:textStyle="bold"
+        tools:text="Nombre de la persona" />
 
     <TextView
         android:id="@+id/tv_deudaRestante"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        tools:text="450 €"/>
+        tools:text="450" />
+
+    <TextView
+        android:id="@+id/tv_moneda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        tools:text=" €" />
 
 </LinearLayout>

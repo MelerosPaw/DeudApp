@@ -60,14 +60,14 @@ import melerospaw.deudapp.iu.widgets.CustomLinearLayoutManager;
 import melerospaw.deudapp.iu.widgets.CustomTransitionSet;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
+import melerospaw.deudapp.preferences.SharedPreferencesManager;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoDeudaModificada;
 import melerospaw.deudapp.utils.ColorManager;
-import melerospaw.deudapp.utils.DecimalFormatUtils;
+import melerospaw.deudapp.utils.CurrencyUtilKt;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
-import melerospaw.deudapp.utils.SharedPreferencesManager;
 import melerospaw.deudapp.utils.StringUtils;
 
 public class ActivityDetallePersona extends AppCompatActivity {
@@ -87,9 +87,10 @@ public class ActivityDetallePersona extends AppCompatActivity {
     @BindView(R.id.rv_deudas)                   ContextRecyclerView rvDeudas;
     @BindView(R.id.tv_concepto)                 TextView tvConcepto;
     @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
+    @BindView(R.id.tv_moneda)                   TextView tvMoneda;
     @BindView(R.id.app_bar)                     AppBarLayout appBar;
     @BindView(R.id.collapsing_toolbar_layout)   CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.fl_barra_total)              LinearLayout llBarraTotal;
+    @BindView(R.id.ll_barra_total)              LinearLayout llBarraTotal;
     @BindView(R.id.iv_foto)                     ImageView ivFoto;
 
     private GestorDatos gestor;
@@ -162,7 +163,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     persona.getOldest() : getString(R.string.primera_deuda_contraida) + persona.getOldest();
             tvSubtitulo.setText(subtitulo);
             tvToolbarSubtitulo.setText(subtitulo);
-            tvToolbarSubtitulo.setVisibility(View.VISIBLE);
+            ExtensionFunctionsKt.visible(tvToolbarSubtitulo);
             tvToolbarTitulo.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 //            Palette palette = Palette.from(MemoryUtil.loadBitmap(persona.getImagen()).getResult()).generate();
 //            @ColorInt int color = palette.getVibrantColor(ContextCompat.getColor(this, android.R.color.white));
@@ -170,7 +171,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
 //            tvSubtitulo.setTextColor(color);
 
         } else {
-            tvToolbarSubtitulo.setVisibility(View.GONE);
+            ExtensionFunctionsKt.hide(tvToolbarSubtitulo);
             tvToolbarTitulo.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         }
 
@@ -344,7 +345,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void mostrarVacio(boolean mostrar) {
-        llVacio.setVisibility(mostrar? View.VISIBLE : View.GONE);
+        ExtensionFunctionsKt.hidden(llVacio, !mostrar);
     }
 
     private void mostrarDeshacer() {
@@ -423,18 +424,29 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void mostrarTotal(@Nullable Entidad entidadOmitida) {
-        boolean mostrarConcepto;
-        CharSequence concepto;
-        CharSequence cantidad;
-        float cantidadTotal = persona.getCantidadTotal(entidadOmitida);
+        final float cantidadTotal = persona.getCantidadTotal(entidadOmitida);
+        final CharSequence concepto = getConcepto(persona.getTipo(), cantidadTotal);
+        final boolean sinConcepto = concepto.length() == 0;
 
-        if (cantidadTotal == 0f) {
-            mostrarConcepto = false;
-            concepto = "";
-            cantidad = getString(R.string.deudas_canceladas);
+        tvConcepto.setText(concepto);
+        ExtensionFunctionsKt.hidden(tvConcepto, sinConcepto);
+        ExtensionFunctionsKt.hidden(tvMoneda, sinConcepto);
+
+        if (sinConcepto) {
+            tvCantidad.setText(getString(R.string.deudas_canceladas));
         } else {
-            mostrarConcepto = true;
-            switch (persona.getTipo()) {
+            CurrencyUtilKt.setUpAmount(this, cantidadTotal, llBarraTotal, tvCantidad, tvMoneda);
+        }
+    }
+
+    private CharSequence getConcepto(@Persona.TipoPersona int tipoPersona, float cantidadTotal) {
+
+        String concepto;
+
+        if (cantidadTotal == 0F) {
+            concepto = "";
+        } else {
+            switch (tipoPersona) {
                 case Persona.ACREEDOR:
                     concepto = getString(R.string.debes_un_total_de);
                     break;
@@ -453,16 +465,10 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 case Persona.INACTIVO:
                 default:
                     concepto = "";
-                    mostrarConcepto = false;
             }
-
-            cantidad = String.format(getString(R.string.cantidad),
-                    DecimalFormatUtils.decimalToStringIfZero(cantidadTotal, 2, ".", ","));
         }
 
-        tvConcepto.setText(concepto);
-        tvCantidad.setText(cantidad);
-        tvConcepto.setVisibility(mostrarConcepto ? View.VISIBLE : View.GONE);
+        return concepto;
     }
 
     private void toggleScroll() {
@@ -490,14 +496,13 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void showDebtSwipeTutorial() {
-        if (preferencesManager.mustShowSwipeTutorial()) {
-            tvNoVolverAMostrar.setVisibility(preferencesManager.mustShowIgnoreSwipeTutorial() ?
-                    View.VISIBLE : View.INVISIBLE);
+        if (preferencesManager.isShowSwipeTutorial()) {
+            ExtensionFunctionsKt.visible(tvNoVolverAMostrar, preferencesManager.isShowIgnoreSwipeTutorial());
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     TransitionManager.beginDelayedTransition(root, new CustomTransitionSet().setDuration(500));
-                    llIndicacionesSwipe.setVisibility(View.VISIBLE);
+                    ExtensionFunctionsKt.visible(llIndicacionesSwipe);
                 }
             }, 650);
         }
@@ -808,8 +813,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
             ivFoto.setImageBitmap(null);
         }
 
-        tvTitulo.setVisibility(View.VISIBLE);
-        tvSubtitulo.setVisibility(View.VISIBLE);
+        ExtensionFunctionsKt.visible(tvTitulo, tvSubtitulo);
         setExpandEnabled(persona.tieneImagen());
         toggleScroll();
         setMenuOptions();
@@ -866,11 +870,11 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void ocultarTutorialSwipe(boolean volverAMostrar) {
-        new SharedPreferencesManager(this).setMustShowIgnoreSwipeTutorial(true);
+        new SharedPreferencesManager(this).setShowIgnoreSwipeTutorial(true);
         if (!volverAMostrar) {
-            new SharedPreferencesManager(this).setMustShowSwipeTutorial(false);
+            new SharedPreferencesManager(this).setShowSwipeTutorial(false);
         }
         TransitionManager.beginDelayedTransition(root, new CustomTransitionSet().setDuration(500));
-        llIndicacionesSwipe.setVisibility(View.GONE);
+        ExtensionFunctionsKt.hide(llIndicacionesSwipe);
     }
 }

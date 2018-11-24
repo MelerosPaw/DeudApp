@@ -58,19 +58,17 @@ class DialogEditarDeuda : DialogFragment() {
         with(entidad) {
             tvFecha.text = readableDate
             etConcepto.setText(concepto)
-            etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(cantidad , 2, ".", ","))
-            etCantidad.setTextColor(ContextCompat.getColor(context!!,
+            et_cantidad.setText(DecimalFormatUtils.decimalToStringIfZero(cantidad , 2, ".", ","))
+            et_cantidad.setTextColor(ContextCompat.getColor(context!!,
                     if (entidad.tipoEntidad == Entidad.DEUDA) R.color.red else R.color.green))
-            btnGuardar.setOnClickListener {
-                guardar()
-            }
-            btnCancelar.setOnClickListener {
-                dismiss()
-            }
-            tvCambiarFecha.setOnClickListener {
-                mostrarDialogFecha()
-            }
         }
+
+        setUpAmount(context = requireContext(), rootView = llCurrencyRoot, amountView = et_cantidad,
+                currencyView = tvMoneda)
+        btnGuardar.setOnClickListener { guardar() }
+        btnCancelar.setOnClickListener { dismiss() }
+        tvCambiarFecha.setOnClickListener {mostrarDialogFecha() }
+
         if (Build.VERSION.SDK_INT >= 16) {
             flRoot.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
         }
@@ -88,7 +86,7 @@ class DialogEditarDeuda : DialogFragment() {
                 fecha = Entidad.formatearFecha(tvFecha.texto)
                 concepto = etConcepto.texto
 
-                val auxCantidad = etCantidad.texto
+                val auxCantidad = et_cantidad.texto
                 if (auxCantidad.isInfinityCharacter() ||
                         StringUtils.prepararDecimal(auxCantidad).isInfiniteFloat()) {
                     if (!cantidad.isInfiniteFloat()) {
@@ -107,7 +105,7 @@ class DialogEditarDeuda : DialogFragment() {
 
     private fun verificarDatos() : Boolean {
         val concepto = etConcepto.texto
-        val cantidad = etCantidad.texto
+        val cantidad = et_cantidad.texto
         val fecha = tvFecha.texto
 
         return when {

@@ -15,7 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.crashlytics.android.Crashlytics;
 
-import butterknife.OnClick;
 import io.fabric.sdk.android.Fabric;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.adapters.ViewPagerAdapter;
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 //        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 //            @Override
 //            public void onTabSelected(TabLayout.Tab tab) {
-//                viewPager.setCurrentItem(tab.getPosition());
+//                viewPager.setCurrentItem(tab.getPosicion());
 //            }
 //
 //            @Override
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        abrirPestañaSeleccionada();
+        abrirPestanaSeleccionada();
     }
 
     @Override
@@ -131,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         isRestoring = false;
     }
 
-    public void abrirPestañaSeleccionada() {
+    public void abrirPestanaSeleccionada() {
         if (!TextUtils.isEmpty(tabSeleccionada)) {
             for (int i = 0; i < viewPager.getChildCount() - 1; i++) {
                 if (tabs.getTabAt(i).getText().equals(tabSeleccionada)) {
