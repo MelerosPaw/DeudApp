@@ -275,7 +275,7 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
 
     @Subscribe
     public void onEventoMonedaCambiada(EventoMonedaCambiada eventoMonedaCambiada) {
-        notifyItemRangeChanged(0, getItemCount() - 1);
+        notifyItemRangeChanged(0, getItemCount());
     }
 
     public interface ContextualMenuInterface {

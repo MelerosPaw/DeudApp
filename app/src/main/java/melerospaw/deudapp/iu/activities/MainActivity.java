@@ -75,6 +75,23 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
     }
 
+    private View tabPersonalizada() {
+
+        ViewGroup v = new ViewGroup(this) {
+            @Override
+            protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+            }
+        };
+
+        View view = LayoutInflater.from(this).inflate(R.layout.item_acreedores_layout, v, false);
+        TextView tvNombre = view.findViewById(tv_nombre);
+        TextView tvDr = view.findViewById(R.id.tv_deudaRestante);
+        tvNombre.setText("A");
+        tvDr.setText("B");
+        return view;
+    }
+
     private void setViewPager() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(viewPagerAdapter);
@@ -98,23 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private View tabPersonalizada() {
-
-        ViewGroup v = new ViewGroup(this) {
-            @Override
-            protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
-            }
-        };
-
-        View view = LayoutInflater.from(this).inflate(R.layout.item_acreedores_layout, v, false);
-        TextView tvNombre = view.findViewById(tv_nombre);
-        TextView tvDr = view.findViewById(R.id.tv_deudaRestante);
-        tvNombre.setText("A");
-        tvDr.setText("B");
-        return view;
     }
 
     @Override
