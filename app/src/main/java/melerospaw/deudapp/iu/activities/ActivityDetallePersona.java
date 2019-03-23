@@ -308,7 +308,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
                         ocultarDeshacer();
 
                         if (swipeDir == ItemTouchHelper.RIGHT) {
