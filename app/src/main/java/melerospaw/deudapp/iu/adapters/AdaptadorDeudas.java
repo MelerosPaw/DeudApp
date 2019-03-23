@@ -53,8 +53,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.item_deuda_layout, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_deuda_layout, parent, false));
     }
 
     @Override
@@ -279,6 +278,13 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             ExtensionFunctionsKt.hidden(tvCancelar, estaCancelada);
         }
 
+        private void toggleOptions() {
+            if (callback.sizeAboutToChange()) {
+                elementosAbiertos.put(getAdapterPosition(), !elementosAbiertos.get(getAdapterPosition()));
+                mostrarOpciones();
+            }
+        }
+
         @OnClick({R.id.ll_item, R.id.tv_aumentar, R.id.tv_descontar, R.id.tv_cancelar})
         public void onViewClicked(View view) {
             switch (view.getId()) {
@@ -301,14 +307,6 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         public boolean onLongClick() {
             callback.onLongClick(llItem, getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
             return true;
-        }
-
-
-        private void toggleOptions() {
-            if (callback.sizeAboutToChange()) {
-                elementosAbiertos.put(getAdapterPosition(), !elementosAbiertos.get(getAdapterPosition()));
-                mostrarOpciones();
-            }
         }
     }
 }
