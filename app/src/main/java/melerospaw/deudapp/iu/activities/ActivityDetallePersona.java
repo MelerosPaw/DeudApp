@@ -130,7 +130,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_deuda_layout);
 
-        String nombre = getIntent().getExtras().getString(BUNDLE_PERSONA);
+        final String nombre = getIntent().getExtras().getString(BUNDLE_PERSONA);
         gestor = GestorDatos.getGestor(this);
         preferencesManager = new SharedPreferencesManager(this);
         persona = gestor.getPersona(nombre);
@@ -179,11 +179,11 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void inicializarAdapter() {
-        List<Entidad> entidades = persona.getEntidades();
+        final List<Entidad> entidades = persona.getEntidades();
         mostrarVacio(entidades.isEmpty());
         Collections.sort(entidades, Entidad.COMPARATOR);
         adaptador = new AdaptadorDeudas(this, entidades);
-        adaptador.setCallback(new AdaptadorDeudas.AdaptadorEntidadesCallback() {
+        adaptador.setCallbacks(new AdaptadorDeudas.AdaptadorEntidadesCallback() {
             @Override
             public boolean sizeAboutToChange() {
                 return prepararAnimacion();

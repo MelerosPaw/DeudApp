@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.security.cert.Extension;
 import java.util.Collections;
 import java.util.List;
 
@@ -211,7 +210,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         posicionProvisional = -1;
     }
 
-    public void setCallback(AdaptadorEntidadesCallback callback) {
+    public void setCallbacks(AdaptadorEntidadesCallback callback) {
         this.callback = callback;
     }
 
