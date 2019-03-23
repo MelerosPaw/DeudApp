@@ -276,7 +276,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
                             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState,
                                     isCurrentlyActive);
                         }
-                        setbackgroundView(viewHolder, dX);
+                        setBackgroundView(viewHolder, dX);
                     }
 
                     @Override
@@ -292,10 +292,10 @@ public class ActivityDetallePersona extends AppCompatActivity {
                                     isCurrentlyActive);
                         }
 
-                        setbackgroundView(viewHolder, dX);
+                        setBackgroundView(viewHolder, dX);
                     }
 
-                    private void setbackgroundView(RecyclerView.ViewHolder vh, float x) {
+                    private void setBackgroundView(RecyclerView.ViewHolder vh, float x) {
                         adaptador.setBackgroundView(vh, x < 0 ?
                                 AdaptadorDeudas.BACKGROUND_BORRAR : AdaptadorDeudas.BACKGROUND_DUPLICAR);
                     }
@@ -387,7 +387,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         transitionSet.addListener(new Transition.TransitionListener() {
             @Override
             public void onTransitionStart(@NonNull Transition transition) {
-                layoutManager.setScrollEnabled(false);
+                enableScroll(false);
             }
 
             @Override
@@ -402,12 +402,12 @@ public class ActivityDetallePersona extends AppCompatActivity {
 
             @Override
             public void onTransitionPause(@NonNull Transition transition) {
-                layoutManager.setScrollEnabled(true);
+                enableScroll(true);
             }
 
             @Override
             public void onTransitionResume(@NonNull Transition transition) {
-                layoutManager.setScrollEnabled(false);
+                enableScroll(false);
             }
         });
         TransitionManager.beginDelayedTransition(rvDeudas, transitionSet);
@@ -415,8 +415,12 @@ public class ActivityDetallePersona extends AppCompatActivity {
     }
 
     private void enableAnimation() {
-        layoutManager.setScrollEnabled(true);
+        enableScroll(true);
         isAnimationGoingOn = false;
+    }
+
+    private void enableScroll(boolean enabled) {
+        layoutManager.setScrollEnabled(enabled);
     }
 
     private void cambiarColorTotal(@Nullable Entidad deudaOmitida) {
