@@ -240,9 +240,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT |
                         ItemTouchHelper.LEFT | ItemTouchHelper.START | ItemTouchHelper.END) {
                     @Override
-                    public boolean onMove(RecyclerView recyclerView,
-                                          RecyclerView.ViewHolder viewHolder,
-                                          RecyclerView.ViewHolder target) {
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder,
+                                          @NonNull RecyclerView.ViewHolder target) {
                         return true;
                     }
 
@@ -256,7 +256,8 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     }
 
                     @Override
-                    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                    public void clearView(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder) {
                         if (isValidViewHolder(viewHolder)) {
                             getDefaultUIUtil().clearView(adaptador.getForegroundView(viewHolder));
                         } else {
@@ -265,9 +266,9 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onChildDraw(Canvas c, RecyclerView recyclerView,
-                                            RecyclerView.ViewHolder viewHolder, float dX, float dY,
-                                            int actionState, boolean isCurrentlyActive) {
+                    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                            @NonNull RecyclerView.ViewHolder viewHolder, float dX,
+                                            float dY, int actionState, boolean isCurrentlyActive) {
                         if (isValidViewHolder(viewHolder)) {
                             getDefaultUIUtil().onDraw(c, recyclerView,
                                     adaptador.getForegroundView(viewHolder), dX, dY, actionState,
@@ -280,9 +281,11 @@ public class ActivityDetallePersona extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onChildDrawOver(Canvas c, RecyclerView recyclerView,
+                    public void onChildDrawOver(@NonNull Canvas c,
+                                                @NonNull RecyclerView recyclerView,
                                                 RecyclerView.ViewHolder viewHolder, float dX,
-                                                float dY, int actionState, boolean isCurrentlyActive) {
+                                                float dY, int actionState,
+                                                boolean isCurrentlyActive) {
                         if (isValidViewHolder(viewHolder)) {
                             getDefaultUIUtil().onDrawOver(c, recyclerView,
                                     adaptador.getForegroundView(viewHolder), dX, dY, actionState,

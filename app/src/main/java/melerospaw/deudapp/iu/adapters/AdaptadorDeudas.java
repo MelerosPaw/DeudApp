@@ -1,5 +1,6 @@
 package melerospaw.deudapp.iu.adapters;
 
+import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -39,7 +40,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
     public static final int BACKGROUND_DUPLICAR = 1;
 
     private List<Entidad> mData;
-    private AppCompatActivity mContext;
+    private Context mContext;
     private AdaptadorEntidadesCallback callback;
     private SparseBooleanArray elementosAbiertos;
     private Entidad itemProvisional;
@@ -51,6 +52,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
         this.elementosAbiertos = new SparseBooleanArray();
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_deuda_layout, parent, false));
@@ -58,12 +60,9 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Entidad entidad = mData.get(position);
-        if (position > 0) {
-            Entidad anterior = mData.get(position - 1);
-            holder.bindView(entidad, anterior);
-        } else
-            holder.bindView(entidad, null);
+        final Entidad entidad = mData.get(position);
+        final Entidad anterior = position > 0 ? mData.get(position - 1) : null;
+        holder.bindView(entidad, anterior);
     }
 
     @Override
