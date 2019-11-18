@@ -42,23 +42,4 @@ class SharedPreferencesManager(context: Context) {
     fun unregisterOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener)
     }
-
-    fun applyFix() {
-        if (!sharedPreferences.getBoolean("FIX_APPLIED", false)) {
-            val storedCurrencyValue: String? = sharedPreferences.getString(prefCurrencyKey, null)
-            var found = false
-            for (currency: Currency in Currency.values()) {
-                if (currency.signo == storedCurrencyValue) {
-                    this.currency = currency
-                    found = true
-                    break
-                }
-            }
-            if (!found) {
-                this.currency = Currency.EURO
-            }
-
-            sharedPreferences.edit().putBoolean("FIX_APPLIED", true).apply()
-        }
-    }
 }

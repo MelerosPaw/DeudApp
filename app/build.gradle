@@ -50,8 +50,8 @@ android {
     productFlavors {
 
         store {
-            versionCode 8
-            versionName "1.2.2"
+            versionCode 9
+            versionName "1.2.3"
             dimension "environment"
             resValue "string", "app_name", "DeudApp"
         }

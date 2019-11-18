@@ -22,9 +22,5 @@ public class DeudAppApplication extends Application {
 
         // Initialize Fabric with the debug-disabled crashlytics.
         Fabric.with(this, crashlyticsKit);
-
-        // TODO: 02/12/2018 Delete in following versions
-        // Fix for 1.2.1 bug on Currency key change
-        new SharedPreferencesManager(this).applyFix();
     }
 }
