@@ -1,7 +1,5 @@
 package melerospaw.deudapp.utils
 
-import java.lang.IllegalStateException
-
 /**
  * Esta clase está debe contener los mismos valores que los arrays {@code currencies} y
  * {@code currency_values} del archivo <i>arrays.xml</i>.
@@ -9,7 +7,7 @@ import java.lang.IllegalStateException
 enum class Currency(val signo: String, val descripcion: String, val caracterDecimal: CaracterDecimal,
                     val posicion: Position) {
 
-    BOLIVAR("Bs.S.", "Bolivares", CaracterDecimal.COMA, Position.DELANTE_CON_ESPACIO),
+    BOLIVAR("Bs.S.", "Bolívares", CaracterDecimal.COMA, Position.DELANTE_CON_ESPACIO),
     COLON("₡", "Colones", CaracterDecimal.COMA, Position.DELANTE_CON_ESPACIO),
     CORDOBA("C$", "Córdobas", CaracterDecimal.COMA, Position.DELANTE_CON_ESPACIO),
     DOLAR("$", "Dólares", CaracterDecimal.PUNTO, Position.DELANTE_SIN_ESPACIO),
@@ -23,8 +21,7 @@ enum class Currency(val signo: String, val descripcion: String, val caracterDeci
     SOL("S/.", "Soles", CaracterDecimal.COMA, Position.DELANTE_CON_ESPACIO),
     UNIDAD_DE_FOMENTO("UF", "Unidades de Fomento", CaracterDecimal.COMA, Position.DELANTE_CON_ESPACIO);
 
-    val nombreCompleto: String
-        get() = "$signo - $descripcion"
+    val nombreCompleto = "$signo - $descripcion"
 
     companion object {
         fun getCurrencyByDescription(descripcion: String) =

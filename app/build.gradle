@@ -16,10 +16,10 @@ android {
 
     signingConfigs {
         release { // La configuración está descomentada porque la unidad E no está conectada.
-//            keyAlias 'llavesita'
-//            keyPassword 'javier*1237'
-//            storeFile file('E:\\DOCUMENTOS GUARDADOS\\Android Studio Projects\\store.jks')
-//            storePassword 'javier*1237'
+            keyAlias 'llavesita'
+            keyPassword 'javier*1237'
+            storeFile file('E:\\DOCUMENTOS GUARDADOS\\Android Studio Projects\\store.jks')
+            storePassword 'javier*1237'
         }
     }
 

@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
+import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.iu.vo.EntidadVO;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
@@ -165,7 +166,7 @@ public class AdaptadorNuevasDeudas
                 etConcepto.setText("");
             }
 
-            if (entidad.getCantidad() != 0.00f) {
+            if (entidad.getCantidad() != ConstantesGenerales.NO_MONEY) {
                 String cantidad = DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad(), 2, ".", ",");
                 etCantidad.setText(cantidad);
             } else {

@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
+import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.utils.SecureOperationKt;
 
 @DatabaseTable(tableName = "Entidades")
@@ -45,13 +46,13 @@ public class Entidad implements Comparable<Entidad>, Serializable {
     }
 
     public Entidad() {
-        this.cantidad = 0.00f;
+        this.cantidad = ConstantesGenerales.NO_MONEY;
         this.concepto = "";
         this.tipoEntidad = INDEFINIDA;
     }
 
     public Entidad(@TipoEntidad int tipoEntidad) {
-        this.cantidad = 0.00f;
+        this.cantidad = ConstantesGenerales.NO_MONEY;
         this.concepto = "";
         this.tipoEntidad = tipoEntidad;
         this.fecha = getFechaSimple();

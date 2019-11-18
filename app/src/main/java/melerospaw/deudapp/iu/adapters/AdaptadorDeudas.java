@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import melerospaw.deudapp.R;
+import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.iu.widgets.ContextRecyclerView;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
@@ -254,7 +255,7 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             }
 
             tvConcepto.setText(entidad.getConcepto());
-            if (entidad.getCantidad() == 0.00f) {
+            if (entidad.getCantidad() == ConstantesGenerales.NO_MONEY) {
                 tvCantidad.setTextColor(ContextCompat.getColor(mContext, R.color.inactive));
                 tvCantidad.setText(R.string.cancelada);
                 ExtensionFunctionsKt.hide(tvMoneda);
