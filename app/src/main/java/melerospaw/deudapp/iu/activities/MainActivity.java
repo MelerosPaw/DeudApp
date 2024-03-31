@@ -10,26 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.crashlytics.android.Crashlytics;
-
 import io.fabric.sdk.android.Fabric;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.iu.adapters.ViewPagerAdapter;
 import melerospaw.deudapp.task.BusProvider;
 import melerospaw.deudapp.task.EventoCambioPagina;
 
-import static melerospaw.deudapp.R.id.tv_nombre;
-
-
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar)     Toolbar toolbar;
-    @BindView(R.id.tabs)        TabLayout tabs;
-    @BindView(R.id.viewPager)   ViewPager viewPager;
-    @BindView(R.id.tv_nombre)   TextView labelNombre;
+    private Toolbar toolbar;
+    private TabLayout tabs;
+    private ViewPager viewPager;
+    private TextView tvNombre;
 
     private CharSequence tabSeleccionada;
     private boolean isRestoring;
@@ -39,8 +32,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main_layout);
-        ButterKnife.bind(this);
+        bindViews();
         loadView();
+    }
+
+    private void bindViews() {
+        toolbar = findViewById(R.id.toolbar);
+        tabs = findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.viewPager);
+        tvNombre = findViewById(R.id.tv_nombre);
     }
 
     private void loadView() {
@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
         View view = LayoutInflater.from(this).inflate(R.layout.item_acreedores_layout, v, false);
-        TextView tvNombre = view.findViewById(labelNombre);
         TextView tvDr = view.findViewById(R.id.tv_deudaRestante);
         tvNombre.setText("A");
         tvDr.setText("B");

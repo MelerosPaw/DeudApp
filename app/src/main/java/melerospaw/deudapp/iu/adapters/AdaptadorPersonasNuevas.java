@@ -2,21 +2,13 @@ package melerospaw.deudapp.iu.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.ContactManager;
 import melerospaw.deudapp.modelo.Contact;
@@ -105,15 +97,24 @@ public class AdaptadorPersonasNuevas
 
 
     /**VIEWHOLDER*/
-    class NuevaPersonaViewHolder extends RecyclerView.ViewHolder{
+    class NuevaPersonaViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.actv_persona)    AutoCompleteTextView actvAcreedor;
+        private AutoCompleteTextView actvAcreedor;
 
         private Contact contact;
 
         private NuevaPersonaViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            bindViews();
+            setUpListeners();
+        }
+
+        private void bindViews() {
+            actvAcreedor = itemView.findViewById(R.id.actv_persona);
+        }
+
+        private void setUpListeners() {
+            actvAcreedor.setOnFocusChangeListener((view, b) -> cerrarEdicion(b));
         }
 
         private void bindView(Contact contact, boolean focus){
@@ -124,13 +125,10 @@ public class AdaptadorPersonasNuevas
             filtrarLista();
             adapter = new AutocompleteAdapter(mContext, R.layout.item_autocomplete, listaContactos);
             actvAcreedor.setAdapter(adapter);
-            actvAcreedor.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Contact contactoSeleccionado = adapter.getItem(i);
-                    NuevaPersonaViewHolder.this.contact.setColor(contactoSeleccionado.getColor());
+            actvAcreedor.setOnItemClickListener((adapterView, view, i, l) -> {
+                Contact contactoSeleccionado = adapter.getItem(i);
+                NuevaPersonaViewHolder.this.contact.setColor(contactoSeleccionado.getColor());
 //                    NuevaPersonaViewHolder.this.contact.setPhotoUri(contactoSeleccionado.getPhotoUri());
-                }
             });
 
             if (StringUtils.isCadenaVacia(this.contact.getName()) && focus) {
@@ -139,19 +137,15 @@ public class AdaptadorPersonasNuevas
                 TecladoUtils.mostrarTeclado(actvAcreedor);
             }
 
-            actvAcreedor.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        cerrarEdicion(false);
-                    }
-                    return false;
+            actvAcreedor.setOnEditorActionListener((v, actionId, event) -> {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    cerrarEdicion(false);
                 }
+                return false;
             });
         }
 
-        @OnFocusChange(R.id.actv_persona)
-        public void cerrarEdicion(boolean hasFocus) {
+        private void cerrarEdicion(boolean hasFocus) {
             if (!hasFocus){
                 String nombre = actvAcreedor.getText().toString();
                 contact.setName(nombre);

@@ -1,37 +1,30 @@
 package melerospaw.deudapp.iu.dialogs;
 
-
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.utils.ScreenUtils;
 
-public class MenuContextualPersona extends DialogFragment {
+public class MenuContextualPersona extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = MenuContextualPersona.class.getSimpleName();
     private static final String BUNDLE_NOMBRE_PERSONA = "persona";
     private static final String BUNDLE_MOSTRAR_ELIMINAR = "mostrar_eliminar";
 
-    @BindView(R.id.tv_titulo)   TextView tvTitulo;
-    @BindView(R.id.tv_eliminar) TextView tvEliminar;
+    private TextView tvTitulo;
+    private TextView tvVer;
+    private TextView tvEliminar;
+    private TextView tvCambiarNombre;
 
     private MenuContextualPersonaCallback callback;
     private String nombrePersona;
     private boolean mostrarEliminar;
-    private Unbinder unbinder;
 
     public static MenuContextualPersona newInstance(String nombrePersona, boolean mostrarEliminar) {
 
@@ -61,7 +54,8 @@ public class MenuContextualPersona extends DialogFragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.menu_contextual_persona_layout, container, false);
         if (view != null) {
-            unbinder = ButterKnife.bind(this, view);
+            setUpListeners();
+            bindViews(view);
             tvEliminar.setEnabled(mostrarEliminar);
         }
         return view;
@@ -83,14 +77,21 @@ public class MenuContextualPersona extends DialogFragment {
         this.callback = callback;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    private void bindViews(@NonNull View view) {
+        tvTitulo = view.findViewById(R.id.tv_titulo);
+        tvVer = view.findViewById(R.id.tv_ver);
+        tvEliminar = view.findViewById(R.id.tv_eliminar);
+        tvCambiarNombre = view.findViewById(R.id.tv_cambiar_nombre);
     }
 
-    @OnClick({R.id.tv_ver, R.id.tv_eliminar, R.id.tv_cambiar_nombre})
-    public void onViewClicked(View view) {
+    private void setUpListeners() {
+        tvVer.setOnClickListener(this);
+        tvEliminar.setOnClickListener(this);
+        tvCambiarNombre.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
         switch(view.getId()) {
             case R.id.tv_ver: callback.verDeuda(this); break;
             case R.id.tv_eliminar: callback.eliminarPersona(this); break;

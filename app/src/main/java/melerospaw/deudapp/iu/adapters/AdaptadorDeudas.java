@@ -13,16 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Collections;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnLongClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.iu.widgets.ContextRecyclerView;
@@ -225,25 +219,50 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
     /**
      * VIEWHOLDER
      */
-    class ViewHolder extends ContextRecyclerView.ViewHolder {
+    class ViewHolder extends ContextRecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        @BindView(R.id.tv_swipe_option_duplicate)   TextView tvDuplicate;
-        @BindView(R.id.tv_swipe_option_delete)      TextView tvDelete;
-        @BindView(R.id.foreground_view)             CardView foregroundView;
-        @BindView(R.id.ll_item)                     LinearLayout llItem;
-        @BindView(R.id.tv_fecha)                    TextView tvFecha;
-        @BindView(R.id.tv_concepto)                 TextView tvConcepto;
-        @BindView(R.id.ll_amount_root)              LinearLayout llAmountRoot;
-        @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
-        @BindView(R.id.tv_moneda)                   TextView tvMoneda;
-        @BindView(R.id.ll_opciones_entidad)         LinearLayout llOpcionesEntidad;
-        @BindView(R.id.tv_aumentar)                 TextView tvAumentar;
-        @BindView(R.id.tv_descontar)                TextView tvDescontar;
-        @BindView(R.id.tv_cancelar)                 TextView tvCancelar;
+        private TextView tvDuplicate;
+        private TextView tvDelete;
+        private CardView foregroundView;
+        private LinearLayout llItem;
+        private TextView tvFecha;
+        private TextView tvConcepto;
+        private LinearLayout llAmountRoot;
+        private TextView tvCantidad;
+        private TextView tvMoneda;
+        private LinearLayout llOpcionesEntidad;
+        private TextView tvAumentar;
+        private TextView tvDescontar;
+        private TextView tvCancelar;
 
         ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            bindViews();
+            setUpListeners();
+        }
+
+        private void bindViews() {
+            tvDuplicate = itemView.findViewById(R.id.tv_swipe_option_duplicate);
+            tvDelete = itemView.findViewById(R.id.tv_swipe_option_delete);
+            foregroundView = itemView.findViewById(R.id.foreground_view);
+            llItem = itemView.findViewById(R.id.ll_item);
+            tvFecha = itemView.findViewById(R.id.tv_fecha);
+            tvConcepto = itemView.findViewById(R.id.tv_concepto);
+            llAmountRoot = itemView.findViewById(R.id.ll_amount_root);
+            tvCantidad = itemView.findViewById(R.id.tv_cantidad);
+            tvMoneda = itemView.findViewById(R.id.tv_moneda);
+            llOpcionesEntidad = itemView.findViewById(R.id.ll_opciones_entidad);
+            tvAumentar = itemView.findViewById(R.id.tv_aumentar);
+            tvDescontar = itemView.findViewById(R.id.tv_descontar);
+            tvCancelar = itemView.findViewById(R.id.tv_cancelar);
+        }
+
+        private void setUpListeners() {
+            llItem.setOnLongClickListener(this);
+            llItem.setOnClickListener(this);
+            tvAumentar.setOnClickListener(this);
+            tvDescontar.setOnClickListener(this);
+            tvCancelar.setOnClickListener(this);
         }
 
         void bindView(final Entidad entidad, final Entidad anterior) {
@@ -285,8 +304,8 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             }
         }
 
-        @OnClick({R.id.ll_item, R.id.tv_aumentar, R.id.tv_descontar, R.id.tv_cancelar})
-        public void onViewClicked(View view) {
+        @Override
+        public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.ll_item:
                     toggleOptions();
@@ -303,8 +322,8 @@ public class AdaptadorDeudas extends ContextRecyclerView.Adapter<AdaptadorDeudas
             }
         }
 
-        @OnLongClick(R.id.ll_item)
-        public boolean onLongClick() {
+        @Override
+        public boolean onLongClick(View view) {
             callback.onLongClick(llItem, getEntidadByPosition(getAdapterPosition()), getAdapterPosition());
             return true;
         }

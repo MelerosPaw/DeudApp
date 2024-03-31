@@ -12,26 +12,24 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 
-public class DialogoCambiarNombre extends DialogFragment {
+public class DialogoCambiarNombre extends DialogFragment implements View.OnClickListener {
 
     public static final String TAG = DialogoCambiarNombre.class.getSimpleName();
     public static final String BUNDLE_PERSONA = "BUNDLE_PERSONA";
     public static final String BUNDLE_ENTIDAD = "BUNDLE_ENTIDAD";
     public static final String BUNDLE_POSICION = "EXTRA_POSICION";
 
-    @BindView(R.id.fl_loading_view) FrameLayout flLoadingView;
-    @BindView(R.id.tv_mensaje)      TextView tvMensaje;
-    @BindView(R.id.et_nombre)       EditText etNombre;
+    private FrameLayout flLoadingView;
+    private TextView tvMensaje;
+    private EditText etNombre;
+    private TextView tvCancelar;
+    private TextView tvGuardar;
 
     private GestorDatos gestor;
     private Persona persona;
@@ -74,17 +72,31 @@ public class DialogoCambiarNombre extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_cambiar_nombre, container, false);
-        ButterKnife.bind(this, v);
+        bindViews(v);
         loadView();
         return v;
     }
 
+    private void bindViews(@NonNull View view) {
+        flLoadingView = view.findViewById(R.id.fl_loading_view);
+        tvMensaje = view.findViewById(R.id.tv_mensaje);
+        etNombre = view.findViewById(R.id.et_nombre);
+        tvCancelar = view.findViewById(R.id.tv_cancelar);
+        tvGuardar = view.findViewById(R.id.tv_guardar);
+    }
+
     private void loadView() {
+        setUpListeners();
         etNombre.setText(getNombre());
         tvMensaje.setText(getMensaje());
     }
 
-    @OnClick({R.id.tv_cancelar, R.id.tv_guardar})
+    private void setUpListeners() {
+        tvCancelar.setOnClickListener(this);
+        tvGuardar.setOnClickListener(this);
+    }
+
+    @Override
     public void onClick(View view) {
         if (view.getId() == R.id.tv_guardar) {
             cambiarNombre();

@@ -35,20 +35,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.squareup.otto.Bus;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.adapters.AdaptadorDeudas;
@@ -69,29 +61,33 @@ import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
 import melerospaw.deudapp.utils.InfinityManagerKt;
 import melerospaw.deudapp.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
-public class ActivityDetallePersona extends AppCompatActivity {
+public class ActivityDetallePersona extends AppCompatActivity implements View.OnClickListener {
 
     public static final String BUNDLE_PERSONA = "PERSONA";
     private static final int RC_FOTO = 0;
 
-    @BindView(R.id.root)                        ViewGroup root;
-    @BindView(R.id.ll_swipe_indications)        ViewGroup llIndicacionesSwipe;
-    @BindView(R.id.tv_no_volver_a_mostrar)      TextView tvNoVolverAMostrar;
-    @BindView(R.id.toolbar)                     Toolbar toolbar;
-    @BindView(R.id.tv_toolbar_titulo)           TextView tvToolbarTitulo;
-    @BindView(R.id.tv_titulo)                   TextView tvTitulo;
-    @BindView(R.id.tv_toolbar_subtitulo)        TextView tvToolbarSubtitulo;
-    @BindView(R.id.tv_subtitulo)                TextView tvSubtitulo;
-    @BindView(R.id.ll_empty_debts)              ViewGroup llVacio;
-    @BindView(R.id.rv_deudas)                   ContextRecyclerView rvDeudas;
-    @BindView(R.id.tv_concepto)                 TextView tvConcepto;
-    @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
-    @BindView(R.id.tv_moneda)                   TextView tvMoneda;
-    @BindView(R.id.app_bar)                     AppBarLayout appBar;
-    @BindView(R.id.collapsing_toolbar_layout)   CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.ll_barra_total)              LinearLayout llBarraTotal;
-    @BindView(R.id.iv_foto)                     ImageView ivFoto;
+    private ViewGroup root;
+    private ViewGroup llIndicacionesSwipe;
+    private TextView tvNoVolverAMostrar;
+    private TextView tvCerrarIndicaciones;
+    private Toolbar toolbar;
+    private TextView tvToolbarTitulo;
+    private TextView tvTitulo;
+    private TextView tvToolbarSubtitulo;
+    private TextView tvSubtitulo;
+    private ViewGroup llVacio;
+    private TextView addDeuda;
+    private TextView borrarPersona;
+    private ContextRecyclerView rvDeudas;
+    private TextView tvConcepto;
+    private TextView tvCantidad;
+    private TextView tvMoneda;
+    private AppBarLayout appBar;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private LinearLayout llBarraTotal;
+    private ImageView ivFoto;
 
     private GestorDatos gestor;
     private Bus bus = BusProvider.getBus();
@@ -134,17 +130,48 @@ public class ActivityDetallePersona extends AppCompatActivity {
         gestor = GestorDatos.getGestor(this);
         preferencesManager = new SharedPreferencesManager(this);
         persona = gestor.getPersona(nombre);
-        ButterKnife.bind(this);
+        bindViews();
         loadView();
     }
 
+    private void bindViews() {
+        root = findViewById(R.id.root);
+        llIndicacionesSwipe = findViewById(R.id.ll_swipe_indications);
+        tvNoVolverAMostrar = findViewById(R.id.tv_no_volver_a_mostrar);
+        tvCerrarIndicaciones = findViewById(R.id.tv_cerrar_indicaciones);
+        toolbar = findViewById(R.id.toolbar);
+        tvToolbarTitulo = findViewById(R.id.tv_toolbar_titulo);
+        tvTitulo = findViewById(R.id.tv_titulo);
+        tvToolbarSubtitulo = findViewById(R.id.tv_toolbar_subtitulo);
+        tvSubtitulo = findViewById(R.id.tv_subtitulo);
+        llVacio = findViewById(R.id.ll_empty_debts);
+        addDeuda = findViewById(R.id.add_debt);
+        borrarPersona = findViewById(R.id.delete_person);
+        rvDeudas = findViewById(R.id.rv_deudas);
+        tvConcepto = findViewById(R.id.tv_concepto);
+        tvCantidad = findViewById(R.id.tv_cantidad);
+        tvMoneda = findViewById(R.id.tv_moneda);
+        appBar = findViewById(R.id.app_bar);
+        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_layout);
+        llBarraTotal = findViewById(R.id.ll_barra_total);
+        ivFoto = findViewById(R.id.iv_foto);
+    }
+
     private void loadView() {
+        setUpClickListeners();
         setToolbar();
         inicializarAdapter();
         cambiarColorTotal(null);
         mostrarFoto();
         mostrarTotal(null);
         showDebtSwipeTutorial();
+    }
+
+    private void setUpClickListeners() {
+        tvNoVolverAMostrar.setOnClickListener(this);
+        tvCerrarIndicaciones.setOnClickListener(this);
+        addDeuda.setOnClickListener(this);
+        borrarPersona.setOnClickListener(this);
     }
 
     private void setToolbar() {
@@ -857,8 +884,7 @@ public class ActivityDetallePersona extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.add_debt, R.id.delete_person, R.id.tv_cerrar_indicaciones,
-            R.id.tv_no_volver_a_mostrar})
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_debt:

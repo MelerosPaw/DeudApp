@@ -10,15 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.squareup.otto.Subscribe;
-
 import java.util.LinkedList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
@@ -302,18 +297,24 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
      */
     class PersonViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_nombre)           TextView tvNombre;
-        @BindView(R.id.ll_root)             ViewGroup llRoot;
-        @BindView(R.id.tv_deudaRestante)    TextView tvDeudaRestante;
-        @BindView(R.id.tv_moneda)           TextView tvMoneda;
-        @BindView(R.id.iv_letra)            ImageView ivLetra;
+        private TextView tvNombre;
+        private ViewGroup llRoot;
+        private TextView tvDeudaRestante;
+        private TextView tvMoneda;
+        private ImageView ivLetra;
 
-        private View item;
 
         PersonViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
-            this.item = itemView;
+            bindViews();
+        }
+
+        private void bindViews() {
+            tvNombre = itemView.findViewById(R.id.tv_nombre);
+            llRoot = itemView.findViewById(R.id.ll_root);
+            tvDeudaRestante = itemView.findViewById(R.id.tv_deudaRestante);
+            tvMoneda = itemView.findViewById(R.id.tv_moneda);
+            ivLetra = itemView.findViewById(R.id.iv_letra);
         }
 
         void bindView(final Persona persona) {
@@ -333,32 +334,21 @@ public class AdaptadorPersonas extends RecyclerView.Adapter<AdaptadorPersonas.Pe
                         persona.getColor());
             }
 
-            item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        itemClickListener.onClick(persona);
-                    }
+            itemView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onClick(persona);
                 }
             });
 
-            item.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (contextualMenuInterface != null) {
-                        contextualMenuInterface.mostrarMenuContextual(persona, getAdapterPosition());
-                        return true;
-                    }
-                    return false;
+            itemView.setOnLongClickListener(v -> {
+                if (contextualMenuInterface != null) {
+                    contextualMenuInterface.mostrarMenuContextual(persona, getAdapterPosition());
+                    return true;
                 }
+                return false;
             });
 
-            ivLetra.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    gestionarModoEliminar(ivLetra, getAdapterPosition());
-                }
-            });
+            ivLetra.setOnClickListener(v -> gestionarModoEliminar(ivLetra, getAdapterPosition()));
         }
 
         private void gestionarModoEliminar(ImageView v, int posicionPulsada) {

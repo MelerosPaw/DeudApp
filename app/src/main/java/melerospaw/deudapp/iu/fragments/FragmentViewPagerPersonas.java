@@ -19,16 +19,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.security.cert.Extension;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.data.GestorDatos;
@@ -48,30 +41,31 @@ public class FragmentViewPagerPersonas extends Fragment {
 
     public static final String BUNDLE_TIPO = "TIPO";
 
-    @BindView(R.id.rv_personas)                 RecyclerView rvPersonas;
-    @BindView(R.id.ll_vacio)                    ViewGroup llVacio;
-    @BindView(R.id.tv_vacio)                    TextView tvVacio;
-    @BindView(R.id.ll_barra_total)              FrameLayout flBarraTotal;
-    @BindView(R.id.fl_total)                    FrameLayout flTotal;
-    @BindView(R.id.tv_total)                    TextView tvTotal;
-    @BindView(R.id.ll_subtotal)                 LinearLayout llSubtotal;
-    @BindView(R.id.tv_subtotal)                 TextView tvSubtotal;
-    @BindView(R.id.ll_total_simple)             LinearLayout llTotalSimple;
-    @BindView(R.id.tv_cantidad)                 TextView tvCantidad;
-    @BindView(R.id.tv_moneda)                   TextView tvMoneda;
-    @BindView(R.id.ll_barra_total_resumen)      LinearLayout llTotalResumen;
-    @BindView(R.id.ll_root_total_debido)        LinearLayout llRootTotalDebido;
-    @BindView(R.id.tv_total_debido)             TextView tvTotalDebido;
-    @BindView(R.id.tv_total_debido_moneda)      TextView tvTotalDebidoMoneda;
-    @BindView(R.id.ll_root_total_adeudado)      LinearLayout llRootTotalAdeudado;
-    @BindView(R.id.tv_total_adeudado)           TextView tvTotalAdeudado;
-    @BindView(R.id.tv_total_adeudado_moneda)    TextView tvTotalAdeudadoMoneda;
-    @BindView(R.id.ll_root_total_ambos)         LinearLayout llRootTotalAmbos;
-    @BindView(R.id.tv_total_ambos)              TextView tvTotalAmbos;
-    @BindView(R.id.tv_total_ambos_moneda)       TextView tvTotalAmbosMoneda;
-    @BindView(R.id.ll_root_total_total)         LinearLayout llRootTotalTotal;
-    @BindView(R.id.tv_total_total)              TextView tvTotalTotal;
-    @BindView(R.id.tv_total_total_moneda)       TextView tvTotalTotalMoneda;
+    private RecyclerView rvPersonas;
+    private ViewGroup llVacio;
+    private TextView tvVacio;
+    private TextView tvNuevaPersona;
+    private FrameLayout flBarraTotal;
+    private FrameLayout flTotal;
+    private TextView tvTotal;
+    private LinearLayout llSubtotal;
+    private TextView tvSubtotal;
+    private LinearLayout llTotalSimple;
+    private TextView tvCantidad;
+    private TextView tvMoneda;
+    private LinearLayout llTotalResumen;
+    private LinearLayout llRootTotalDebido;
+    private TextView tvTotalDebido;
+    private TextView tvTotalDebidoMoneda;
+    private LinearLayout llRootTotalAdeudado;
+    private TextView tvTotalAdeudado;
+    private TextView tvTotalAdeudadoMoneda;
+    private LinearLayout llRootTotalAmbos;
+    private TextView tvTotalAmbos;
+    private TextView tvTotalAmbosMoneda;
+    private LinearLayout llRootTotalTotal;
+    private TextView tvTotalTotal;
+    private TextView tvTotalTotalMoneda;
 
     private GestorDatos gestor;
     private AdaptadorPersonas adaptadorPersonas;
@@ -79,7 +73,6 @@ public class FragmentViewPagerPersonas extends Fragment {
     private String mTipo;
     private Persona personaSeleccionada;
     private Menu menu;
-    private Unbinder unbinder;
     private boolean showResumen;
 
     public static FragmentViewPagerPersonas newInstance(String tipo) {
@@ -106,12 +99,41 @@ public class FragmentViewPagerPersonas extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_lista_personas, container, false);
-        unbinder = ButterKnife.bind(this, rootView);
+        bindViews(rootView);
         loadView();
         return rootView;
     }
 
+    private void bindViews(@NonNull final View view) {
+        rvPersonas = view.findViewById(R.id.rv_personas);
+        llVacio = view.findViewById(R.id.ll_vacio);
+        tvVacio = view.findViewById(R.id.tv_vacio);
+        tvNuevaPersona = view.findViewById(R.id.new_person);
+        flBarraTotal = view.findViewById(R.id.ll_barra_total);
+        flTotal = view.findViewById(R.id.fl_total);
+        tvTotal = view.findViewById(R.id.tv_total);
+        llSubtotal = view.findViewById(R.id.ll_subtotal);
+        tvSubtotal = view.findViewById(R.id.tv_subtotal);
+        llTotalSimple = view.findViewById(R.id.ll_total_simple);
+        tvCantidad = view.findViewById(R.id.tv_cantidad);
+        tvMoneda = view.findViewById(R.id.tv_moneda);
+        llTotalResumen = view.findViewById(R.id.ll_barra_total_resumen);
+        llRootTotalDebido = view.findViewById(R.id.ll_root_total_debido);
+        tvTotalDebido = view.findViewById(R.id.tv_total_debido);
+        tvTotalDebidoMoneda = view.findViewById(R.id.tv_total_debido_moneda);
+        llRootTotalAdeudado = view.findViewById(R.id.ll_root_total_adeudado);
+        tvTotalAdeudado = view.findViewById(R.id.tv_total_adeudado);
+        tvTotalAdeudadoMoneda = view.findViewById(R.id.tv_total_adeudado_moneda);
+        llRootTotalAmbos = view.findViewById(R.id.ll_root_total_ambos);
+        tvTotalAmbos = view.findViewById(R.id.tv_total_ambos);
+        tvTotalAmbosMoneda = view.findViewById(R.id.tv_total_ambos_moneda);
+        llRootTotalTotal = view.findViewById(R.id.ll_root_total_total);
+        tvTotalTotal = view.findViewById(R.id.tv_total_total);
+        tvTotalTotalMoneda = view.findViewById(R.id.tv_total_total_moneda);
+    }
+
     private void loadView() {
+        setUpClickListeners();
         cargarPersonas();
         asignarListenersAdapter();
         inicializarMensajeVacio();
@@ -193,6 +215,15 @@ public class FragmentViewPagerPersonas extends Fragment {
         } else {
             Snackbar.make(rvPersonas, R.string.imposible_borrar_deudas, Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    private void setUpClickListeners() {
+        tvNuevaPersona.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onNuevaPersonaClicked();
+            }
+        });
     }
 
     private void cargarPersonas() {
@@ -444,14 +475,7 @@ public class FragmentViewPagerPersonas extends Fragment {
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @OnClick(R.id.new_person)
-    public void onClick() {
+    private void onNuevaPersonaClicked() {
         ActivityNuevasDeudas.start(getActivity());
     }
 }
