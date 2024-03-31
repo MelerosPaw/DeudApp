@@ -3,8 +3,8 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    namespace 'melerospaw.deudapp'
+    compileSdk 28
 
     defaultConfig {
         applicationId "melerospaw.deudapp"
