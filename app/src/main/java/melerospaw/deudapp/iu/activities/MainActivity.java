@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)     Toolbar toolbar;
     @BindView(R.id.tabs)        TabLayout tabs;
     @BindView(R.id.viewPager)   ViewPager viewPager;
+    @BindView(R.id.tv_nombre)   TextView labelNombre;
 
     private CharSequence tabSeleccionada;
     private boolean isRestoring;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         View view = LayoutInflater.from(this).inflate(R.layout.item_acreedores_layout, v, false);
-        TextView tvNombre = view.findViewById(tv_nombre);
+        TextView tvNombre = view.findViewById(labelNombre);
         TextView tvDr = view.findViewById(R.id.tv_deudaRestante);
         tvNombre.setText("A");
         tvDr.setText("B");
