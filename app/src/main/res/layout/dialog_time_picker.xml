@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <DatePicker
-        android:id="@+id/dpFecha"
+        android:id="@+id/dp_fecha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -20,7 +20,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tvCancelar"
+            android:id="@+id/tv_cancelar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
@@ -30,7 +30,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvCambiar"
+            android:id="@+id/tv_cambiar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"

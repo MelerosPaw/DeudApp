@@ -82,7 +82,7 @@ public class DialogoModificarCantidad extends DialogFragment {
     }
 
     private void bindViews(@NonNull View view) {
-        llCurrencyGroup = view.findViewById(R.id.llCurrencyRoot);
+        llCurrencyGroup = view.findViewById(R.id.ll_currency_root);
         tvTitulo = view.findViewById(R.id.tv_titulo);
         tvMensaje = view.findViewById(R.id.tv_mensaje);
         etCantidad = view.findViewById(R.id.etCantidad);

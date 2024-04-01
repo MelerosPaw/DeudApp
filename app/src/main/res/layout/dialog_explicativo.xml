@@ -30,7 +30,7 @@
                 app:srcCompat="@drawable/ic_deuda_grupal" />
 
             <TextView
-                android:id="@+id/tvDescripcion"
+                android:id="@+id/tv_descripcion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/deuda_grupal_explicacion"
@@ -39,7 +39,7 @@
         </LinearLayout>
 
         <CheckBox
-            android:id="@+id/chkNoMostrarDialogo"
+            android:id="@+id/chk_no_mostrar_dialogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
@@ -53,7 +53,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnEntendido"
+                android:id="@+id/btn_entendido"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
