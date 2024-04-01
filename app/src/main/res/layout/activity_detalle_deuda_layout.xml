@@ -119,7 +119,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 app:behaviour_expandedSubtitleColor="@color/colorPrimary"
-                app:behaviour_expandedSubtitleTopMargin="-8dp"
                 app:behaviour_expandedTitleColor="@color/colorPrimary"
                 app:layout_behavior="com.melerospaw.coordinatorbehaviour.HeaderBehaviour">
 

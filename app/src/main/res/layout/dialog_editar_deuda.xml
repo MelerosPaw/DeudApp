@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/flRoot"
+    android:id="@+id/fl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
@@ -62,7 +62,7 @@
                         tools:text="Concepto" />
 
                     <LinearLayout
-                        android:id="@+id/llCurrencyRoot"
+                        android:id="@+id/ll_currency_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
@@ -95,7 +95,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tvCambiarFecha"
+                        android:id="@+id/tv_cambiar_fecha"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

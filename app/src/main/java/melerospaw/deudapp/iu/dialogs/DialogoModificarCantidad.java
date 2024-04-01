@@ -2,6 +2,7 @@ package melerospaw.deudapp.iu.dialogs;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
@@ -10,10 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.utils.CurrencyUtilKt;
@@ -33,18 +30,17 @@ public class DialogoModificarCantidad extends DialogFragment {
     public static final String EXTRA_POSICION = "POSICION";
     public static final String EXTRA_ENTIDAD = "EXTRA_ENTIDAD";
 
-    @BindView(R.id.llCurrencyRoot)      ViewGroup llCurrencyGroup;
-    @BindView(R.id.tv_titulo)           TextView tvTitulo;
-    @BindView(R.id.tv_mensaje)          TextView tvMensaje;
-    @BindView(R.id.etCantidad)         EditText etCantidad;
-    @BindView(R.id.tv_moneda)           TextView tvMoneda;
-    @BindView(R.id.tv_guardar)          TextView btnAceptar;
-    @BindView(R.id.tv_cancelar)         TextView btnCancelar;
+    private ViewGroup llCurrencyGroup;
+    private TextView tvTitulo;
+    private TextView tvMensaje;
+    private EditText etCantidad;
+    private TextView tvMoneda;
+    private TextView btnAceptar;
+    private TextView btnCancelar;
 
     private String modo;
     private int position;
     private Entidad entidad;
-    private Unbinder unbinder;
     private PositiveCallback positiveCallback;
 
 
@@ -77,13 +73,22 @@ public class DialogoModificarCantidad extends DialogFragment {
                              Bundle savedInstanceState) {
         if (inflater != null) {
             View v = inflater.inflate(R.layout.dialog_modificar_deuda_layout, container, false);
-            unbinder = ButterKnife.bind(this, v);
-
+            bindViews(v);
             loadView();
             return v;
         } else {
             return null;
         }
+    }
+
+    private void bindViews(@NonNull View view) {
+        llCurrencyGroup = view.findViewById(R.id.ll_currency_root);
+        tvTitulo = view.findViewById(R.id.tv_titulo);
+        tvMensaje = view.findViewById(R.id.tv_mensaje);
+        etCantidad = view.findViewById(R.id.etCantidad);
+        tvMoneda = view.findViewById(R.id.tv_moneda);
+        btnAceptar = view.findViewById(R.id.tv_guardar);
+        btnCancelar = view.findViewById(R.id.tv_cancelar);
     }
 
     public void loadView(){
@@ -114,18 +119,8 @@ public class DialogoModificarCantidad extends DialogFragment {
                 R.string.pregunta_aumentar_deuda : R.string.pregunta_aumentar_derecho_cobro);
         btnAceptar.setText(R.string.aumentar);
         btnCancelar.setText(R.string.cancelar);
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        btnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aumentar();
-            }
-        });
+        btnCancelar.setOnClickListener(v -> dismiss());
+        btnAceptar.setOnClickListener(v -> aumentar());
     }
 
     private void loadViewDisminuir() {
@@ -133,18 +128,8 @@ public class DialogoModificarCantidad extends DialogFragment {
                 R.string.pregunta_descontar_deuda : R.string.pregunta_descontar_derecho_cobro);
         btnAceptar.setText(R.string.disminuir);
         btnCancelar.setText(R.string.cancelar);
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        btnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                disminuir();
-            }
-        });
+        btnCancelar.setOnClickListener(v -> dismiss());
+        btnAceptar.setOnClickListener(v -> disminuir());
     }
 
     private void loadViewCancelar() {
@@ -153,18 +138,8 @@ public class DialogoModificarCantidad extends DialogFragment {
         btnAceptar.setText(R.string.si);
         btnCancelar.setText(R.string.no);
         ExtensionFunctionsKt.hide(tvMoneda, etCantidad);
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        btnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelar();
-            }
-        });
+        btnCancelar.setOnClickListener(v -> dismiss());
+        btnAceptar.setOnClickListener(v -> cancelar());
     }
 
     private void loadViewCancelarTodas() {
@@ -173,18 +148,8 @@ public class DialogoModificarCantidad extends DialogFragment {
         btnAceptar.setText(R.string.si);
         btnCancelar.setText(R.string.no);
         ExtensionFunctionsKt.hide(tvMoneda, etCantidad);
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        btnAceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelarTodas();
-            }
-        });
+        btnCancelar.setOnClickListener(v -> dismiss());
+        btnAceptar.setOnClickListener(v -> cancelarTodas());
     }
 
     private void aumentar() {
@@ -283,12 +248,6 @@ public class DialogoModificarCantidad extends DialogFragment {
         }
 
         dismiss();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     public void setPositiveCallback(PositiveCallback positiveCallback) {

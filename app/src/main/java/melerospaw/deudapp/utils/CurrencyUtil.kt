@@ -7,8 +7,13 @@ import melerospaw.deudapp.preferences.SharedPreferencesManager
 
 fun getCurrency(context: Context) = SharedPreferencesManager(context).currency
 
-fun setUpAmount(context: Context, amount: Float? = null, rootView: ViewGroup, amountView: TextView,
-                currencyView: TextView) {
+fun setUpAmount(
+  context: Context,
+  amount: Float? = null,
+  rootView: ViewGroup,
+  amountView: TextView,
+  currencyView: TextView,
+) {
     val currency = getCurrency(context)
 
     if (amount != null) {

@@ -27,14 +27,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.data.GestorDatos;
 import melerospaw.deudapp.iu.adapters.AdaptadorNuevasDeudas;
@@ -45,25 +40,29 @@ import melerospaw.deudapp.modelo.Contact;
 import melerospaw.deudapp.modelo.Entidad;
 import melerospaw.deudapp.modelo.Persona;
 import melerospaw.deudapp.modelo.Persona.TipoPersona;
+import melerospaw.deudapp.preferences.SharedPreferencesManager;
 import melerospaw.deudapp.utils.EntidadesUtilKt;
 import melerospaw.deudapp.utils.ExtensionFunctionsKt;
-import melerospaw.deudapp.preferences.SharedPreferencesManager;
 import melerospaw.deudapp.utils.TecladoUtils;
 
-public class ActivityNuevasDeudas extends AppCompatActivity {
+public class ActivityNuevasDeudas extends AppCompatActivity implements View.OnClickListener{
 
     public static final String BUNDLE_PERSONA = "PERSONA";
     public static final int REQUEST_CODE_ADD_ENTITIES = 1;
     public static final String RESULT_ENTITIES_ADDED = "ENTITIES_ADDED";
     public static final int PERMISO_CONTACTOS = 0;
 
-    @BindView(R.id.toolbar)                 Toolbar toolbar;
-    @BindView(R.id.ll_seccion_personas)     LinearLayout llSeccionPersonas;
-    @BindView(R.id.tv_personas_vacias)      TextView tvPersonasVacias;
-    @BindView(R.id.rv_personas)             RecyclerView rvPersonas;
-    @BindView(R.id.tv_entidades_vacias)     TextView tvEntidadesVacias;
-    @BindView(R.id.rv_conceptosCantidades)  RecyclerView rvNuevasEntidades;
-    @BindView(R.id.btn_guardar)             Button btnGuardar;
+    private Toolbar toolbar;
+    private LinearLayout llSeccionPersonas;
+    private Button btnNuevaPersona;
+    private TextView tvPersonasVacias;
+    private Button btnNuevaDeuda;
+    private Button btnNuevoDerecho;
+    private RecyclerView rvPersonas;
+    private TextView tvEntidadesVacias;
+    private Button btnCancelar;
+    private RecyclerView rvNuevasEntidades;
+    private Button btnGuardar;
 
     private GestorDatos gestor;
     private AdaptadorPersonasNuevas adaptadorNuevasPersonas;
@@ -89,10 +88,11 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevas_entidades_layout);
-        ButterKnife.bind(this);
 
         gestor = GestorDatos.getGestor(this);
 
+        bindViews();
+        setUpClickListeners();
         recuperarPersona();
         inicializarToolbar();
         inicializarAdaptadorPersonas();
@@ -118,10 +118,8 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.btn_nueva_persona, R.id.btn_nueva_deuda, R.id.btn_nuevo_derecho,
-            R.id.btn_cancelar, R.id.btn_guardar})
+    @Override
     public void onClick(View view) {
-
         switch (view.getId()) {
             case R.id.btn_nueva_persona:
                 nuevaPersona();
@@ -143,6 +141,28 @@ public class ActivityNuevasDeudas extends AppCompatActivity {
             default:
                 // NO-OP No more cases
         }
+    }
+
+    private void bindViews() {
+        toolbar = findViewById(R.id.toolbar);
+        llSeccionPersonas = findViewById(R.id.ll_seccion_personas);
+        btnNuevaPersona = findViewById(R.id.btn_nueva_persona);
+        tvPersonasVacias = findViewById(R.id.tv_personas_vacias);
+        btnNuevaDeuda = findViewById(R.id.btn_nueva_deuda);
+        btnNuevoDerecho = findViewById(R.id.btn_nuevo_derecho);
+        rvPersonas = findViewById(R.id.rv_personas);
+        tvEntidadesVacias = findViewById(R.id.tv_entidades_vacias);
+        btnCancelar = findViewById(R.id.btn_cancelar);
+        rvNuevasEntidades = findViewById(R.id.rv_conceptosCantidades);
+        btnGuardar = findViewById(R.id.btn_guardar);
+    }
+
+    private void setUpClickListeners() {
+        btnNuevaPersona.setOnClickListener(this);
+        btnNuevaDeuda.setOnClickListener(this);
+        btnNuevoDerecho.setOnClickListener(this);
+        btnCancelar.setOnClickListener(this);
+        btnGuardar.setOnClickListener(this);
     }
 
     private void recuperarPersona() {

@@ -14,15 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
-import butterknife.OnFocusChange;
 import melerospaw.deudapp.R;
 import melerospaw.deudapp.constants.ConstantesGenerales;
 import melerospaw.deudapp.iu.vo.EntidadVO;
@@ -140,19 +135,34 @@ public class AdaptadorNuevasDeudas
     /**
      * VIEWHOLDER
      */
-    class EntidadNuevaViewHolder extends RecyclerView.ViewHolder {
+    class EntidadNuevaViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
 
-        @BindView(R.id.root)                ViewGroup root;
-        @BindView(R.id.et_concepto)         EditText etConcepto;
-        @BindView(R.id.etCantidad)          EditText etCantidad;
-        @BindView(R.id.tv_moneda)           TextView tvMoneda;
-        @BindView(R.id.chk_deuda_grupal)    CheckBox chkDeudaGrupal;
+        private ViewGroup root;
+        private EditText etConcepto;
+        private EditText etCantidad;
+        private TextView tvMoneda;
+        private CheckBox chkDeudaGrupal;
 
         private Entidad entidad;
 
         EntidadNuevaViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            bindViews();
+            setUpListeners();
+        }
+
+        private void bindViews() {
+            root = itemView.findViewById(R.id.root);
+            etConcepto = itemView.findViewById(R.id.et_concepto);
+            etCantidad = itemView.findViewById(R.id.etCantidad);
+            tvMoneda = itemView.findViewById(R.id.tv_moneda);
+            chkDeudaGrupal = itemView.findViewById(R.id.chk_deuda_grupal);
+        }
+
+        private void setUpListeners() {
+            etCantidad.setOnFocusChangeListener(this::cerrarEdicion);
+            etConcepto.setOnFocusChangeListener(this::cerrarEdicion);
+            chkDeudaGrupal.setOnCheckedChangeListener(this);
         }
 
         private void bindView(Entidad entidad) {
@@ -203,8 +213,7 @@ public class AdaptadorNuevasDeudas
             etConcepto.setTextColor(colorResource);
         }
 
-        @OnFocusChange({R.id.etCantidad, R.id.et_concepto})
-        public void cerrarEdicion(View v, boolean hasFocus) {
+        private void cerrarEdicion(View v, boolean hasFocus) {
 
             if (!hasFocus) {
                 if (v.getId() == R.id.et_concepto) {
@@ -274,8 +283,8 @@ public class AdaptadorNuevasDeudas
             etCantidad.setText(DecimalFormatUtils.decimalToStringIfZero(entidad.getCantidad() * -1, 2, ".", ","));
         }
 
-        @OnCheckedChanged(R.id.chk_deuda_grupal)
-        public void onCheckedChanged(boolean isChecked) {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
             if (isChecked) {
                 mostrarDialogoExplicativoListener.onMostrarCuadroIndicativo();
             }

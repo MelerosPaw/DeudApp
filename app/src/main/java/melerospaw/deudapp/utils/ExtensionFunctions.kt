@@ -13,15 +13,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 
-fun inflate(layoutInflater: LayoutInflater?, @LayoutRes layoutRes: Int, container: ViewGroup?) =
-        layoutInflater?.inflate(layoutRes, container, false)
+fun inflate(layoutInflater: LayoutInflater, @LayoutRes layoutRes: Int, container: ViewGroup?): View =
+        layoutInflater.inflate(layoutRes, container, false)
 
 fun Fragment.shortToast(message: String) {
-    Toast.makeText(context!!.applicationContext, message, Toast.LENGTH_SHORT).show()
+    context?.applicationContext?.let { Toast.makeText(it, message, Toast.LENGTH_SHORT).show() }
 }
 
 fun Fragment.longToast(message: String) {
-    Toast.makeText(context!!.applicationContext, message, Toast.LENGTH_LONG).show()
+    context?.applicationContext?.let { Toast.makeText(it, message, Toast.LENGTH_LONG).show() }
 }
 
 fun Context.shortToast(message: String) {
@@ -135,4 +135,15 @@ fun hide(vararg views: View) {
     for (view in views) {
         view.hide()
     }
+}
+
+fun <FIRST, SECOND, THIRD, R> doIfNotNull(
+    firstParam: FIRST?,
+    secondParam: SECOND?,
+    thirdParam: THIRD?,
+    doWhat: (first: FIRST, SECOND, THIRD) -> R,
+): R? = if (firstParam != null && secondParam != null && thirdParam != null) {
+    doWhat(firstParam, secondParam, thirdParam)
+} else {
+    null
 }

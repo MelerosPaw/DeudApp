@@ -9,20 +9,34 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.dialog_editar_deuda.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import melerospaw.deudapp.R
 import melerospaw.deudapp.data.GestorDatos
 import melerospaw.deudapp.modelo.Entidad
-import melerospaw.deudapp.utils.*
-import java.util.*
+import melerospaw.deudapp.utils.DecimalFormatUtils
+import melerospaw.deudapp.utils.ScreenUtils
+import melerospaw.deudapp.utils.StringUtils
+import melerospaw.deudapp.utils.doIfNotNull
+import melerospaw.deudapp.utils.esRepetida
+import melerospaw.deudapp.utils.estaContenida
+import melerospaw.deudapp.utils.getInfiniteFloat
+import melerospaw.deudapp.utils.getNegativeInfiniteFloat
+import melerospaw.deudapp.utils.inflate
+import melerospaw.deudapp.utils.isInfiniteFloat
+import melerospaw.deudapp.utils.isInfinityCharacter
+import melerospaw.deudapp.utils.longToast
+import melerospaw.deudapp.utils.mostrarInfinityDialog
+import melerospaw.deudapp.utils.setUpAmount
+import melerospaw.deudapp.utils.shortToast
+import melerospaw.deudapp.utils.texto
+import java.util.Date
 
 
 class DialogEditarDeuda : DialogFragment() {
-
-    private lateinit var entidad: Entidad
-    private var posicion: Int = -1
-    private lateinit var gestor: GestorDatos
-    var positiveCallback: PositiveCallback? = null
 
     companion object {
 
@@ -41,6 +55,21 @@ class DialogEditarDeuda : DialogFragment() {
             return df
         }
     }
+    
+    private var tvFecha: TextView? = null
+    private var etConcepto: EditText? = null
+    private var etCantidad: EditText? = null
+    private var llCurrencyRoot: LinearLayout? = null
+    private var tvMoneda: TextView? = null
+    private var btnGuardar: Button? = null
+    private var btnCancelar: Button? = null
+    private var tvCambiarFecha: TextView? = null
+    private var flRoot: FrameLayout? = null
+
+    private lateinit var entidad: Entidad
+    private var posicion: Int = -1
+    private lateinit var gestor: GestorDatos
+    var positiveCallback: PositiveCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,27 +79,35 @@ class DialogEditarDeuda : DialogFragment() {
         entidad = gestor.getEntidad(idEntidad)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? =
-            inflate(inflater, R.layout.dialog_editar_deuda, container)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? = inflate(inflater, R.layout.dialog_editar_deuda, container)?.also {
+        bindViews(it)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val context = requireContext()
+
         with(entidad) {
-            tvFecha.text = readableDate
-            etConcepto.setText(concepto)
-            et_cantidad.setText(DecimalFormatUtils.decimalToStringIfZero(cantidad , 2, ".", ","))
-            et_cantidad.setTextColor(ContextCompat.getColor(context!!,
+            tvFecha?.text = readableDate
+            etConcepto?.setText(concepto)
+            etCantidad?.setText(DecimalFormatUtils.decimalToStringIfZero(cantidad , 2, ".", ","))
+            etCantidad?.setTextColor(ContextCompat.getColor(context,
                     if (entidad.tipoEntidad == Entidad.DEUDA) R.color.red else R.color.green))
         }
 
-        setUpAmount(context = requireContext(), rootView = llCurrencyRoot, amountView = et_cantidad,
-                currencyView = tvMoneda)
-        btnGuardar.setOnClickListener { guardar() }
-        btnCancelar.setOnClickListener { dismiss() }
-        tvCambiarFecha.setOnClickListener {mostrarDialogFecha() }
+        doIfNotNull(llCurrencyRoot, etCantidad, tvMoneda) { rootView, amountView, currencyView ->
+            setUpAmount(context, null, rootView, amountView, currencyView)
+        }
+
+        btnGuardar?.setOnClickListener { guardar() }
+        btnCancelar?.setOnClickListener { dismiss() }
+        tvCambiarFecha?.setOnClickListener {mostrarDialogFecha() }
 
         if (Build.VERSION.SDK_INT >= 16) {
-            flRoot.layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+            flRoot?.layoutTransition?.enableTransitionType(LayoutTransition.CHANGING)
         }
     }
 
@@ -79,42 +116,55 @@ class DialogEditarDeuda : DialogFragment() {
         ScreenUtils.pantallaCompleta(this, true)
     }
 
+    private fun bindViews(view: View) {
+        with(view) {
+            tvFecha = findViewById(R.id.tv_fecha)
+            etConcepto = findViewById(R.id.et_concepto)
+            etCantidad = findViewById(R.id.et_cantidad)
+            llCurrencyRoot = findViewById(R.id.ll_currency_root)
+            tvMoneda = findViewById(R.id.tv_moneda)
+            btnGuardar = findViewById(R.id.btn_guardar)
+            btnCancelar = findViewById(R.id.btn_cancelar)
+            tvCambiarFecha = findViewById(R.id.tv_cambiar_fecha)
+            flRoot = findViewById(R.id.fl_root)
+        }
+    }
+
     private fun guardar() {
         if (verificarDatos()) {
             with(entidad) {
 
-                fecha = Entidad.formatearFecha(tvFecha.texto)
-                concepto = etConcepto.texto
-
-                val auxCantidad = et_cantidad.texto
-                if (auxCantidad.isInfinityCharacter() ||
-                        StringUtils.prepararDecimal(auxCantidad).isInfiniteFloat()) {
-                    if (!cantidad.isInfiniteFloat()) {
-                        mostrarDialogCantidadInfinita()
+                fecha = Entidad.formatearFecha(tvFecha?.texto)
+                concepto = etConcepto?.texto
+                etCantidad?.texto?.let {
+                    if (it.isInfinityCharacter() || StringUtils.prepararDecimal(it).isInfiniteFloat()) {
+                        if (!cantidad.isInfiniteFloat()) {
+                            mostrarDialogCantidadInfinita()
+                        } else {
+                            cantidad = getInfiniteFloatByDebtType(entidad)
+                            closeAndSave()
+                        }
                     } else {
-                        cantidad = getInfiniteFloatByDebtType(entidad)
+                        cantidad = StringUtils.prepararDecimal(it).toFloat()
                         closeAndSave()
                     }
-                } else {
-                    cantidad = StringUtils.prepararDecimal(auxCantidad).toFloat()
-                    closeAndSave()
                 }
             }
         }
     }
 
     private fun verificarDatos() : Boolean {
-        val concepto = etConcepto.texto
-        val cantidad = et_cantidad.texto
-        val fecha = tvFecha.texto
+        val concepto = etConcepto?.texto
+        val cantidad = etCantidad?.texto
+        val fecha = tvFecha?.texto
 
         return when {
-            concepto.isBlank() -> {
+            concepto.isNullOrBlank() -> {
                 shortToast(getString(R.string.concepto_vacio))
                 false
             }
 
-            cantidad.isBlank() -> {
+            cantidad.isNullOrBlank() -> {
                 shortToast(getString(R.string.cantidad_vacia))
                 false
             }
@@ -169,10 +219,10 @@ class DialogEditarDeuda : DialogFragment() {
         if (activity != null) {
             val fm = activity!!.supportFragmentManager
             val ft = fm.beginTransaction().addToBackStack(DialogFechaDeuda.TAG)
-            val dialog = DialogFechaDeuda.newInstance(Entidad.formatearFecha(tvFecha.text.toString()).time)
+            val dialog = DialogFechaDeuda.newInstance(Entidad.formatearFecha(tvFecha?.text.toString()).time)
             dialog.positiveCallback = object : DialogFechaDeuda.PositiveCallback {
                 override fun guardarFecha(fecha: Date) {
-                    tvFecha.text = Entidad.formatearFecha(fecha)
+                    tvFecha?.text = Entidad.formatearFecha(fecha)
                 }
             }
             dialog.show(ft, DialogoModificarCantidad.TAG)
