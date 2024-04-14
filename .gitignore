@@ -3,6 +3,6 @@
 /build
 .idea/
 DeudApp.iml
-gradle.properties
+app/gradle.properties
 projectFilesBackup/
 gradle/

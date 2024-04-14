@@ -1,5 +1,7 @@
 package melerospaw.deudapp.iu.behaviours;
 
-public class ScrollingBehaviour extends android.support.design.widget.AppBarLayout.Behavior {
+import com.google.android.material.appbar.AppBarLayout;
+
+public class ScrollingBehaviour extends AppBarLayout.Behavior {
 
 }

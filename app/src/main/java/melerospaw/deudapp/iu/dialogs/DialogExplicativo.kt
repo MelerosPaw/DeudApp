@@ -2,7 +2,7 @@ package melerospaw.deudapp.iu.dialogs
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan

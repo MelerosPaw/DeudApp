@@ -1,7 +1,7 @@
 package melerospaw.deudapp.iu.adapters
 
-import android.support.annotation.Nullable
-import android.support.v7.util.DiffUtil
+import androidx.annotation.Nullable
+import androidx.recyclerview.widget.DiffUtil
 import melerospaw.deudapp.modelo.Entidad
 
 class DiffUtilBaseCallback(private val oldList: List<Entidad>, private val newList: List<Entidad>) : DiffUtil.Callback() {

@@ -3,7 +3,7 @@ package melerospaw.deudapp.utils
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import melerospaw.deudapp.R
 
 const val INFINITY_CHAR = "\u221e"

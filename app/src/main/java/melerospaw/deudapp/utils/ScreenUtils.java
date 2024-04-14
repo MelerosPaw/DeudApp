@@ -1,7 +1,7 @@
 package melerospaw.deudapp.utils;
 
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.app.DialogFragment;
+import androidx.fragment.app.DialogFragment;
 import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
