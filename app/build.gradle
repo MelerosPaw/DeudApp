@@ -11,6 +11,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 28
         vectorDrawables.useSupportLibrary true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -91,4 +92,7 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
+
+    androidTestImplementation 'junit:junit:4.13'
+    androidTestImplementation "androidx.test:runner:1.5.2"
 }
