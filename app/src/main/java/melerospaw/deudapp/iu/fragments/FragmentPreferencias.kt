@@ -2,13 +2,12 @@ package melerospaw.deudapp.iu.fragments
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.v7.preference.ListPreference
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.preference.ListPreference
+import androidx.preference.PreferenceFragmentCompat
 import melerospaw.deudapp.R
 import melerospaw.deudapp.preferences.SharedPreferencesManager
 import melerospaw.deudapp.task.BusProvider
 import melerospaw.deudapp.task.EventoMonedaCambiada
-import melerospaw.deudapp.utils.Currency
 
 class FragmentPreferencias: PreferenceFragmentCompat(),
         SharedPreferences.OnSharedPreferenceChangeListener {

@@ -1,7 +1,7 @@
 package melerospaw.deudapp.iu.widgets;
 
 import android.content.Context;
-import android.support.design.widget.CollapsingToolbarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import android.util.AttributeSet;
 
 

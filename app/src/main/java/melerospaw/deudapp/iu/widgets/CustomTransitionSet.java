@@ -1,8 +1,8 @@
 package melerospaw.deudapp.iu.widgets;
 
-import android.support.transition.ChangeBounds;
-import android.support.transition.Fade;
-import android.support.transition.TransitionSet;
+import androidx.transition.ChangeBounds;
+import androidx.transition.Fade;
+import androidx.transition.TransitionSet;
 
 public class CustomTransitionSet extends TransitionSet {
 

@@ -11,18 +11,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.design.widget.CoordinatorLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <android.support.design.widget.AppBarLayout
+            <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 app:expanded="false">
 
-                <android.support.design.widget.CollapsingToolbarLayout
+                <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:id="@+id/collapsing_toolbar_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -39,9 +39,9 @@
 
                     <include layout="@layout/collapsing_toolbar" />
 
-                </android.support.design.widget.CollapsingToolbarLayout>
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            </android.support.design.widget.AppBarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
 
             <melerospaw.deudapp.iu.widgets.ContextRecyclerView
                 android:id="@+id/rv_deudas"
@@ -90,7 +90,7 @@
 
                     </FrameLayout>
 
-                    <android.support.v4.widget.Space
+                    <androidx.legacy.widget.Space
                         android:layout_width="16dp"
                         android:layout_height="0dp" />
 
@@ -141,7 +141,7 @@
 
             </LinearLayout>
 
-        </android.support.design.widget.CoordinatorLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <LinearLayout
             android:id="@+id/ll_barra_total"
@@ -211,9 +211,9 @@
                 android:layout_marginStart="10dp"
                 app:srcCompat="@drawable/flecha_derecha" />
 
-            <android.support.v4.widget.Space android:layout_height="50dp" />
+            <androidx.legacy.widget.Space android:layout_height="50dp" />
 
-            <android.support.v4.widget.Space />
+            <androidx.legacy.widget.Space />
 
             <ImageView
                 android:layout_width="100dp"

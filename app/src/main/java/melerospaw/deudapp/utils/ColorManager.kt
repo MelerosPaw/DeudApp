@@ -1,6 +1,6 @@
 package melerospaw.deudapp.utils
 
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import melerospaw.deudapp.R
 
